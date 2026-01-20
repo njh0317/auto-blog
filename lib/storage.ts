@@ -1,12 +1,15 @@
-// 스토리지 추상화 - 로컬(파일) / Vercel(KV) 자동 전환
+// 스토리지 추상화 - 로컬(파일) / Vercel(Upstash Redis) 자동 전환
 import { Post, PostsData } from './types';
 
 const isVercel = process.env.VERCEL === '1';
 
-// Vercel KV 사용 시
-async function getKV() {
-  const { kv } = await import('@vercel/kv');
-  return kv;
+// Upstash Redis 사용 시
+async function getRedis() {
+  const { Redis } = await import('@upstash/redis');
+  return new Redis({
+    url: process.env.KV_REST_API_URL!,
+    token: process.env.KV_REST_API_TOKEN!,
+  });
 }
 
 // 로컬 파일 시스템 사용 시
@@ -36,8 +39,8 @@ function writeLocalFile(filename: string, data: unknown) {
 // Posts 관련
 export async function getPosts(): Promise<Post[]> {
   if (isVercel) {
-    const kv = await getKV();
-    const posts = await kv.get<Post[]>('posts');
+    const redis = await getRedis();
+    const posts = await redis.get<Post[]>('posts');
     return posts || [];
   }
   const data = readLocalFile('posts.json') as PostsData | null;
@@ -46,8 +49,8 @@ export async function getPosts(): Promise<Post[]> {
 
 export async function savePosts(posts: Post[]): Promise<void> {
   if (isVercel) {
-    const kv = await getKV();
-    await kv.set('posts', posts);
+    const redis = await getRedis();
+    await redis.set('posts', posts);
     return;
   }
   writeLocalFile('posts.json', { posts });
@@ -70,8 +73,8 @@ const DEFAULT_BRANDING: Branding = {
 
 export async function getBrandingData(): Promise<Branding> {
   if (isVercel) {
-    const kv = await getKV();
-    const branding = await kv.get<Branding>('branding');
+    const redis = await getRedis();
+    const branding = await redis.get<Branding>('branding');
     return branding || DEFAULT_BRANDING;
   }
   const data = readLocalFile('branding.json') as Branding | null;
@@ -80,8 +83,8 @@ export async function getBrandingData(): Promise<Branding> {
 
 export async function saveBrandingData(branding: Branding): Promise<void> {
   if (isVercel) {
-    const kv = await getKV();
-    await kv.set('branding', branding);
+    const redis = await getRedis();
+    await redis.set('branding', branding);
     return;
   }
   writeLocalFile('branding.json', branding);
