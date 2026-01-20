@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getDetailedMarketData } from '@/lib/market-data';
-import { generateDetailedReport } from '@/lib/detailed-report';
+import { generateDetailedMarketReport } from '@/lib/detailed-report';
 import { savePosts, getPosts } from '@/lib/storage';
 import { Post } from '@/lib/types';
 
@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     const marketData = await getDetailedMarketData();
     
     // 2. 상세 리포트 생성
-    const report = generateDetailedReport(marketData);
+    const report = generateDetailedMarketReport(marketData);
     
     // 3. 날짜 포맷
     const today = new Date().toLocaleDateString('ko-KR', { 
