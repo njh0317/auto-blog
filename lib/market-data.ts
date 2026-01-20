@@ -335,11 +335,23 @@ async function fetchMag7Stocks(): Promise<StockData[]> {
 
 // CNN Fear & Greed Index 조회
 async function fetchFearGreedIndex(): Promise<number> {
+  const userAgents = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0',
+  ];
+  const randomUA = userAgents[Math.floor(Math.random() * userAgents.length)];
+  
   try {
-    // CNN Fear & Greed API (비공식)
+    // CNN Fear & Greed API
     const res = await fetch('https://production.dataviz.cnn.io/index/fearandgreed/graphdata', {
-      headers: { 'User-Agent': 'Mozilla/5.0' },
-      next: { revalidate: 3600 } // 1시간 캐시
+      headers: { 
+        'User-Agent': randomUA,
+        'Accept': 'application/json',
+        'Referer': 'https://edition.cnn.com/',
+      },
+      next: { revalidate: 3600 }
     });
     
     if (res.ok) {
