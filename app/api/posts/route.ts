@@ -3,7 +3,7 @@ import { getAllPosts, createPost, deletePostById } from '@/lib/posts';
 import { verifyPassword } from '@/lib/auth';
 
 export async function GET() {
-  const posts = getAllPosts();
+  const posts = await getAllPosts();
   return NextResponse.json(posts);
 }
 
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: '제목과 내용이 필요합니다' }, { status: 400 });
   }
 
-  const post = createPost({
+  const post = await createPost({
     title: body.title,
     content: body.content,
     excerpt: body.excerpt || body.content.substring(0, 150),
@@ -42,7 +42,7 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: 'ID가 필요합니다' }, { status: 400 });
   }
 
-  const deleted = deletePostById(id);
+  const deleted = await deletePostById(id);
   if (!deleted) {
     return NextResponse.json({ error: '글을 찾을 수 없습니다' }, { status: 404 });
   }

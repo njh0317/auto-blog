@@ -1,15 +1,7 @@
 // 블로그 브랜딩 설정 모듈
-import fs from 'fs';
-import path from 'path';
+import { getBrandingData, saveBrandingData, Branding } from './storage';
 
-export interface BlogBranding {
-  nickname: string;
-  greeting: string;
-  closing: string;
-  style: 'formal' | 'casual';
-}
-
-const BRANDING_FILE = path.join(process.cwd(), 'data', 'branding.json');
+export type BlogBranding = Branding;
 
 const DEFAULT_BRANDING: BlogBranding = {
   nickname: '투자하는 개발자',
@@ -18,10 +10,21 @@ const DEFAULT_BRANDING: BlogBranding = {
   style: 'casual',
 };
 
+// 동기 버전 (로컬 전용, detailed-report.ts 호환)
 export function getBranding(): BlogBranding {
+  // Vercel 환경에서는 기본값 반환 (async 버전 사용 권장)
+  if (process.env.VERCEL === '1') {
+    return DEFAULT_BRANDING;
+  }
+  
   try {
-    if (fs.existsSync(BRANDING_FILE)) {
-      const data = fs.readFileSync(BRANDING_FILE, 'utf-8');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const fs = require('fs');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'data', 'branding.json');
+    if (fs.existsSync(filePath)) {
+      const data = fs.readFileSync(filePath, 'utf-8');
       return { ...DEFAULT_BRANDING, ...JSON.parse(data) };
     }
   } catch (error) {
@@ -30,20 +33,16 @@ export function getBranding(): BlogBranding {
   return DEFAULT_BRANDING;
 }
 
-export function saveBranding(branding: Partial<BlogBranding>): BlogBranding {
-  const current = getBranding();
+// 비동기 버전 (Vercel KV 지원)
+export async function getBrandingAsync(): Promise<BlogBranding> {
+  const branding = await getBrandingData();
+  return { ...DEFAULT_BRANDING, ...branding };
+}
+
+export async function saveBranding(branding: Partial<BlogBranding>): Promise<BlogBranding> {
+  const current = await getBrandingAsync();
   const updated = { ...current, ...branding };
-  
-  try {
-    const dir = path.dirname(BRANDING_FILE);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    fs.writeFileSync(BRANDING_FILE, JSON.stringify(updated, null, 2));
-  } catch (error) {
-    console.error('브랜딩 설정 저장 실패:', error);
-  }
-  
+  await saveBrandingData(updated);
   return updated;
 }
 

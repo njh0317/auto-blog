@@ -1,3 +1,173 @@
 {
-  "posts": []
+  "posts": [
+    {
+      "id": "mkmq632i48p80ji",
+      "slug": "2026년-1월-21일-미국증시-마감시황-3대지수-약세",
+      "title": "[2026년 1월 21일] 미국증시 마감시황 - 3대지수 약세",
+      "content": "안녕하세요 투자하는 개발자입니다.\n오늘 미국증시 마감시황 알려드리겠습니다.\n\n★ 3대지수\n━━━━━━━━━━━━━━━━━━━━\n\nDow -1.28%, Nasdaq -1.47%, S&P500 -1.29%\n\n3대지수는 모두 하락 마감.\n\n★ Magnificent 7\n━━━━━━━━━━━━━━━━━━━━\n\nMagnificent 7 모두 하락\n\n★ 주요 종목\n━━━━━━━━━━━━━━━━━━━━\n\nApple -1.32%, Microsoft -1.48%, Google -1.74%, Amazon -2.59%, Nvidia -3.04%\n\n★ 오늘의 상승 종목 TOP 10\n━━━━━━━━━━━━━━━━━━━━\n\n1. ImmunityBio, Inc. (IBRX) +24.65%\n2. Korea Electric Power Corporatio (KEP) +15.31%\n3. United Microelectronics Corpora (UMC) +14.73%\n4. Centerra Gold Inc. (CGAU) +13.42%\n5. Iamgold Corporation (IAG) +13.04%\n6. Hycroft Mining Holding Corporat (HYMC) +12.23%\n7. Orla Mining Ltd. (ORLA) +10.19%\n8. SK Telecom Co., Ltd. (SKM) +10.30%\n9. POSCO Holdings Inc. (PKX) +8.14%\n10. USA Rare Earth, Inc. (USAR) +8.47%\n\n★ 오늘의 하락 종목 TOP 10\n━━━━━━━━━━━━━━━━━━━━\n\n1. Applied Digital Corporation (APLD) -8.08%\n2. Bitdeer Technologies Group (BTDR) -8.33%\n3. MARA Holdings, Inc. (MARA) -8.32%\n4. Regencell Bioscience Holdings L (RGC) -8.24%\n5. D-Wave Quantum Inc. (QBTS) -8.03%\n6. BitMine Immersion Technologies, (BMNR) -7.85%\n7. Sunrun Inc. (RUN) -7.76%\n8. Strategy Inc (MSTR) -7.77%\n9. Fluence Energy, Inc. (FLNC) -6.55%\n10. Samsara Inc. (IOT) -6.86%\n\n★ 유럽증시\n━━━━━━━━━━━━━━━━━━━━\n\n유럽 STOXX 600은 -1.07% 하락\n\n★ 환율\n━━━━━━━━━━━━━━━━━━━━\n\n오늘 달러/원 환율은 +0.38% 상승한 1,478.03 이고\n미국 달러지수 -0.84% 하락한 98.56\n달러/위안화 환율은 6.9600입니다.\n\n★ 금, 구리, 유가\n━━━━━━━━━━━━━━━━━━━━\n\n금은 +3.21% 상승한 4,742.90달러\nDr. Copper라 불리는 구리는 -0.65% 하락\nWTI는 +1.45% 상승한 60.20달러\n\n★ 채권\n━━━━━━━━━━━━━━━━━━━━\n\n미국채10년물 금리는 +6bp 상승한 4.290%\n\n★ Fear & Greed Index\n━━━━━━━━━━━━━━━━━━━━\n\nCNN Fear & Greed Index는 65 Greed 수준\n\n★ 지수 마감가\n━━━━━━━━━━━━━━━━━━━━\n\nS&P500는 6,850.64p\nNasdaq은 23,169.15p로 마감\n\n감사합니다.\n\n※ 본 콘텐츠는 투자 참고용이며, 투자 판단의 최종 책임은 투자자 본인에게 있습니다.",
+      "excerpt": "2026년 1월 21일 미국증시 마감시황 - S&P500 -1.29%, 나스닥 -1.47%, 다우 -1.28%",
+      "keywords": [
+        "미국증시",
+        "나스닥",
+        "S&P500",
+        "다우존스",
+        "2026년1월21일",
+        "증시마감",
+        "시황"
+      ],
+      "createdAt": "2026-01-20T15:04:26.634Z",
+      "updatedAt": "2026-01-20T15:04:26.634Z",
+      "marketData": {
+        "indices": {
+          "dow": {
+            "name": "Dow Jones",
+            "price": 48726.37,
+            "changePercent": -1.28
+          },
+          "nasdaq": {
+            "name": "Nasdaq",
+            "price": 23169.15,
+            "changePercent": -1.47
+          },
+          "sp500": {
+            "name": "S&P 500",
+            "price": 6850.64,
+            "changePercent": -1.29
+          }
+        },
+        "stocks": [
+          {
+            "name": "Apple",
+            "sector": "Magnificent 7",
+            "changePercent": -1.32
+          },
+          {
+            "name": "Microsoft",
+            "sector": "Magnificent 7",
+            "changePercent": -1.48
+          },
+          {
+            "name": "Google",
+            "sector": "Magnificent 7",
+            "changePercent": -1.74
+          },
+          {
+            "name": "Amazon",
+            "sector": "Magnificent 7",
+            "changePercent": -2.59
+          },
+          {
+            "name": "Nvidia",
+            "sector": "Magnificent 7",
+            "changePercent": -3.04
+          }
+        ],
+        "gainers": [
+          {
+            "symbol": "IBRX",
+            "name": "ImmunityBio, Inc.",
+            "changePercent": 24.652243
+          },
+          {
+            "symbol": "KEP",
+            "name": "Korea Electric Power Corporatio",
+            "changePercent": 15.306671
+          },
+          {
+            "symbol": "UMC",
+            "name": "United Microelectronics Corpora",
+            "changePercent": 14.731181
+          },
+          {
+            "symbol": "CGAU",
+            "name": "Centerra Gold Inc.",
+            "changePercent": 13.416148
+          },
+          {
+            "symbol": "IAG",
+            "name": "Iamgold Corporation",
+            "changePercent": 13.038415
+          },
+          {
+            "symbol": "HYMC",
+            "name": "Hycroft Mining Holding Corporat",
+            "changePercent": 12.2295685
+          },
+          {
+            "symbol": "ORLA",
+            "name": "Orla Mining Ltd.",
+            "changePercent": 10.186757
+          },
+          {
+            "symbol": "SKM",
+            "name": "SK Telecom Co., Ltd.",
+            "changePercent": 10.300428
+          },
+          {
+            "symbol": "PKX",
+            "name": "POSCO Holdings Inc.",
+            "changePercent": 8.141646
+          },
+          {
+            "symbol": "USAR",
+            "name": "USA Rare Earth, Inc.",
+            "changePercent": 8.471453
+          }
+        ],
+        "losers": [
+          {
+            "symbol": "APLD",
+            "name": "Applied Digital Corporation",
+            "changePercent": -8.077027
+          },
+          {
+            "symbol": "BTDR",
+            "name": "Bitdeer Technologies Group",
+            "changePercent": -8.333331
+          },
+          {
+            "symbol": "MARA",
+            "name": "MARA Holdings, Inc.",
+            "changePercent": -8.319096
+          },
+          {
+            "symbol": "RGC",
+            "name": "Regencell Bioscience Holdings L",
+            "changePercent": -8.242799
+          },
+          {
+            "symbol": "QBTS",
+            "name": "D-Wave Quantum Inc.",
+            "changePercent": -8.025656
+          },
+          {
+            "symbol": "BMNR",
+            "name": "BitMine Immersion Technologies,",
+            "changePercent": -7.8500443
+          },
+          {
+            "symbol": "RUN",
+            "name": "Sunrun Inc.",
+            "changePercent": -7.761926
+          },
+          {
+            "symbol": "MSTR",
+            "name": "Strategy Inc",
+            "changePercent": -7.765819
+          },
+          {
+            "symbol": "FLNC",
+            "name": "Fluence Energy, Inc.",
+            "changePercent": -6.5546517
+          },
+          {
+            "symbol": "IOT",
+            "name": "Samsara Inc.",
+            "changePercent": -6.863819
+          }
+        ],
+        "fetchedAt": "2026-01-20T15:04:26.629Z"
+      }
+    }
+  ]
 }

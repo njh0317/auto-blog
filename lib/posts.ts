@@ -1,5 +1,5 @@
 import { Post, MarketSnapshot } from './types';
-import { readPosts, addPost as storageAddPost, deletePost as storageDeletePost } from './storage';
+import { getPosts, savePosts } from './storage';
 
 // 한글을 영문 slug로 변환 (간단 버전)
 function toSlug(title: string): string {
@@ -30,24 +30,26 @@ function generateUniqueSlug(title: string, existingPosts: Post[]): string {
   return slug;
 }
 
-export function getAllPosts(): Post[] {
-  return readPosts().sort((a, b) => 
+export async function getAllPosts(): Promise<Post[]> {
+  const posts = await getPosts();
+  return posts.sort((a, b) => 
     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 }
 
-export function getPostBySlug(slug: string): Post | undefined {
-  return readPosts().find(p => p.slug === slug);
+export async function getPostBySlug(slug: string): Promise<Post | undefined> {
+  const posts = await getPosts();
+  return posts.find(p => p.slug === slug);
 }
 
-export function createPost(data: {
+export async function createPost(data: {
   title: string;
   content: string;
   excerpt: string;
   keywords: string[];
   marketData?: MarketSnapshot;
-}): Post {
-  const posts = readPosts();
+}): Promise<Post> {
+  const posts = await getPosts();
   const now = new Date().toISOString();
   
   const post: Post = {
@@ -62,10 +64,16 @@ export function createPost(data: {
     marketData: data.marketData,
   };
   
-  storageAddPost(post);
+  posts.unshift(post);
+  await savePosts(posts);
   return post;
 }
 
-export function deletePostById(id: string): boolean {
-  return storageDeletePost(id);
+export async function deletePostById(id: string): Promise<boolean> {
+  const posts = await getPosts();
+  const index = posts.findIndex(p => p.id === id);
+  if (index === -1) return false;
+  posts.splice(index, 1);
+  await savePosts(posts);
+  return true;
 }

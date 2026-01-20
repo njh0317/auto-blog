@@ -14,7 +14,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(decodeURIComponent(slug));
+  const post = await getPostBySlug(decodeURIComponent(slug));
   
   if (!post) {
     return { title: '글을 찾을 수 없습니다' };
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function PostPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = getPostBySlug(decodeURIComponent(slug));
+  const post = await getPostBySlug(decodeURIComponent(slug));
 
   if (!post) {
     notFound();

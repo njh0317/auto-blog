@@ -6,7 +6,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   
   let posts: { slug: string; updatedAt: string }[] = [];
   try {
-    posts = getAllPosts();
+    posts = await getAllPosts();
   } catch {
     posts = [];
   }

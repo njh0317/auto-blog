@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { getBranding, saveBranding } from '@/lib/branding';
+import { getBrandingAsync, saveBranding } from '@/lib/branding';
 
 // 브랜딩 설정 조회
 export async function GET() {
   try {
-    const branding = getBranding();
+    const branding = await getBrandingAsync();
     return NextResponse.json(branding);
   } catch (error) {
     console.error('브랜딩 조회 실패:', error);
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const updated = saveBranding(body);
+    const updated = await saveBranding(body);
     
     return NextResponse.json(updated);
   } catch (error) {
