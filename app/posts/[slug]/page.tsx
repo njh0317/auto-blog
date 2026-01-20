@@ -70,7 +70,7 @@ export default async function PostPage({ params }: PageProps) {
       {hasMarketData && post.marketData && (
         <div className="mb-6 sm:mb-8">
           {/* 3대 지수 카드 */}
-          <h2 className="text-base sm:text-lg md:text-xl font-semibold mb-3 sm:mb-4">📊 3대 지수</h2>
+          <h2 className="text-base sm:text-lg md:text-xl font-semibold mb-3 sm:mb-4 text-gray-900">📊 3대 지수</h2>
           <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6">
             {Object.values(post.marketData.indices).map((index) => (
               <div 
@@ -147,7 +147,7 @@ export default async function PostPage({ params }: PageProps) {
       {/* 하단 실시간 시세 (TradingView) */}
       {hasMarketData && (
         <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t">
-          <h2 className="text-base sm:text-lg md:text-xl font-semibold mb-3 sm:mb-4">📈 실시간 시세</h2>
+          <h2 className="text-base sm:text-lg md:text-xl font-semibold mb-3 sm:mb-4 text-gray-900">📈 실시간 시세</h2>
           <TradingViewWidget type="ticker" />
         </div>
       )}

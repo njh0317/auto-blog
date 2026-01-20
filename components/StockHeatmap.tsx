@@ -33,7 +33,7 @@ export default function StockHeatmap({ stocks, title = '주요 종목 등락률'
 
   return (
     <div className="my-4">
-      {title && <h3 className="text-base sm:text-lg font-semibold mb-3">{title}</h3>}
+      {title && <h3 className="text-base sm:text-lg font-semibold mb-3 text-gray-900">{title}</h3>}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1.5 sm:gap-2">
         {stocks.map((stock, index) => (
           <div
