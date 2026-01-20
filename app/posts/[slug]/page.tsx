@@ -137,7 +137,7 @@ export default async function PostPage({ params }: PageProps) {
       )}
       
       <div 
-        className="prose prose-sm sm:prose-base md:prose-lg max-w-none"
+        className="prose prose-sm sm:prose-base md:prose-lg max-w-none prose-gray prose-p:text-gray-800 prose-strong:text-gray-900"
         dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }}
       />
 
