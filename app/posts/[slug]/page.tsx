@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { getPostBySlug } from '@/lib/posts';
 import StockHeatmap from '@/components/StockHeatmap';
 import TradingViewWidget from '@/components/TradingViewWidget';
+import AdBanner from '@/components/AdBanner';
 
 // 동적 렌더링으로 변경
 export const dynamic = 'force-dynamic';
@@ -61,6 +62,9 @@ export default async function PostPage({ params }: PageProps) {
           </div>
         </div>
       </header>
+
+      {/* 상단 광고 */}
+      <AdBanner slot={process.env.NEXT_PUBLIC_AD_SLOT_TOP || ''} className="mb-6" />
 
       {/* 저장된 시장 데이터로 히트맵 표시 */}
       {hasMarketData && post.marketData && (
@@ -136,6 +140,9 @@ export default async function PostPage({ params }: PageProps) {
         className="prose prose-sm sm:prose-base md:prose-lg max-w-none"
         dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }}
       />
+
+      {/* 본문 하단 광고 */}
+      <AdBanner slot={process.env.NEXT_PUBLIC_AD_SLOT_BOTTOM || ''} className="my-6" />
 
       {/* 하단 실시간 시세 (TradingView) */}
       {hasMarketData && (
