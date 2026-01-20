@@ -131,7 +131,7 @@ export default async function PostPage({ params }: PageProps) {
           )}
           
           <p className="text-[10px] sm:text-xs text-gray-400 mt-2">
-            데이터 수집 시간: {new Date(post.marketData.fetchedAt).toLocaleString('ko-KR')}
+            데이터 수집 시간: {new Date(post.marketData.fetchedAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}
           </p>
         </div>
       )}
