@@ -140,17 +140,17 @@ async function generateWithOpenAI(topic: string, keywords?: string[]): Promise<G
   return JSON.parse(content) as GenerateResponse;
 }
 
-// 메인 함수 - 환경변수로 제공자 선택
+// 메인 함수 - 환경변수로 제공자 선택 (기본값: gemini)
 export async function generateContent(topic: string, keywords?: string[]): Promise<GenerateResponse> {
-  const provider = (process.env.AI_PROVIDER || 'groq') as AIProvider;
+  const provider = (process.env.AI_PROVIDER || 'gemini') as AIProvider;
 
   switch (provider) {
     case 'openai':
       return generateWithOpenAI(topic, keywords);
-    case 'gemini':
-      return generateWithGemini(topic, keywords);
     case 'groq':
-    default:
       return generateWithGroq(topic, keywords);
+    case 'gemini':
+    default:
+      return generateWithGemini(topic, keywords);
   }
 }
