@@ -18,7 +18,7 @@ export default function PostCard({ post }: PostCardProps) {
       </p>
       <div className="flex items-center justify-between text-sm text-gray-500">
         <time dateTime={post.createdAt}>
-          {new Date(post.createdAt).toLocaleDateString('ko-KR')}
+          {new Date(post.createdAt).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}
         </time>
         <div className="flex gap-2">
           {post.keywords.slice(0, 3).map((keyword) => (
