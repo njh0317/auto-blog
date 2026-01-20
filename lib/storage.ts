@@ -2,9 +2,13 @@
 import { Post, PostsData } from './types';
 
 const isVercel = process.env.VERCEL === '1';
+const hasRedisConfig = !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
 
 // Upstash Redis 사용 시
 async function getRedis() {
+  if (!hasRedisConfig) {
+    throw new Error('Redis 환경변수가 설정되지 않았습니다');
+  }
   const { Redis } = await import('@upstash/redis');
   return new Redis({
     url: process.env.KV_REST_API_URL!,

@@ -36,8 +36,9 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error('상세 시황 생성 실패:', error);
+    const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류';
     return NextResponse.json(
-      { error: '상세 시황 생성에 실패했습니다' },
+      { error: '상세 시황 생성에 실패했습니다', details: errorMessage },
       { status: 500 }
     );
   }
