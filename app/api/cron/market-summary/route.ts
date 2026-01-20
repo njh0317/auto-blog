@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDetailedMarketData } from '@/lib/market-data';
+import { getDetailedMarketData, getFearGreedData } from '@/lib/market-data';
 import { generateDetailedMarketReport } from '@/lib/detailed-report';
 import { savePosts, getPosts } from '@/lib/storage';
 import { Post } from '@/lib/types';
@@ -18,7 +18,10 @@ export async function GET(request: Request) {
 
   try {
     // 1. 시장 데이터 수집
-    const marketData = await getDetailedMarketData();
+    const [marketData, fearGreedData] = await Promise.all([
+      getDetailedMarketData(),
+      getFearGreedData()
+    ]);
     
     // 2. 상세 리포트 생성
     const reportData = generateDetailedMarketReport(marketData);
@@ -48,6 +51,11 @@ export async function GET(request: Request) {
         stocks: marketData.sectorStocks['Magnificent 7'] || [],
         gainers: marketData.gainers,
         losers: marketData.losers,
+        fearGreed: {
+          score: fearGreedData.score,
+          rating: fearGreedData.rating,
+          history: fearGreedData.history,
+        },
         fetchedAt: marketData.fetchedAt,
       },
     };

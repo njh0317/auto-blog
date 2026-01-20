@@ -4,6 +4,7 @@ import { getPostBySlug } from '@/lib/posts';
 import StockHeatmap from '@/components/StockHeatmap';
 import TradingViewWidget from '@/components/TradingViewWidget';
 import AdBanner from '@/components/AdBanner';
+import FearGreedGauge from '@/components/FearGreedGauge';
 
 // 동적 렌더링으로 변경
 export const dynamic = 'force-dynamic';
@@ -97,6 +98,17 @@ export default async function PostPage({ params }: PageProps) {
             stocks={post.marketData.stocks} 
             title="📈 Magnificent 7 등락률 (글 작성 시점)"
           />
+          
+          {/* 공포탐욕지수 */}
+          {post.marketData.fearGreed && (
+            <div className="mt-4 sm:mt-6">
+              <FearGreedGauge 
+                score={post.marketData.fearGreed.score}
+                rating={post.marketData.fearGreed.rating}
+                history={post.marketData.fearGreed.history}
+              />
+            </div>
+          )}
           
           {/* 상승/하락 종목 */}
           {(post.marketData.gainers?.length || post.marketData.losers?.length) && (

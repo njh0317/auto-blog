@@ -152,6 +152,10 @@ export function generateDetailedMarketReport(data: DetailedMarketData): Generate
     stocks: allStocks,
     gainers: data.gainers?.slice(0, 10).map(s => ({ symbol: s.symbol, name: s.name, changePercent: s.changePercent })),
     losers: data.losers?.slice(0, 10).map(s => ({ symbol: s.symbol, name: s.name, changePercent: s.changePercent })),
+    fearGreed: {
+      score: data.fearGreedIndex,
+      rating: getFearGreedLabel(data.fearGreedIndex),
+    },
     fetchedAt: data.fetchedAt,
   };
 

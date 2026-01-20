@@ -333,23 +333,36 @@ async function fetchMag7Stocks(): Promise<StockData[]> {
   return results;
 }
 
-// CNN Fear & Greed Index 조회
-async function fetchFearGreedIndex(): Promise<number> {
-  const userAgents = [
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0',
-  ];
-  const randomUA = userAgents[Math.floor(Math.random() * userAgents.length)];
-  
+// Fear & Greed 히스토리 데이터 타입
+export interface FearGreedHistoryItem {
+  x: number; // timestamp
+  y: number; // score
+  rating: string;
+}
+
+export interface FearGreedData {
+  score: number;
+  rating: string;
+  history: FearGreedHistoryItem[];
+}
+
+// CNN Fear & Greed Index 조회 (히스토리 포함)
+async function fetchFearGreedData(): Promise<FearGreedData | null> {
   try {
-    // CNN Fear & Greed API
+    // CNN Fear & Greed API - 전체 브라우저 헤더 추가
     const res = await fetch('https://production.dataviz.cnn.io/index/fearandgreed/graphdata', {
       headers: { 
-        'User-Agent': randomUA,
-        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'en-US,en;q=0.9,ko;q=0.8',
         'Referer': 'https://edition.cnn.com/',
+        'Origin': 'https://edition.cnn.com',
+        'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"macOS"',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'cross-site',
       },
       next: { revalidate: 3600 }
     });
@@ -357,23 +370,44 @@ async function fetchFearGreedIndex(): Promise<number> {
     if (res.ok) {
       const data = await res.json();
       if (data?.fear_and_greed?.score) {
-        return Math.round(data.fear_and_greed.score);
+        // 히스토리 데이터 추출 (최근 30일)
+        const history: FearGreedHistoryItem[] = [];
+        if (data.fear_and_greed_historical?.data) {
+          const histData = data.fear_and_greed_historical.data;
+          histData.slice(-30).forEach((item: { x: number; y: number; rating: string }) => {
+            history.push({
+              x: item.x,
+              y: item.y,
+              rating: item.rating
+            });
+          });
+        }
+        
+        return {
+          score: Math.round(data.fear_and_greed.score),
+          rating: data.fear_and_greed.rating || '',
+          history
+        };
       }
     }
   } catch {
-    // API 실패 시 VIX 기반 추정
+    // API 실패 시 폴백
+  }
+  
+  return null;
+}
+
+// CNN Fear & Greed Index 조회 (점수만)
+async function fetchFearGreedIndex(): Promise<number> {
+  const data = await fetchFearGreedData();
+  if (data) {
+    return data.score;
   }
   
   // 폴백: VIX 기반 추정
   try {
     const vix = await fetchYahooQuote('^VIX');
     if (vix) {
-      // VIX가 낮으면 Greed, 높으면 Fear
-      // VIX 12-15: Extreme Greed (80-100)
-      // VIX 15-20: Greed (60-80)
-      // VIX 20-25: Neutral (40-60)
-      // VIX 25-30: Fear (20-40)
-      // VIX 30+: Extreme Fear (0-20)
       if (vix.price <= 15) return 85;
       if (vix.price <= 20) return 65;
       if (vix.price <= 25) return 50;
@@ -385,6 +419,22 @@ async function fetchFearGreedIndex(): Promise<number> {
   }
   
   return 50; // 기본값: Neutral
+}
+
+// Fear & Greed 전체 데이터 export
+export async function getFearGreedData(): Promise<FearGreedData> {
+  const data = await fetchFearGreedData();
+  if (data) {
+    return data;
+  }
+  
+  // 폴백
+  const score = await fetchFearGreedIndex();
+  return {
+    score,
+    rating: formatUtils.getFearGreedLabel(score),
+    history: []
+  };
 }
 
 // 전체 시장 데이터 조회

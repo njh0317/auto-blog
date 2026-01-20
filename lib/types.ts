@@ -1,3 +1,17 @@
+// 공포탐욕지수 히스토리 아이템
+export interface FearGreedHistoryItem {
+  x: number; // timestamp
+  y: number; // score
+  rating: string;
+}
+
+// 공포탐욕지수 데이터
+export interface FearGreedSnapshot {
+  score: number;
+  rating: string;
+  history?: FearGreedHistoryItem[];
+}
+
 // 시장 데이터 스냅샷 (글 작성 시점)
 export interface MarketSnapshot {
   indices: {
@@ -20,6 +34,7 @@ export interface MarketSnapshot {
     name: string;
     changePercent: number;
   }>;
+  fearGreed?: FearGreedSnapshot;
   fetchedAt: string;
 }
 
