@@ -1,6 +1,428 @@
 {
   "posts": [
     {
+      "id": "1768950800060",
+      "title": "[2026년 1월 21일] 미국증시 마감시황 - 3대지수 약세",
+      "slug": "2026-1-21-미국증시-마감시황-3대지수",
+      "content": "안녕하세요 코딩하다 주식하는 사람입니다.\n오늘 미국증시 마감시황 알려드리겠습니다.\n\n★ 3대지수\n━━━━━━━━━━━━━━━━━━━━\n\nDow -1.09%, Nasdaq -1.31%, S&P500 -1.12%\n\n3대지수는 모두 하락 마감.\n\n★ Magnificent 7\n━━━━━━━━━━━━━━━━━━━━\n\nMagnificent 7 모두 하락\n\n★ 주요 종목\n━━━━━━━━━━━━━━━━━━━━\n\nApple -1.54%, Microsoft -1.07%, Google -1.06%, Amazon -1.82%, Nvidia -2.76%\n\n★ 오늘의 상승 종목 TOP 10\n━━━━━━━━━━━━━━━━━━━━\n\n1. ImmunityBio, Inc. (IBRX) +32.97%\n2. United Microelectronics Corpora (UMC) +17.43%\n3. Korea Electric Power Corporatio (KEP) +15.80%\n4. Iamgold Corporation (IAG) +15.11%\n5. Orla Mining Ltd. (ORLA) +13.78%\n6. Ondas Holdings Inc. (ONDS) +12.43%\n7. Hycroft Mining Holding Corporat (HYMC) +12.76%\n8. Centerra Gold Inc. (CGAU) +11.94%\n9. SK Telecom Co., Ltd. (SKM) +10.34%\n10. USA Rare Earth, Inc. (USAR) +10.50%\n\n★ 오늘의 하락 종목 TOP 10\n━━━━━━━━━━━━━━━━━━━━\n\n1. Regencell Bioscience Holdings L (RGC) -10.03%\n2. VNET Group, Inc. (VNET) -8.95%\n3. Sunrun Inc. (RUN) -8.48%\n4. NetApp, Inc. (NTAP) -7.95%\n5. StubHub Holdings, Inc. (STUB) -7.19%\n6. Fermi Inc. (FRMI) -7.26%\n7. 3M Company (MMM) -7.72%\n8. ATS Corporation (ATS) -7.59%\n9. BitMine Immersion Technologies, (BMNR) -7.48%\n10. Samsara Inc. (IOT) -7.24%\n\n★ 유럽증시\n━━━━━━━━━━━━━━━━━━━━\n\n유럽 STOXX 600은 -0.85% 하락\n\n★ 환율\n━━━━━━━━━━━━━━━━━━━━\n\n오늘 달러/원 환율은 +0.26% 상승한 1,476.28 이고\n미국 달러지수 -0.89% 하락한 98.51\n달러/위안화 환율은 6.9600입니다.\n\n★ 금, 구리, 유가\n━━━━━━━━━━━━━━━━━━━━\n\n금은 +3.22% 상승한 4,743.30달러\nDr. Copper라 불리는 구리는 -0.89% 하락\nWTI는 +1.16% 상승한 60.03달러\n\n★ 채권\n━━━━━━━━━━━━━━━━━━━━\n\n미국채10년물 금리는 +4bp 상승한 4.270%\n\n★ Fear & Greed Index\n━━━━━━━━━━━━━━━━━━━━\n\nCNN Fear & Greed Index는 48 Neutral 수준\n\n★ 지수 마감가\n━━━━━━━━━━━━━━━━━━━━\n\nS&P500는 6,861.99p\nNasdaq은 23,208.23p로 마감\n\n감사합니다.\n\n※ 본 콘텐츠는 투자 참고용이며, 투자 판단의 최종 책임은 투자자 본인에게 있습니다.",
+      "excerpt": "2026년 1월 21일 미국증시 마감시황 - S&P500 -1.12%, 나스닥 -1.31%, 다우 -1.09%",
+      "keywords": [
+        "미국증시",
+        "나스닥",
+        "S&P500",
+        "다우존스",
+        "2026년1월21일",
+        "증시마감",
+        "시황"
+      ],
+      "createdAt": "2026-01-20T23:13:20.060Z",
+      "updatedAt": "2026-01-20T23:13:20.060Z",
+      "marketData": {
+        "indices": {
+          "dow": {
+            "symbol": "DJI",
+            "name": "Dow Jones",
+            "price": 48819.5,
+            "change": -539.83,
+            "changePercent": -1.09
+          },
+          "nasdaq": {
+            "symbol": "IXIC",
+            "name": "Nasdaq",
+            "price": 23208.23,
+            "change": -307.16,
+            "changePercent": -1.31
+          },
+          "sp500": {
+            "symbol": "GSPC",
+            "name": "S&P 500",
+            "price": 6861.99,
+            "change": -78.02,
+            "changePercent": -1.12
+          }
+        },
+        "stocks": [
+          {
+            "symbol": "AAPL",
+            "name": "Apple",
+            "sector": "Magnificent 7",
+            "price": 251.59,
+            "change": -3.93,
+            "changePercent": -1.54
+          },
+          {
+            "symbol": "MSFT",
+            "name": "Microsoft",
+            "sector": "Magnificent 7",
+            "price": 454.93,
+            "change": -4.94,
+            "changePercent": -1.07
+          },
+          {
+            "symbol": "GOOGL",
+            "name": "Google",
+            "sector": "Magnificent 7",
+            "price": 326.5,
+            "change": -3.5,
+            "changePercent": -1.06
+          },
+          {
+            "symbol": "AMZN",
+            "name": "Amazon",
+            "sector": "Magnificent 7",
+            "price": 234.77,
+            "change": -4.35,
+            "changePercent": -1.82
+          },
+          {
+            "symbol": "NVDA",
+            "name": "Nvidia",
+            "sector": "Magnificent 7",
+            "price": 180.97,
+            "change": -5.13,
+            "changePercent": -2.76
+          },
+          {
+            "symbol": "META",
+            "name": "Meta",
+            "sector": "Magnificent 7",
+            "price": 609.79,
+            "change": -10.46,
+            "changePercent": -1.69
+          },
+          {
+            "symbol": "TSLA",
+            "name": "Tesla",
+            "sector": "Magnificent 7",
+            "price": 425.22,
+            "change": -12.3,
+            "changePercent": -2.81
+          }
+        ],
+        "gainers": [
+          {
+            "symbol": "IBRX",
+            "name": "ImmunityBio, Inc.",
+            "sector": "상승",
+            "price": 7.3401,
+            "change": 1.8200998,
+            "changePercent": 32.972824
+          },
+          {
+            "symbol": "UMC",
+            "name": "United Microelectronics Corpora",
+            "sector": "상승",
+            "price": 10.9213,
+            "change": 1.6212997,
+            "changePercent": 17.43333
+          },
+          {
+            "symbol": "KEP",
+            "name": "Korea Electric Power Corporatio",
+            "sector": "상승",
+            "price": 21.7,
+            "change": 2.960001,
+            "changePercent": 15.795095
+          },
+          {
+            "symbol": "IAG",
+            "name": "Iamgold Corporation",
+            "sector": "상승",
+            "price": 19.765,
+            "change": 2.5949993,
+            "changePercent": 15.113566
+          },
+          {
+            "symbol": "ORLA",
+            "name": "Orla Mining Ltd.",
+            "sector": "상승",
+            "price": 16.76,
+            "change": 2.0300007,
+            "changePercent": 13.776728
+          },
+          {
+            "symbol": "ONDS",
+            "name": "Ondas Holdings Inc.",
+            "sector": "상승",
+            "price": 13.645,
+            "change": 1.5080004,
+            "changePercent": 12.42994
+          },
+          {
+            "symbol": "HYMC",
+            "name": "Hycroft Mining Holding Corporat",
+            "sector": "상승",
+            "price": 39.05,
+            "change": 4.419998,
+            "changePercent": 12.7634945
+          },
+          {
+            "symbol": "CGAU",
+            "name": "Centerra Gold Inc.",
+            "sector": "상승",
+            "price": 18.055,
+            "change": 1.9250011,
+            "changePercent": 11.937993
+          },
+          {
+            "symbol": "SKM",
+            "name": "SK Telecom Co., Ltd.",
+            "sector": "상승",
+            "price": 23.16,
+            "change": 2.17,
+            "changePercent": 10.340719
+          },
+          {
+            "symbol": "USAR",
+            "name": "USA Rare Earth, Inc.",
+            "sector": "상승",
+            "price": 19.5471,
+            "change": 1.8570995,
+            "changePercent": 10.498019
+          }
+        ],
+        "losers": [
+          {
+            "symbol": "RGC",
+            "name": "Regencell Bioscience Holdings L",
+            "sector": "하락",
+            "price": 24.68,
+            "change": -2.75,
+            "changePercent": -10.025519
+          },
+          {
+            "symbol": "VNET",
+            "name": "VNET Group, Inc.",
+            "sector": "하락",
+            "price": 9.61,
+            "change": -0.94500065,
+            "changePercent": -8.953109
+          },
+          {
+            "symbol": "RUN",
+            "name": "Sunrun Inc.",
+            "sector": "하락",
+            "price": 16.685,
+            "change": -1.5450001,
+            "changePercent": -8.475041
+          },
+          {
+            "symbol": "NTAP",
+            "name": "NetApp, Inc.",
+            "sector": "하락",
+            "price": 95.55,
+            "change": -8.254997,
+            "changePercent": -7.9524083
+          },
+          {
+            "symbol": "STUB",
+            "name": "StubHub Holdings, Inc.",
+            "sector": "하락",
+            "price": 14.85,
+            "change": -1.1499996,
+            "changePercent": -7.1874976
+          },
+          {
+            "symbol": "FRMI",
+            "name": "Fermi Inc.",
+            "sector": "하락",
+            "price": 9.39,
+            "change": -0.73499966,
+            "changePercent": -7.2592564
+          },
+          {
+            "symbol": "MMM",
+            "name": "3M Company",
+            "sector": "하락",
+            "price": 154.84,
+            "change": -12.960007,
+            "changePercent": -7.7234845
+          },
+          {
+            "symbol": "ATS",
+            "name": "ATS Corporation",
+            "sector": "하락",
+            "price": 28.315,
+            "change": -2.3249989,
+            "changePercent": -7.588116
+          },
+          {
+            "symbol": "BMNR",
+            "name": "BitMine Immersion Technologies,",
+            "sector": "하락",
+            "price": 28.83,
+            "change": -2.33,
+            "changePercent": -7.4775352
+          },
+          {
+            "symbol": "IOT",
+            "name": "Samsara Inc.",
+            "sector": "하락",
+            "price": 32.365,
+            "change": -2.5249977,
+            "changePercent": -7.2370243
+          }
+        ],
+        "fearGreed": {
+          "score": 48,
+          "rating": "neutral",
+          "history": [
+            {
+              "x": 1765324800000,
+              "y": 40.0285714285714,
+              "rating": "fear"
+            },
+            {
+              "x": 1765411200000,
+              "y": 48.4571428571429,
+              "rating": "neutral"
+            },
+            {
+              "x": 1765497600000,
+              "y": 42.1714285714286,
+              "rating": "fear"
+            },
+            {
+              "x": 1765756800000,
+              "y": 52.2571428571429,
+              "rating": "neutral"
+            },
+            {
+              "x": 1765843200000,
+              "y": 45.4857142857143,
+              "rating": "neutral"
+            },
+            {
+              "x": 1765929600000,
+              "y": 46.8571428571429,
+              "rating": "neutral"
+            },
+            {
+              "x": 1766016000000,
+              "y": 43.8,
+              "rating": "fear"
+            },
+            {
+              "x": 1766102400000,
+              "y": 49.6857142857143,
+              "rating": "neutral"
+            },
+            {
+              "x": 1766361600000,
+              "y": 57.2857142857143,
+              "rating": "greed"
+            },
+            {
+              "x": 1766448000000,
+              "y": 57.7142857142857,
+              "rating": "greed"
+            },
+            {
+              "x": 1766534400000,
+              "y": 54.3142857142857,
+              "rating": "neutral"
+            },
+            {
+              "x": 1766620800000,
+              "y": 57.7428571428571,
+              "rating": "greed"
+            },
+            {
+              "x": 1766707200000,
+              "y": 52.5428571428571,
+              "rating": "neutral"
+            },
+            {
+              "x": 1766966400000,
+              "y": 49.0285714285714,
+              "rating": "neutral"
+            },
+            {
+              "x": 1767052800000,
+              "y": 48.4285714285714,
+              "rating": "neutral"
+            },
+            {
+              "x": 1767139200000,
+              "y": 44,
+              "rating": "fear"
+            },
+            {
+              "x": 1767225600000,
+              "y": 44.8285714285714,
+              "rating": "fear"
+            },
+            {
+              "x": 1767312000000,
+              "y": 44.7142857142857,
+              "rating": "fear"
+            },
+            {
+              "x": 1767571200000,
+              "y": 47.9428571428571,
+              "rating": "neutral"
+            },
+            {
+              "x": 1767657600000,
+              "y": 51.9428571428571,
+              "rating": "neutral"
+            },
+            {
+              "x": 1767744000000,
+              "y": 43.6857142857143,
+              "rating": "fear"
+            },
+            {
+              "x": 1767830400000,
+              "y": 47.2285714285714,
+              "rating": "neutral"
+            },
+            {
+              "x": 1767916800000,
+              "y": 53.5428571428571,
+              "rating": "neutral"
+            },
+            {
+              "x": 1768176000000,
+              "y": 58.5714285714286,
+              "rating": "greed"
+            },
+            {
+              "x": 1768262400000,
+              "y": 59.5142857142857,
+              "rating": "greed"
+            },
+            {
+              "x": 1768348800000,
+              "y": 60.9714285714286,
+              "rating": "greed"
+            },
+            {
+              "x": 1768435200000,
+              "y": 62.1714285714286,
+              "rating": "greed"
+            },
+            {
+              "x": 1768521600000,
+              "y": 55.3428571428571,
+              "rating": "greed"
+            },
+            {
+              "x": 1768867200000,
+              "y": 48.4285714285714,
+              "rating": "neutral"
+            },
+            {
+              "x": 1768949612000,
+              "y": 48.4285714285714,
+              "rating": "neutral"
+            }
+          ]
+        },
+        "fetchedAt": "2026-01-20T23:13:20.043Z"
+      }
+    },
+    {
       "id": "1768925446390",
       "title": "2026년 1월 21일 미국 증시 마감: 고점 부담 속 전방위적 하락, '코주식'의 시장 분석",
       "slug": "2026-1-21-미국증시-마감시황",

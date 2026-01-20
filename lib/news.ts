@@ -53,6 +53,12 @@ export async function getUSMarketNews(): Promise<NewsItem[]> {
   return fetchGoogleNews('나스닥 S&P500 미국증시');
 }
 
+// 글로벌 경제 뉴스 (장 시작 전 브리핑용)
+export async function getGlobalEconomyNews(): Promise<NewsItem[]> {
+  // 일반적인 경제/증시 뉴스 검색
+  return fetchGoogleNews('경제 증시 투자');
+}
+
 // 뉴스 요약 텍스트 생성
 export function formatNewsForAI(news: NewsItem[]): string {
   if (news.length === 0) return '최신 뉴스를 찾을 수 없습니다.';

@@ -69,7 +69,7 @@ async function generateWithGroq(topic: string, keywords?: string[]): Promise<Gen
 }
 
 // Gemini API 호출
-async function generateWithGemini(topic: string, keywords?: string[]): Promise<GenerateResponse> {
+export async function generateWithGemini(topic: string, keywords?: string[]): Promise<GenerateResponse> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY가 설정되지 않았습니다');
 
