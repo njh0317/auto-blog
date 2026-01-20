@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     const marketData = await getDetailedMarketData();
     
     // 2. 상세 리포트 생성
-    const report = generateDetailedMarketReport(marketData);
+    const reportData = generateDetailedMarketReport(marketData);
     
     // 3. 날짜 포맷
     const today = new Date().toLocaleDateString('ko-KR', { 
@@ -36,11 +36,11 @@ export async function GET(request: Request) {
     
     const newPost: Post = {
       id: Date.now().toString(),
-      title: `${today} 미국증시 마감시황 - 3대지수 ${marketData.indices.sp500.changePercent >= 0 ? '상승' : '하락'}`,
+      title: reportData.title,
       slug,
-      content: report,
-      excerpt: `다우 ${marketData.indices.dow.changePercent >= 0 ? '+' : ''}${marketData.indices.dow.changePercent.toFixed(2)}%, 나스닥 ${marketData.indices.nasdaq.changePercent >= 0 ? '+' : ''}${marketData.indices.nasdaq.changePercent.toFixed(2)}%, S&P500 ${marketData.indices.sp500.changePercent >= 0 ? '+' : ''}${marketData.indices.sp500.changePercent.toFixed(2)}%`,
-      keywords: ['미국증시', '나스닥', 'S&P500', '다우존스', '시황'],
+      content: reportData.content,
+      excerpt: reportData.excerpt,
+      keywords: reportData.keywords,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       marketData: {
