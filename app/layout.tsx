@@ -9,15 +9,15 @@ const geistSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "투자하는 개발자 블로그",
-  description: "투자와 주식에 대한 유용한 정보를 제공하는 블로그입니다.",
-  keywords: ["투자", "주식", "재테크", "금융", "경제"],
+  title: "코딩하다 주식하는 사람",
+  description: "매일 미국증시 마감시황을 정리해드립니다. 3대 지수, 빅테크, 환율, 원자재 등 한눈에 확인하세요.",
+  keywords: ["미국증시", "주식", "시황", "나스닥", "S&P500", "투자"],
   verification: {
     google: "g0k23fRklD5CcgzkuQ1QqA9tPC0HU__l11-OEDl2oKU",
   },
   openGraph: {
-    title: "투자하는 개발자 블로그",
-    description: "투자와 주식에 대한 유용한 정보를 제공하는 블로그입니다.",
+    title: "코딩하다 주식하는 사람",
+    description: "매일 미국증시 마감시황을 정리해드립니다.",
     type: "website",
     locale: "ko_KR",
   },
@@ -44,7 +44,7 @@ export default function RootLayout({
         <header className="bg-white shadow-sm border-b">
           <nav className="max-w-4xl mx-auto px-4 py-4">
             <a href="/" className="text-xl font-bold text-gray-900">
-              투자하는 개발자
+              코딩하다 주식하는 사람
             </a>
           </nav>
         </header>
@@ -53,7 +53,7 @@ export default function RootLayout({
         </main>
         <footer className="bg-white border-t mt-12">
           <div className="max-w-4xl mx-auto px-4 py-6 text-center text-gray-500 text-sm">
-            © 2026 투자하는 개발자 블로그
+            © 2026 코딩하다 주식하는 사람
           </div>
         </footer>
       </body>
