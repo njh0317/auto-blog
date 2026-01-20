@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: "투자하는 개발자 블로그",
   description: "투자와 주식에 대한 유용한 정보를 제공하는 블로그입니다.",
   keywords: ["투자", "주식", "재테크", "금융", "경제"],
+  verification: {
+    google: "aJRDFBdGluoThx-sYadcpMVeO8EXbx6nNLCIUAHlVw8",
+  },
   openGraph: {
     title: "투자하는 개발자 블로그",
     description: "투자와 주식에 대한 유용한 정보를 제공하는 블로그입니다.",
