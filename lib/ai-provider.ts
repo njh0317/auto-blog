@@ -1,26 +1,72 @@
 import { GenerateResponse } from './types';
 
 // AI 제공자 타입
-type AIProvider = 'gemini' | 'openai';
+type AIProvider = 'gemini' | 'openai' | 'groq';
 
-const SYSTEM_PROMPT = `당신은 투자/주식 전문 블로그 작가입니다. 
-다음 규칙을 따라 글을 작성하세요:
+const SYSTEM_PROMPT = `당신은 증권사 리서치센터 출신의 개인 투자 블로거 '코딩하다 주식하는 사람'입니다.
 
-1. 자연스럽고 읽기 쉬운 한국어로 작성
-2. 전문적이지만 초보자도 이해할 수 있게 설명
-3. 구체적인 예시와 데이터를 포함
-4. 독자에게 실질적인 도움이 되는 정보 제공
-5. 마크다운 형식으로 작성 (제목, 소제목, 목록 활용)
-6. 최소 1000자 이상 작성
-7. AI가 작성한 것처럼 보이지 않도록 자연스럽게 작성
+작성 스타일:
+1. 전문적이면서도 읽기 쉬운 존댓말 사용 ("~입니다", "~했습니다")
+2. 핵심 데이터와 수치를 명확하게 제시
+3. 시장 흐름에 대한 본인만의 분석과 인사이트 포함
+4. 이모지는 소제목에만 사용 (📊, 📈, 💡 등)
+5. 투자 초보자도 이해할 수 있도록 전문용어는 간단히 설명
+
+가독성 규칙 (매우 중요):
+- 한 문단은 2-3문장으로 짧게 작성
+- 문단 사이에 반드시 빈 줄(\\n\\n) 삽입
+- 소제목을 활용해 내용 구분 (예: "📊 오늘의 지수 동향")
+- 숫자 나열 시 줄바꿈으로 구분
+- 마크다운 헤더(#, ##) 사용 금지
+- 최소 800자 이상 작성
+- 마지막에 간단한 투자 유의사항 포함
 
 응답은 반드시 다음 JSON 형식으로 반환하세요:
 {
   "title": "글 제목",
-  "content": "마크다운 본문 (1000자 이상)",
-  "excerpt": "2-3문장 요약 (메타 설명용)",
+  "content": "본문 내용",
+  "excerpt": "2-3문장 요약",
   "keywords": ["키워드1", "키워드2", "키워드3"]
 }`;
+
+// Groq API 호출 (무료)
+async function generateWithGroq(topic: string, keywords?: string[]): Promise<GenerateResponse> {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) throw new Error('GROQ_API_KEY가 설정되지 않았습니다');
+
+  const userPrompt = keywords?.length 
+    ? `주제: ${topic}\n관련 키워드: ${keywords.join(', ')}`
+    : `주제: ${topic}`;
+
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: userPrompt },
+      ],
+      temperature: 0.8,
+      response_format: { type: 'json_object' },
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    console.error('Groq API Error:', response.status, errorData);
+    throw new Error(`Groq API 오류: ${response.status} - ${JSON.stringify(errorData)}`);
+  }
+
+  const data = await response.json();
+  const content = data.choices?.[0]?.message?.content;
+  if (!content) throw new Error('Groq 응답이 비어있습니다');
+
+  return JSON.parse(content) as GenerateResponse;
+}
 
 // Gemini API 호출
 async function generateWithGemini(topic: string, keywords?: string[]): Promise<GenerateResponse> {
@@ -32,7 +78,7 @@ async function generateWithGemini(topic: string, keywords?: string[]): Promise<G
     : `주제: ${topic}`;
 
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -48,17 +94,26 @@ async function generateWithGemini(topic: string, keywords?: string[]): Promise<G
   );
 
   if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    console.error('Gemini API Error:', response.status, errorData);
     if (response.status === 429) {
-      throw new Error('요청 제한에 걸렸습니다. 1분 후 다시 시도해주세요.');
+      throw new Error(`요청 제한: ${JSON.stringify(errorData)}`);
     }
-    throw new Error(`Gemini API 오류: ${response.status}`);
+    throw new Error(`Gemini API 오류: ${response.status} - ${JSON.stringify(errorData)}`);
   }
 
   const data = await response.json();
   const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
   if (!text) throw new Error('Gemini 응답이 비어있습니다');
 
-  return JSON.parse(text) as GenerateResponse;
+  // ```json ... ``` 형식에서 JSON 추출
+  let jsonText = text;
+  const jsonMatch = text.match(/```json\s*([\s\S]*?)\s*```/);
+  if (jsonMatch) {
+    jsonText = jsonMatch[1];
+  }
+
+  return JSON.parse(jsonText) as GenerateResponse;
 }
 
 // OpenAI API 호출
@@ -88,13 +143,15 @@ async function generateWithOpenAI(topic: string, keywords?: string[]): Promise<G
 
 // 메인 함수 - 환경변수로 제공자 선택
 export async function generateContent(topic: string, keywords?: string[]): Promise<GenerateResponse> {
-  const provider = (process.env.AI_PROVIDER || 'gemini') as AIProvider;
+  const provider = (process.env.AI_PROVIDER || 'groq') as AIProvider;
 
   switch (provider) {
     case 'openai':
       return generateWithOpenAI(topic, keywords);
     case 'gemini':
-    default:
       return generateWithGemini(topic, keywords);
+    case 'groq':
+    default:
+      return generateWithGroq(topic, keywords);
   }
 }
