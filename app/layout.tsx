@@ -9,11 +9,11 @@ const geistSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "투자 인사이트 블로그",
+  title: "투자하는 개발자 블로그",
   description: "투자와 주식에 대한 유용한 정보를 제공하는 블로그입니다.",
   keywords: ["투자", "주식", "재테크", "금융", "경제"],
   openGraph: {
-    title: "투자 인사이트 블로그",
+    title: "투자하는 개발자 블로그",
     description: "투자와 주식에 대한 유용한 정보를 제공하는 블로그입니다.",
     type: "website",
     locale: "ko_KR",
@@ -41,7 +41,7 @@ export default function RootLayout({
         <header className="bg-white shadow-sm border-b">
           <nav className="max-w-4xl mx-auto px-4 py-4">
             <a href="/" className="text-xl font-bold text-gray-900">
-              투자 인사이트
+              투자하는 개발자
             </a>
           </nav>
         </header>
@@ -50,7 +50,7 @@ export default function RootLayout({
         </main>
         <footer className="bg-white border-t mt-12">
           <div className="max-w-4xl mx-auto px-4 py-6 text-center text-gray-500 text-sm">
-            © 2024 투자 인사이트 블로그
+            © 2026 투자하는 개발자 블로그
           </div>
         </footer>
       </body>

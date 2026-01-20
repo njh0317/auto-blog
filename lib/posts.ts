@@ -1,4 +1,4 @@
-import { Post } from './types';
+import { Post, MarketSnapshot } from './types';
 import { readPosts, addPost as storageAddPost, deletePost as storageDeletePost } from './storage';
 
 // 한글을 영문 slug로 변환 (간단 버전)
@@ -45,6 +45,7 @@ export function createPost(data: {
   content: string;
   excerpt: string;
   keywords: string[];
+  marketData?: MarketSnapshot;
 }): Post {
   const posts = readPosts();
   const now = new Date().toISOString();
@@ -58,6 +59,7 @@ export function createPost(data: {
     keywords: data.keywords,
     createdAt: now,
     updatedAt: now,
+    marketData: data.marketData,
   };
   
   storageAddPost(post);

@@ -1,3 +1,748 @@
 {
-  "posts": []
+  "posts": [
+    {
+      "id": "mkmotdlvzcetowp",
+      "slug": "2026년-1월-20일-미국증시-마감시황-3대지수-보합",
+      "title": "[2026년 1월 20일] 미국증시 마감시황 - 3대지수 보합",
+      "content": "안녕하세요 투자하는 개발자입니다.\n오늘 미국증시 마감시황 알려드리겠습니다.\n\n★ 3대지수(출처: Finviz)\n━━━━━━━━━━━━━━━━━━━━\n\nDow -0.17%, Nasdaq -0.06%, S&P500 -0.06%\n\n3대지수는 모두 하락 마감.\n\n★ 시총 5대장(출처: CompaniesMarketCap)\n━━━━━━━━━━━━━━━━━━━━\n\n시총 5대장 중 Microsoft, Amazon만 상승\n\n★ 주요 종목(출처: Webull)\n━━━━━━━━━━━━━━━━━━━━\n\nMicrosoft +0.70%, Apple -1.05%, Nvidia -0.54%, Google -0.84%, Amazon +0.39%\n\n자율주행 Tesla -0.23%\nAI메타버스 Meta Platform -0.09%\nAI소프트웨어 Palantir -3.44%\n반도체 TSMC +0.22%\n반도체 Micron +7.76%\n반도체 장비 ASML +2.06%\n에너지 Exxon Mobil +0.59%\n통신 AT&T -1.01%\n금융 JP Morgan +1.04%\n헬스케어 Eli Lilly +0.53%\n헬스케어 Novo Nordisk +9.12%\n항공 Boeing -0.02%\n방산 Lockheed Martin +0.79%\n엔터 Netflix -0.05%\n산업 Caterpillar -0.04%\n친환경 Nextera Energy +1.75%\n리츠 Realty Income +1.15%\n결제 Visa +0.17%\n필수소비 Walmart +0.42%\n워런버핏 BRK.B +0.14%\n\n★ 유럽증시(출처: CNBC)\n━━━━━━━━━━━━━━━━━━━━\n\n유럽 STOXX 600은 -1.31% 하락\n\n★ 환율(출처: Investing.com)\n━━━━━━━━━━━━━━━━━━━━\n\n오늘 달러/원 환율은 +0.40% 상승한 1,478.37 이고\n미국 달러지수 -0.89% 하락한 98.51\n달러/위안화 환율은 6.9600입니다.\n\n★ 금, 구리, 유가(출처: Investing.com)\n━━━━━━━━━━━━━━━━━━━━\n\n금은 +3.30% 상승한 4,746.90달러\nDr. Copper라 불리는 구리는 -0.55% 하락\nWTI는 +0.64% 상승한 59.72달러\n\n★ 채권(출처: CNBC)\n━━━━━━━━━━━━━━━━━━━━\n\n미국채10년물 금리는 +6bp 상승한 4.290%\n(채권금리의 하락은 채권가격의 상승을 의미하고 반대로 채권금리 상승은 채권가격 하락을 의미합니다.)\n\n★ Fear & Greed Index(출처: CNN)\n━━━━━━━━━━━━━━━━━━━━\n\nCNN Fear & Greed Index는 50 Neutral 수준\n\n★ 지수 마감가(출처: Webull)\n━━━━━━━━━━━━━━━━━━━━\n\nS&P500는 6,940.01p\nNasdaq은 23,515.39p로 마감\n\n참고로 환율, 원자재, 금리 지표들은\n제가 글을 쓰는 시간인 한국시간 6시 근처때 캡쳐한 내용으로 최종 종가와는 약간 다를 수 있습니다.\n\n감사합니다.\n\n※ 본 콘텐츠는 투자 참고용이며, 투자 판단의 최종 책임은 투자자 본인에게 있습니다.",
+      "excerpt": "2026년 1월 20일 미국증시 마감시황 - S&P500 -0.06%, 나스닥 -0.06%, 다우 -0.17%",
+      "keywords": [
+        "미국증시",
+        "나스닥",
+        "S&P500",
+        "다우존스",
+        "2026년1월20일",
+        "증시마감",
+        "시황"
+      ],
+      "createdAt": "2026-01-20T14:26:34.147Z",
+      "updatedAt": "2026-01-20T14:26:34.147Z"
+    },
+    {
+      "id": "mkmowmmlkspiu0x",
+      "slug": "2026년-1월-20일-미국증시-마감시황-3대지수-보합-1",
+      "title": "[2026년 1월 20일] 미국증시 마감시황 - 3대지수 보합",
+      "content": "안녕하세요 투자하는 개발자입니다.\n오늘 미국증시 마감시황 알려드리겠습니다.\n\n★ 3대지수(출처: Finviz)\n━━━━━━━━━━━━━━━━━━━━\n\nDow -0.17%, Nasdaq -0.06%, S&P500 -0.06%\n\n3대지수는 모두 하락 마감.\n\n★ 시총 5대장(출처: CompaniesMarketCap)\n━━━━━━━━━━━━━━━━━━━━\n\n시총 5대장 중 Microsoft, Amazon만 상승\n\n★ 주요 종목(출처: Webull)\n━━━━━━━━━━━━━━━━━━━━\n\nMicrosoft +0.70%, Apple -1.05%, Nvidia -0.54%, Google -0.84%, Amazon +0.39%\n\n자율주행 Tesla -0.23%\nAI메타버스 Meta Platform -0.09%\nAI소프트웨어 Palantir -3.44%\n반도체 TSMC +0.22%\n반도체 Micron +7.76%\n반도체 장비 ASML +2.06%\n에너지 Exxon Mobil +0.59%\n통신 AT&T -1.01%\n금융 JP Morgan +1.04%\n헬스케어 Eli Lilly +0.53%\n헬스케어 Novo Nordisk +9.12%\n항공 Boeing -0.02%\n방산 Lockheed Martin +0.79%\n엔터 Netflix -0.05%\n산업 Caterpillar -0.04%\n친환경 Nextera Energy +1.75%\n리츠 Realty Income +1.15%\n결제 Visa +0.17%\n필수소비 Walmart +0.42%\n워런버핏 BRK.B +0.14%\n\n★ 유럽증시(출처: CNBC)\n━━━━━━━━━━━━━━━━━━━━\n\n유럽 STOXX 600은 -1.31% 하락\n\n★ 환율(출처: Investing.com)\n━━━━━━━━━━━━━━━━━━━━\n\n오늘 달러/원 환율은 +0.40% 상승한 1,478.37 이고\n미국 달러지수 -0.89% 하락한 98.51\n달러/위안화 환율은 6.9600입니다.\n\n★ 금, 구리, 유가(출처: Investing.com)\n━━━━━━━━━━━━━━━━━━━━\n\n금은 +3.30% 상승한 4,746.90달러\nDr. Copper라 불리는 구리는 -0.55% 하락\nWTI는 +0.64% 상승한 59.72달러\n\n★ 채권(출처: CNBC)\n━━━━━━━━━━━━━━━━━━━━\n\n미국채10년물 금리는 +6bp 상승한 4.290%\n(채권금리의 하락은 채권가격의 상승을 의미하고 반대로 채권금리 상승은 채권가격 하락을 의미합니다.)\n\n★ Fear & Greed Index(출처: CNN)\n━━━━━━━━━━━━━━━━━━━━\n\nCNN Fear & Greed Index는 50 Neutral 수준\n\n★ 지수 마감가(출처: Webull)\n━━━━━━━━━━━━━━━━━━━━\n\nS&P500는 6,940.01p\nNasdaq은 23,515.39p로 마감\n\n참고로 환율, 원자재, 금리 지표들은\n제가 글을 쓰는 시간인 한국시간 6시 근처때 캡쳐한 내용으로 최종 종가와는 약간 다를 수 있습니다.\n\n감사합니다.\n\n※ 본 콘텐츠는 투자 참고용이며, 투자 판단의 최종 책임은 투자자 본인에게 있습니다.",
+      "excerpt": "2026년 1월 20일 미국증시 마감시황 - S&P500 -0.06%, 나스닥 -0.06%, 다우 -0.17%",
+      "keywords": [
+        "미국증시",
+        "나스닥",
+        "S&P500",
+        "다우존스",
+        "2026년1월20일",
+        "증시마감",
+        "시황"
+      ],
+      "createdAt": "2026-01-20T14:29:05.805Z",
+      "updatedAt": "2026-01-20T14:29:05.805Z"
+    },
+    {
+      "id": "mkmp3g5jgx1adqm",
+      "slug": "2026년-1월-20일-미국증시-마감시황-3대지수-약세",
+      "title": "[2026년 1월 20일] 미국증시 마감시황 - 3대지수 약세",
+      "content": "안녕하세요 투자하는 개발자입니다.\n오늘 미국증시 마감시황 알려드리겠습니다.\n\n★ 3대지수\n━━━━━━━━━━━━━━━━━━━━\n\nDow -1.44%, Nasdaq -1.51%, S&P500 -1.34%\n\n3대지수는 모두 하락 마감.\n\n★ 시총 5대장\n━━━━━━━━━━━━━━━━━━━━\n\n시총 5대장 모두 하락\n\n★ 주요 종목\n━━━━━━━━━━━━━━━━━━━━\n\nMicrosoft -1.97%, Apple -0.58%, Nvidia -2.24%, Google -1.71%, Amazon -2.37%\n\n자율주행 Tesla -2.52%\nAI메타버스 Meta Platform -2.31%\nAI소프트웨어 Palantir -0.99%\n반도체 TSMC -0.16%\n반도체 Micron +2.38%\n반도체 장비 ASML -2.25%\n에너지 Exxon Mobil +0.67%\n통신 AT&T -0.51%\n금융 JP Morgan -1.72%\n헬스케어 Eli Lilly -1.26%\n헬스케어 Novo Nordisk -3.37%\n항공 Boeing -1.01%\n방산 Lockheed Martin +0.44%\n엔터 Netflix +1.64%\n산업 Caterpillar -0.78%\n친환경 Nextera Energy -0.90%\n리츠 Realty Income +0.19%\n결제 Visa -1.75%\n필수소비 Walmart +1.37%\n워런버핏 BRK.B -0.92%\n\n★ 유럽증시\n━━━━━━━━━━━━━━━━━━━━\n\n유럽 STOXX 600은 -1.29% 하락\n\n★ 환율\n━━━━━━━━━━━━━━━━━━━━\n\n오늘 달러/원 환율은 +0.43% 상승한 1,478.73 이고\n미국 달러지수 -0.90% 하락한 98.50\n달러/위안화 환율은 6.9600입니다.\n\n★ 금, 구리, 유가\n━━━━━━━━━━━━━━━━━━━━\n\n금은 +3.31% 상승한 4,747.40달러\nDr. Copper라 불리는 구리는 -0.45% 하락\nWTI는 +1.13% 상승한 60.01달러\n\n★ 채권\n━━━━━━━━━━━━━━━━━━━━\n\n미국채10년물 금리는 +5bp 상승한 4.280%\n\n★ Fear & Greed Index\n━━━━━━━━━━━━━━━━━━━━\n\nCNN Fear & Greed Index는 50 Neutral 수준\n\n★ 지수 마감가\n━━━━━━━━━━━━━━━━━━━━\n\nS&P500는 6,846.87p\nNasdaq은 23,159.36p로 마감\n\n감사합니다.\n\n※ 본 콘텐츠는 투자 참고용이며, 투자 판단의 최종 책임은 투자자 본인에게 있습니다.",
+      "excerpt": "2026년 1월 20일 미국증시 마감시황 - S&P500 -1.34%, 나스닥 -1.51%, 다우 -1.44%",
+      "keywords": [
+        "미국증시",
+        "나스닥",
+        "S&P500",
+        "다우존스",
+        "2026년1월20일",
+        "증시마감",
+        "시황"
+      ],
+      "createdAt": "2026-01-20T14:34:24.007Z",
+      "updatedAt": "2026-01-20T14:34:24.007Z"
+    },
+    {
+      "id": "mkmp8f4mhqj9xbh",
+      "slug": "2026년-1월-20일-미국증시-마감시황-3대지수-약세-1",
+      "title": "[2026년 1월 20일] 미국증시 마감시황 - 3대지수 약세",
+      "content": "안녕하세요 투자하는 개발자입니다.\n오늘 미국증시 마감시황 알려드리겠습니다.\n\n★ 3대지수\n━━━━━━━━━━━━━━━━━━━━\n\nDow -1.44%, Nasdaq -1.51%, S&P500 -1.34%\n\n3대지수는 모두 하락 마감.\n\n★ 시총 5대장\n━━━━━━━━━━━━━━━━━━━━\n\n시총 5대장 모두 하락\n\n★ 주요 종목\n━━━━━━━━━━━━━━━━━━━━\n\nMicrosoft -1.97%, Apple -0.58%, Nvidia -2.24%, Google -1.71%, Amazon -2.37%\n\n자율주행 Tesla -2.52%\nAI메타버스 Meta Platform -2.31%\nAI소프트웨어 Palantir -0.99%\n반도체 TSMC -0.16%\n반도체 Micron +2.38%\n반도체 장비 ASML -2.25%\n에너지 Exxon Mobil +0.67%\n통신 AT&T -0.51%\n금융 JP Morgan -1.72%\n헬스케어 Eli Lilly -1.26%\n헬스케어 Novo Nordisk -3.37%\n항공 Boeing -1.01%\n방산 Lockheed Martin +0.44%\n엔터 Netflix +1.64%\n산업 Caterpillar -0.78%\n친환경 Nextera Energy -0.90%\n리츠 Realty Income +0.19%\n결제 Visa -1.75%\n필수소비 Walmart +1.37%\n워런버핏 BRK.B -0.92%\n\n★ 유럽증시\n━━━━━━━━━━━━━━━━━━━━\n\n유럽 STOXX 600은 -1.29% 하락\n\n★ 환율\n━━━━━━━━━━━━━━━━━━━━\n\n오늘 달러/원 환율은 +0.43% 상승한 1,478.73 이고\n미국 달러지수 -0.90% 하락한 98.50\n달러/위안화 환율은 6.9600입니다.\n\n★ 금, 구리, 유가\n━━━━━━━━━━━━━━━━━━━━\n\n금은 +3.31% 상승한 4,747.40달러\nDr. Copper라 불리는 구리는 -0.45% 하락\nWTI는 +1.13% 상승한 60.01달러\n\n★ 채권\n━━━━━━━━━━━━━━━━━━━━\n\n미국채10년물 금리는 +5bp 상승한 4.280%\n\n★ Fear & Greed Index\n━━━━━━━━━━━━━━━━━━━━\n\nCNN Fear & Greed Index는 50 Neutral 수준\n\n★ 지수 마감가\n━━━━━━━━━━━━━━━━━━━━\n\nS&P500는 6,846.87p\nNasdaq은 23,159.36p로 마감\n\n감사합니다.\n\n※ 본 콘텐츠는 투자 참고용이며, 투자 판단의 최종 책임은 투자자 본인에게 있습니다.",
+      "excerpt": "2026년 1월 20일 미국증시 마감시황 - S&P500 -1.34%, 나스닥 -1.51%, 다우 -1.44%",
+      "keywords": [
+        "미국증시",
+        "나스닥",
+        "S&P500",
+        "다우존스",
+        "2026년1월20일",
+        "증시마감",
+        "시황"
+      ],
+      "createdAt": "2026-01-20T14:38:15.958Z",
+      "updatedAt": "2026-01-20T14:38:15.958Z"
+    },
+    {
+      "id": "mkmpdmsdxpec39u",
+      "slug": "2026년-1월-20일-미국증시-마감시황-3대지수-약세-2",
+      "title": "[2026년 1월 20일] 미국증시 마감시황 - 3대지수 약세",
+      "content": "안녕하세요 투자하는 개발자입니다.\n오늘 미국증시 마감시황 알려드리겠습니다.\n\n★ 3대지수\n━━━━━━━━━━━━━━━━━━━━\n\nDow -1.44%, Nasdaq -1.51%, S&P500 -1.34%\n\n3대지수는 모두 하락 마감.\n\n★ 시총 5대장\n━━━━━━━━━━━━━━━━━━━━\n\n시총 5대장 모두 하락\n\n★ 주요 종목\n━━━━━━━━━━━━━━━━━━━━\n\nMicrosoft -1.97%, Apple -0.58%, Nvidia -2.24%, Google -1.71%, Amazon -2.37%\n\n자율주행 Tesla -2.52%\nAI메타버스 Meta Platform -2.31%\nAI소프트웨어 Palantir -0.99%\n반도체 TSMC -0.16%\n반도체 Micron +2.38%\n반도체 장비 ASML -2.25%\n에너지 Exxon Mobil +0.67%\n통신 AT&T -0.51%\n금융 JP Morgan -1.72%\n헬스케어 Eli Lilly -1.26%\n헬스케어 Novo Nordisk -3.37%\n항공 Boeing -1.01%\n방산 Lockheed Martin +0.44%\n엔터 Netflix +1.64%\n산업 Caterpillar -0.78%\n친환경 Nextera Energy -0.90%\n리츠 Realty Income +0.19%\n결제 Visa -1.75%\n필수소비 Walmart +1.37%\n워런버핏 BRK.B -0.92%\n\n★ 유럽증시\n━━━━━━━━━━━━━━━━━━━━\n\n유럽 STOXX 600은 -1.29% 하락\n\n★ 환율\n━━━━━━━━━━━━━━━━━━━━\n\n오늘 달러/원 환율은 +0.43% 상승한 1,478.73 이고\n미국 달러지수 -0.90% 하락한 98.50\n달러/위안화 환율은 6.9600입니다.\n\n★ 금, 구리, 유가\n━━━━━━━━━━━━━━━━━━━━\n\n금은 +3.31% 상승한 4,747.40달러\nDr. Copper라 불리는 구리는 -0.45% 하락\nWTI는 +1.13% 상승한 60.01달러\n\n★ 채권\n━━━━━━━━━━━━━━━━━━━━\n\n미국채10년물 금리는 +5bp 상승한 4.280%\n\n★ Fear & Greed Index\n━━━━━━━━━━━━━━━━━━━━\n\nCNN Fear & Greed Index는 50 Neutral 수준\n\n★ 지수 마감가\n━━━━━━━━━━━━━━━━━━━━\n\nS&P500는 6,846.87p\nNasdaq은 23,159.36p로 마감\n\n감사합니다.\n\n※ 본 콘텐츠는 투자 참고용이며, 투자 판단의 최종 책임은 투자자 본인에게 있습니다.",
+      "excerpt": "2026년 1월 20일 미국증시 마감시황 - S&P500 -1.34%, 나스닥 -1.51%, 다우 -1.44%",
+      "keywords": [
+        "미국증시",
+        "나스닥",
+        "S&P500",
+        "다우존스",
+        "2026년1월20일",
+        "증시마감",
+        "시황"
+      ],
+      "createdAt": "2026-01-20T14:42:19.165Z",
+      "updatedAt": "2026-01-20T14:42:19.165Z",
+      "marketData": {
+        "indices": {
+          "dow": {
+            "name": "Dow Jones",
+            "price": 48646.58,
+            "changePercent": -1.44
+          },
+          "nasdaq": {
+            "name": "Nasdaq",
+            "price": 23159.36,
+            "changePercent": -1.51
+          },
+          "sp500": {
+            "name": "S&P 500",
+            "price": 6846.87,
+            "changePercent": -1.34
+          }
+        },
+        "stocks": [
+          {
+            "name": "Microsoft",
+            "sector": "시총 5대장",
+            "changePercent": -1.97
+          },
+          {
+            "name": "Apple",
+            "sector": "시총 5대장",
+            "changePercent": -0.58
+          },
+          {
+            "name": "Nvidia",
+            "sector": "시총 5대장",
+            "changePercent": -2.24
+          },
+          {
+            "name": "Google",
+            "sector": "시총 5대장",
+            "changePercent": -1.71
+          },
+          {
+            "name": "Amazon",
+            "sector": "시총 5대장",
+            "changePercent": -2.37
+          },
+          {
+            "name": "Tesla",
+            "sector": "자율주행",
+            "changePercent": -2.52
+          },
+          {
+            "name": "Meta Platform",
+            "sector": "AI메타버스",
+            "changePercent": -2.31
+          },
+          {
+            "name": "Palantir",
+            "sector": "AI소프트웨어",
+            "changePercent": -0.99
+          },
+          {
+            "name": "TSMC",
+            "sector": "반도체",
+            "changePercent": -0.16
+          },
+          {
+            "name": "Micron",
+            "sector": "반도체",
+            "changePercent": 2.38
+          },
+          {
+            "name": "ASML",
+            "sector": "반도체 장비",
+            "changePercent": -2.25
+          },
+          {
+            "name": "Exxon Mobil",
+            "sector": "에너지",
+            "changePercent": 0.67
+          },
+          {
+            "name": "AT&T",
+            "sector": "통신",
+            "changePercent": -0.51
+          },
+          {
+            "name": "JP Morgan",
+            "sector": "금융",
+            "changePercent": -1.72
+          },
+          {
+            "name": "Eli Lilly",
+            "sector": "헬스케어",
+            "changePercent": -1.26
+          },
+          {
+            "name": "Novo Nordisk",
+            "sector": "헬스케어",
+            "changePercent": -3.37
+          },
+          {
+            "name": "Boeing",
+            "sector": "항공",
+            "changePercent": -1.01
+          },
+          {
+            "name": "Lockheed Martin",
+            "sector": "방산",
+            "changePercent": 0.44
+          },
+          {
+            "name": "Netflix",
+            "sector": "엔터",
+            "changePercent": 1.64
+          },
+          {
+            "name": "Caterpillar",
+            "sector": "산업",
+            "changePercent": -0.78
+          },
+          {
+            "name": "Nextera Energy",
+            "sector": "친환경",
+            "changePercent": -0.9
+          },
+          {
+            "name": "Realty Income",
+            "sector": "리츠",
+            "changePercent": 0.19
+          },
+          {
+            "name": "Visa",
+            "sector": "결제",
+            "changePercent": -1.75
+          },
+          {
+            "name": "Walmart",
+            "sector": "필수소비",
+            "changePercent": 1.37
+          },
+          {
+            "name": "BRK.B",
+            "sector": "워런버핏",
+            "changePercent": -0.92
+          }
+        ],
+        "fetchedAt": "2026-01-20T14:42:19.163Z"
+      }
+    },
+    {
+      "id": "mkmpovjmm6yala9",
+      "slug": "2026년-1월-20일-미국증시-마감시황-3대지수-약세-3",
+      "title": "[2026년 1월 20일] 미국증시 마감시황 - 3대지수 약세",
+      "content": "안녕하세요 투자하는 개발자입니다.\n오늘 미국증시 마감시황 알려드리겠습니다.\n\n★ 3대지수\n━━━━━━━━━━━━━━━━━━━━\n\nDow -1.27%, Nasdaq -1.66%, S&P500 -1.34%\n\n3대지수는 모두 하락 마감.\n\n★ Magnificent 7\n━━━━━━━━━━━━━━━━━━━━\n\nMagnificent 7 모두 하락\n\n★ 주요 종목\n━━━━━━━━━━━━━━━━━━━━\n\nApple -1.01%, Microsoft -1.44%, Google -2.61%, Amazon -2.80%, Nvidia -3.24%\n\n★ 오늘의 상승 종목 TOP 10\n━━━━━━━━━━━━━━━━━━━━\n\n1. ImmunityBio, Inc. (IBRX) +25.58%\n2. Korea Electric Power Corporatio (KEP) +15.15%\n3. United Microelectronics Corpora (UMC) +14.68%\n4. Centerra Gold Inc. (CGAU) +12.34%\n5. Iamgold Corporation (IAG) +12.15%\n6. Hycroft Mining Holding Corporat (HYMC) +11.10%\n7. Orla Mining Ltd. (ORLA) +10.26%\n8. SK Telecom Co., Ltd. (SKM) +10.39%\n9. Ondas Holdings Inc. (ONDS) +8.43%\n10. POSCO Holdings Inc. (PKX) +6.77%\n\n★ 오늘의 하락 종목 TOP 10\n━━━━━━━━━━━━━━━━━━━━\n\n1. MARA Holdings, Inc. (MARA) -8.67%\n2. Applied Digital Corporation (APLD) -8.85%\n3. Bitdeer Technologies Group (BTDR) -8.52%\n4. BitMine Immersion Technologies, (BMNR) -7.61%\n5. Nebius Group N.V. (NBIS) -6.93%\n6. D-Wave Quantum Inc. (QBTS) -7.92%\n7. Fluence Energy, Inc. (FLNC) -7.53%\n8. Sunrun Inc. (RUN) -7.52%\n9. Strategy Inc (MSTR) -7.76%\n10. Navitas Semiconductor Corporati (NVTS) -7.10%\n\n★ 유럽증시\n━━━━━━━━━━━━━━━━━━━━\n\n유럽 STOXX 600은 -1.22% 하락\n\n★ 환율\n━━━━━━━━━━━━━━━━━━━━\n\n오늘 달러/원 환율은 +0.40% 상승한 1,478.32 이고\n미국 달러지수 -0.85% 하락한 98.55\n달러/위안화 환율은 6.9600입니다.\n\n★ 금, 구리, 유가\n━━━━━━━━━━━━━━━━━━━━\n\n금은 +3.25% 상승한 4,744.80달러\nDr. Copper라 불리는 구리는 -0.45% 하락\nWTI는 +1.63% 상승한 60.31달러\n\n★ 채권\n━━━━━━━━━━━━━━━━━━━━\n\n미국채10년물 금리는 +6bp 상승한 4.290%\n\n★ Fear & Greed Index\n━━━━━━━━━━━━━━━━━━━━\n\nCNN Fear & Greed Index는 50 Neutral 수준\n\n★ 지수 마감가\n━━━━━━━━━━━━━━━━━━━━\n\nS&P500는 6,847.14p\nNasdaq은 23,124.24p로 마감\n\n감사합니다.\n\n※ 본 콘텐츠는 투자 참고용이며, 투자 판단의 최종 책임은 투자자 본인에게 있습니다.",
+      "excerpt": "2026년 1월 20일 미국증시 마감시황 - S&P500 -1.34%, 나스닥 -1.66%, 다우 -1.27%",
+      "keywords": [
+        "미국증시",
+        "나스닥",
+        "S&P500",
+        "다우존스",
+        "2026년1월20일",
+        "증시마감",
+        "시황"
+      ],
+      "createdAt": "2026-01-20T14:51:03.730Z",
+      "updatedAt": "2026-01-20T14:51:03.730Z",
+      "marketData": {
+        "indices": {
+          "dow": {
+            "name": "Dow Jones",
+            "price": 48730.17,
+            "changePercent": -1.27
+          },
+          "nasdaq": {
+            "name": "Nasdaq",
+            "price": 23124.24,
+            "changePercent": -1.66
+          },
+          "sp500": {
+            "name": "S&P 500",
+            "price": 6847.14,
+            "changePercent": -1.34
+          }
+        },
+        "stocks": [
+          {
+            "name": "Apple",
+            "sector": "Magnificent 7",
+            "changePercent": -1.01
+          },
+          {
+            "name": "Microsoft",
+            "sector": "Magnificent 7",
+            "changePercent": -1.44
+          },
+          {
+            "name": "Google",
+            "sector": "Magnificent 7",
+            "changePercent": -2.61
+          },
+          {
+            "name": "Amazon",
+            "sector": "Magnificent 7",
+            "changePercent": -2.8
+          },
+          {
+            "name": "Nvidia",
+            "sector": "Magnificent 7",
+            "changePercent": -3.24
+          }
+        ],
+        "gainers": [
+          {
+            "symbol": "IBRX",
+            "name": "ImmunityBio, Inc.",
+            "changePercent": 25.576086
+          },
+          {
+            "symbol": "KEP",
+            "name": "Korea Electric Power Corporatio",
+            "changePercent": 15.154749
+          },
+          {
+            "symbol": "UMC",
+            "name": "United Microelectronics Corpora",
+            "changePercent": 14.677416
+          },
+          {
+            "symbol": "CGAU",
+            "name": "Centerra Gold Inc.",
+            "changePercent": 12.337271
+          },
+          {
+            "symbol": "IAG",
+            "name": "Iamgold Corporation",
+            "changePercent": 12.146805
+          },
+          {
+            "symbol": "HYMC",
+            "name": "Hycroft Mining Holding Corporat",
+            "changePercent": 11.098197
+          },
+          {
+            "symbol": "ORLA",
+            "name": "Orla Mining Ltd.",
+            "changePercent": 10.26164
+          },
+          {
+            "symbol": "SKM",
+            "name": "SK Telecom Co., Ltd.",
+            "changePercent": 10.39085
+          },
+          {
+            "symbol": "ONDS",
+            "name": "Ondas Holdings Inc.",
+            "changePercent": 8.428769
+          },
+          {
+            "symbol": "PKX",
+            "name": "POSCO Holdings Inc.",
+            "changePercent": 6.76508
+          }
+        ],
+        "losers": [
+          {
+            "symbol": "MARA",
+            "name": "MARA Holdings, Inc.",
+            "changePercent": -8.67459
+          },
+          {
+            "symbol": "APLD",
+            "name": "Applied Digital Corporation",
+            "changePercent": -8.85027
+          },
+          {
+            "symbol": "BTDR",
+            "name": "Bitdeer Technologies Group",
+            "changePercent": -8.522729
+          },
+          {
+            "symbol": "BMNR",
+            "name": "BitMine Immersion Technologies,",
+            "changePercent": -7.6059017
+          },
+          {
+            "symbol": "NBIS",
+            "name": "Nebius Group N.V.",
+            "changePercent": -6.9346094
+          },
+          {
+            "symbol": "QBTS",
+            "name": "D-Wave Quantum Inc.",
+            "changePercent": -7.924038
+          },
+          {
+            "symbol": "FLNC",
+            "name": "Fluence Energy, Inc.",
+            "changePercent": -7.5332317
+          },
+          {
+            "symbol": "RUN",
+            "name": "Sunrun Inc.",
+            "changePercent": -7.5150795
+          },
+          {
+            "symbol": "MSTR",
+            "name": "Strategy Inc",
+            "changePercent": -7.758678
+          },
+          {
+            "symbol": "NVTS",
+            "name": "Navitas Semiconductor Corporati",
+            "changePercent": -7.1035714
+          }
+        ],
+        "fetchedAt": "2026-01-20T14:51:03.719Z"
+      }
+    },
+    {
+      "id": "mkmprybnvm78hhc",
+      "slug": "2026년-1월-20일-미국증시-마감시황-3대지수-약세-4",
+      "title": "[2026년 1월 20일] 미국증시 마감시황 - 3대지수 약세",
+      "content": "안녕하세요 투자하는 개발자입니다.\n오늘 미국증시 마감시황 알려드리겠습니다.\n\n★ 3대지수\n━━━━━━━━━━━━━━━━━━━━\n\nDow -1.28%, Nasdaq -1.47%, S&P500 -1.29%\n\n3대지수는 모두 하락 마감.\n\n★ Magnificent 7\n━━━━━━━━━━━━━━━━━━━━\n\nMagnificent 7 모두 하락\n\n★ 주요 종목\n━━━━━━━━━━━━━━━━━━━━\n\nApple -1.32%, Microsoft -1.48%, Google -1.74%, Amazon -2.59%, Nvidia -3.04%\n\n★ 오늘의 상승 종목 TOP 10\n━━━━━━━━━━━━━━━━━━━━\n\n1. ImmunityBio, Inc. (IBRX) +24.65%\n2. Korea Electric Power Corporatio (KEP) +15.31%\n3. United Microelectronics Corpora (UMC) +14.73%\n4. Centerra Gold Inc. (CGAU) +13.42%\n5. Iamgold Corporation (IAG) +13.04%\n6. Hycroft Mining Holding Corporat (HYMC) +12.23%\n7. Orla Mining Ltd. (ORLA) +10.19%\n8. SK Telecom Co., Ltd. (SKM) +10.30%\n9. POSCO Holdings Inc. (PKX) +8.14%\n10. USA Rare Earth, Inc. (USAR) +8.47%\n\n★ 오늘의 하락 종목 TOP 10\n━━━━━━━━━━━━━━━━━━━━\n\n1. Applied Digital Corporation (APLD) -8.08%\n2. Bitdeer Technologies Group (BTDR) -8.33%\n3. MARA Holdings, Inc. (MARA) -8.32%\n4. Regencell Bioscience Holdings L (RGC) -8.24%\n5. D-Wave Quantum Inc. (QBTS) -8.03%\n6. BitMine Immersion Technologies, (BMNR) -7.85%\n7. Sunrun Inc. (RUN) -7.76%\n8. Strategy Inc (MSTR) -7.77%\n9. Fluence Energy, Inc. (FLNC) -6.55%\n10. Samsara Inc. (IOT) -6.86%\n\n★ 유럽증시\n━━━━━━━━━━━━━━━━━━━━\n\n유럽 STOXX 600은 -1.07% 하락\n\n★ 환율\n━━━━━━━━━━━━━━━━━━━━\n\n오늘 달러/원 환율은 +0.38% 상승한 1,478.03 이고\n미국 달러지수 -0.84% 하락한 98.56\n달러/위안화 환율은 6.9600입니다.\n\n★ 금, 구리, 유가\n━━━━━━━━━━━━━━━━━━━━\n\n금은 +3.21% 상승한 4,742.90달러\nDr. Copper라 불리는 구리는 -0.65% 하락\nWTI는 +1.45% 상승한 60.20달러\n\n★ 채권\n━━━━━━━━━━━━━━━━━━━━\n\n미국채10년물 금리는 +6bp 상승한 4.290%\n\n★ Fear & Greed Index\n━━━━━━━━━━━━━━━━━━━━\n\nCNN Fear & Greed Index는 65 Greed 수준\n\n★ 지수 마감가\n━━━━━━━━━━━━━━━━━━━━\n\nS&P500는 6,850.64p\nNasdaq은 23,169.15p로 마감\n\n감사합니다.\n\n※ 본 콘텐츠는 투자 참고용이며, 투자 판단의 최종 책임은 투자자 본인에게 있습니다.",
+      "excerpt": "2026년 1월 20일 미국증시 마감시황 - S&P500 -1.29%, 나스닥 -1.47%, 다우 -1.28%",
+      "keywords": [
+        "미국증시",
+        "나스닥",
+        "S&P500",
+        "다우존스",
+        "2026년1월20일",
+        "증시마감",
+        "시황"
+      ],
+      "createdAt": "2026-01-20T14:53:27.299Z",
+      "updatedAt": "2026-01-20T14:53:27.299Z",
+      "marketData": {
+        "indices": {
+          "dow": {
+            "name": "Dow Jones",
+            "price": 48726.37,
+            "changePercent": -1.28
+          },
+          "nasdaq": {
+            "name": "Nasdaq",
+            "price": 23169.15,
+            "changePercent": -1.47
+          },
+          "sp500": {
+            "name": "S&P 500",
+            "price": 6850.64,
+            "changePercent": -1.29
+          }
+        },
+        "stocks": [
+          {
+            "name": "Apple",
+            "sector": "Magnificent 7",
+            "changePercent": -1.32
+          },
+          {
+            "name": "Microsoft",
+            "sector": "Magnificent 7",
+            "changePercent": -1.48
+          },
+          {
+            "name": "Google",
+            "sector": "Magnificent 7",
+            "changePercent": -1.74
+          },
+          {
+            "name": "Amazon",
+            "sector": "Magnificent 7",
+            "changePercent": -2.59
+          },
+          {
+            "name": "Nvidia",
+            "sector": "Magnificent 7",
+            "changePercent": -3.04
+          }
+        ],
+        "gainers": [
+          {
+            "symbol": "IBRX",
+            "name": "ImmunityBio, Inc.",
+            "changePercent": 24.652243
+          },
+          {
+            "symbol": "KEP",
+            "name": "Korea Electric Power Corporatio",
+            "changePercent": 15.306671
+          },
+          {
+            "symbol": "UMC",
+            "name": "United Microelectronics Corpora",
+            "changePercent": 14.731181
+          },
+          {
+            "symbol": "CGAU",
+            "name": "Centerra Gold Inc.",
+            "changePercent": 13.416148
+          },
+          {
+            "symbol": "IAG",
+            "name": "Iamgold Corporation",
+            "changePercent": 13.038415
+          },
+          {
+            "symbol": "HYMC",
+            "name": "Hycroft Mining Holding Corporat",
+            "changePercent": 12.2295685
+          },
+          {
+            "symbol": "ORLA",
+            "name": "Orla Mining Ltd.",
+            "changePercent": 10.186757
+          },
+          {
+            "symbol": "SKM",
+            "name": "SK Telecom Co., Ltd.",
+            "changePercent": 10.300428
+          },
+          {
+            "symbol": "PKX",
+            "name": "POSCO Holdings Inc.",
+            "changePercent": 8.141646
+          },
+          {
+            "symbol": "USAR",
+            "name": "USA Rare Earth, Inc.",
+            "changePercent": 8.471453
+          }
+        ],
+        "losers": [
+          {
+            "symbol": "APLD",
+            "name": "Applied Digital Corporation",
+            "changePercent": -8.077027
+          },
+          {
+            "symbol": "BTDR",
+            "name": "Bitdeer Technologies Group",
+            "changePercent": -8.333331
+          },
+          {
+            "symbol": "MARA",
+            "name": "MARA Holdings, Inc.",
+            "changePercent": -8.319096
+          },
+          {
+            "symbol": "RGC",
+            "name": "Regencell Bioscience Holdings L",
+            "changePercent": -8.242799
+          },
+          {
+            "symbol": "QBTS",
+            "name": "D-Wave Quantum Inc.",
+            "changePercent": -8.025656
+          },
+          {
+            "symbol": "BMNR",
+            "name": "BitMine Immersion Technologies,",
+            "changePercent": -7.8500443
+          },
+          {
+            "symbol": "RUN",
+            "name": "Sunrun Inc.",
+            "changePercent": -7.761926
+          },
+          {
+            "symbol": "MSTR",
+            "name": "Strategy Inc",
+            "changePercent": -7.765819
+          },
+          {
+            "symbol": "FLNC",
+            "name": "Fluence Energy, Inc.",
+            "changePercent": -6.5546517
+          },
+          {
+            "symbol": "IOT",
+            "name": "Samsara Inc.",
+            "changePercent": -6.863819
+          }
+        ],
+        "fetchedAt": "2026-01-20T14:53:27.294Z"
+      }
+    },
+    {
+      "id": "mkmptjx2uynbkvi",
+      "slug": "2026년-1월-20일-미국증시-마감시황-3대지수-약세-5",
+      "title": "[2026년 1월 20일] 미국증시 마감시황 - 3대지수 약세",
+      "content": "안녕하세요 투자하는 개발자입니다.\n오늘 미국증시 마감시황 알려드리겠습니다.\n\n★ 3대지수\n━━━━━━━━━━━━━━━━━━━━\n\nDow -1.28%, Nasdaq -1.47%, S&P500 -1.29%\n\n3대지수는 모두 하락 마감.\n\n★ Magnificent 7\n━━━━━━━━━━━━━━━━━━━━\n\nMagnificent 7 모두 하락\n\n★ 주요 종목\n━━━━━━━━━━━━━━━━━━━━\n\nApple -1.32%, Microsoft -1.48%, Google -1.74%, Amazon -2.59%, Nvidia -3.04%\n\n★ 오늘의 상승 종목 TOP 10\n━━━━━━━━━━━━━━━━━━━━\n\n1. ImmunityBio, Inc. (IBRX) +24.65%\n2. Korea Electric Power Corporatio (KEP) +15.31%\n3. United Microelectronics Corpora (UMC) +14.73%\n4. Centerra Gold Inc. (CGAU) +13.42%\n5. Iamgold Corporation (IAG) +13.04%\n6. Hycroft Mining Holding Corporat (HYMC) +12.23%\n7. Orla Mining Ltd. (ORLA) +10.19%\n8. SK Telecom Co., Ltd. (SKM) +10.30%\n9. POSCO Holdings Inc. (PKX) +8.14%\n10. USA Rare Earth, Inc. (USAR) +8.47%\n\n★ 오늘의 하락 종목 TOP 10\n━━━━━━━━━━━━━━━━━━━━\n\n1. Applied Digital Corporation (APLD) -8.08%\n2. Bitdeer Technologies Group (BTDR) -8.33%\n3. MARA Holdings, Inc. (MARA) -8.32%\n4. Regencell Bioscience Holdings L (RGC) -8.24%\n5. D-Wave Quantum Inc. (QBTS) -8.03%\n6. BitMine Immersion Technologies, (BMNR) -7.85%\n7. Sunrun Inc. (RUN) -7.76%\n8. Strategy Inc (MSTR) -7.77%\n9. Fluence Energy, Inc. (FLNC) -6.55%\n10. Samsara Inc. (IOT) -6.86%\n\n★ 유럽증시\n━━━━━━━━━━━━━━━━━━━━\n\n유럽 STOXX 600은 -1.07% 하락\n\n★ 환율\n━━━━━━━━━━━━━━━━━━━━\n\n오늘 달러/원 환율은 +0.38% 상승한 1,478.03 이고\n미국 달러지수 -0.84% 하락한 98.56\n달러/위안화 환율은 6.9600입니다.\n\n★ 금, 구리, 유가\n━━━━━━━━━━━━━━━━━━━━\n\n금은 +3.21% 상승한 4,742.90달러\nDr. Copper라 불리는 구리는 -0.65% 하락\nWTI는 +1.45% 상승한 60.20달러\n\n★ 채권\n━━━━━━━━━━━━━━━━━━━━\n\n미국채10년물 금리는 +6bp 상승한 4.290%\n\n★ Fear & Greed Index\n━━━━━━━━━━━━━━━━━━━━\n\nCNN Fear & Greed Index는 65 Greed 수준\n\n★ 지수 마감가\n━━━━━━━━━━━━━━━━━━━━\n\nS&P500는 6,850.64p\nNasdaq은 23,169.15p로 마감\n\n감사합니다.\n\n※ 본 콘텐츠는 투자 참고용이며, 투자 판단의 최종 책임은 투자자 본인에게 있습니다.",
+      "excerpt": "2026년 1월 20일 미국증시 마감시황 - S&P500 -1.29%, 나스닥 -1.47%, 다우 -1.28%",
+      "keywords": [
+        "미국증시",
+        "나스닥",
+        "S&P500",
+        "다우존스",
+        "2026년1월20일",
+        "증시마감",
+        "시황"
+      ],
+      "createdAt": "2026-01-20T14:54:41.942Z",
+      "updatedAt": "2026-01-20T14:54:41.942Z",
+      "marketData": {
+        "indices": {
+          "dow": {
+            "name": "Dow Jones",
+            "price": 48726.37,
+            "changePercent": -1.28
+          },
+          "nasdaq": {
+            "name": "Nasdaq",
+            "price": 23169.15,
+            "changePercent": -1.47
+          },
+          "sp500": {
+            "name": "S&P 500",
+            "price": 6850.64,
+            "changePercent": -1.29
+          }
+        },
+        "stocks": [
+          {
+            "name": "Apple",
+            "sector": "Magnificent 7",
+            "changePercent": -1.32
+          },
+          {
+            "name": "Microsoft",
+            "sector": "Magnificent 7",
+            "changePercent": -1.48
+          },
+          {
+            "name": "Google",
+            "sector": "Magnificent 7",
+            "changePercent": -1.74
+          },
+          {
+            "name": "Amazon",
+            "sector": "Magnificent 7",
+            "changePercent": -2.59
+          },
+          {
+            "name": "Nvidia",
+            "sector": "Magnificent 7",
+            "changePercent": -3.04
+          }
+        ],
+        "gainers": [
+          {
+            "symbol": "IBRX",
+            "name": "ImmunityBio, Inc.",
+            "changePercent": 24.652243
+          },
+          {
+            "symbol": "KEP",
+            "name": "Korea Electric Power Corporatio",
+            "changePercent": 15.306671
+          },
+          {
+            "symbol": "UMC",
+            "name": "United Microelectronics Corpora",
+            "changePercent": 14.731181
+          },
+          {
+            "symbol": "CGAU",
+            "name": "Centerra Gold Inc.",
+            "changePercent": 13.416148
+          },
+          {
+            "symbol": "IAG",
+            "name": "Iamgold Corporation",
+            "changePercent": 13.038415
+          },
+          {
+            "symbol": "HYMC",
+            "name": "Hycroft Mining Holding Corporat",
+            "changePercent": 12.2295685
+          },
+          {
+            "symbol": "ORLA",
+            "name": "Orla Mining Ltd.",
+            "changePercent": 10.186757
+          },
+          {
+            "symbol": "SKM",
+            "name": "SK Telecom Co., Ltd.",
+            "changePercent": 10.300428
+          },
+          {
+            "symbol": "PKX",
+            "name": "POSCO Holdings Inc.",
+            "changePercent": 8.141646
+          },
+          {
+            "symbol": "USAR",
+            "name": "USA Rare Earth, Inc.",
+            "changePercent": 8.471453
+          }
+        ],
+        "losers": [
+          {
+            "symbol": "APLD",
+            "name": "Applied Digital Corporation",
+            "changePercent": -8.077027
+          },
+          {
+            "symbol": "BTDR",
+            "name": "Bitdeer Technologies Group",
+            "changePercent": -8.333331
+          },
+          {
+            "symbol": "MARA",
+            "name": "MARA Holdings, Inc.",
+            "changePercent": -8.319096
+          },
+          {
+            "symbol": "RGC",
+            "name": "Regencell Bioscience Holdings L",
+            "changePercent": -8.242799
+          },
+          {
+            "symbol": "QBTS",
+            "name": "D-Wave Quantum Inc.",
+            "changePercent": -8.025656
+          },
+          {
+            "symbol": "BMNR",
+            "name": "BitMine Immersion Technologies,",
+            "changePercent": -7.8500443
+          },
+          {
+            "symbol": "RUN",
+            "name": "Sunrun Inc.",
+            "changePercent": -7.761926
+          },
+          {
+            "symbol": "MSTR",
+            "name": "Strategy Inc",
+            "changePercent": -7.765819
+          },
+          {
+            "symbol": "FLNC",
+            "name": "Fluence Energy, Inc.",
+            "changePercent": -6.5546517
+          },
+          {
+            "symbol": "IOT",
+            "name": "Samsara Inc.",
+            "changePercent": -6.863819
+          }
+        ],
+        "fetchedAt": "2026-01-20T14:54:41.941Z"
+      }
+    }
+  ]
 }

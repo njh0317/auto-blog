@@ -47,7 +47,8 @@ graph TB
 │   ├── admin/page.tsx        # 관리자 페이지
 │   ├── api/
 │   │   ├── posts/route.ts    # 글 CRUD API
-│   │   └── generate/route.ts # AI 생성 API
+│   │   ├── generate/route.ts # AI 생성 API
+│   │   └── market-report/route.ts # 상세 시황 생성 API
 │   └── layout.tsx            # 공통 레이아웃
 ├── components/
 │   ├── PostCard.tsx          # 글 카드 컴포넌트
@@ -56,9 +57,13 @@ graph TB
 ├── lib/
 │   ├── posts.ts              # 글 데이터 처리
 │   ├── openai.ts             # OpenAI API 클라이언트
-│   └── storage.ts            # JSON 파일 저장
+│   ├── storage.ts            # JSON 파일 저장
+│   ├── market-data.ts        # 시장 데이터 수집 (다중 소스)
+│   ├── detailed-report.ts    # 상세 시황 글 생성
+│   └── branding.ts           # 블로그 브랜딩 설정
 ├── data/
-│   └── posts.json            # 글 데이터 저장소
+│   ├── posts.json            # 글 데이터 저장소
+│   └── branding.json         # 브랜딩 설정 저장소
 └── public/
     └── robots.txt
 ```
@@ -90,6 +95,55 @@ interface GenerateResponse {
   content: string;
   excerpt: string;
   keywords: string[];
+}
+
+// 상세 시황 데이터
+interface DetailedMarketData {
+  // 3대 지수
+  indices: {
+    dow: IndexData;
+    nasdaq: IndexData;
+    sp500: IndexData;
+  };
+  // 주요 뉴스
+  news: NewsItem[];
+  // 시총 상위 기업
+  topCompanies: StockData[];
+  // 섹터별 종목
+  sectorStocks: {
+    [sector: string]: StockData[];
+  };
+  // 유럽증시
+  europe: {
+    stoxx600: IndexData;
+  };
+  // 환율
+  forex: {
+    usdKrw: ForexData;
+    dollarIndex: ForexData;
+    usdCny: ForexData;
+  };
+  // 원자재
+  commodities: {
+    gold: CommodityData;
+    copper: CommodityData;
+    wti: CommodityData;
+  };
+  // 채권
+  bonds: {
+    us10y: BondData;
+  };
+  // 심리지표
+  fearGreedIndex: number;
+  fetchedAt: string;
+}
+
+// 블로그 브랜딩 설정
+interface BlogBranding {
+  nickname: string;           // 블로그 닉네임 (예: "호빵먹는 부자")
+  greeting: string;           // 인사말 템플릿
+  closing: string;            // 마무리 인사 템플릿
+  style: 'formal' | 'casual'; // 문체 스타일
 }
 ```
 
