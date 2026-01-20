@@ -9,6 +9,36 @@ import FearGreedGauge from '@/components/FearGreedGauge';
 // 동적 렌더링으로 변경
 export const dynamic = 'force-dynamic';
 
+// 본문 포맷팅 - [[ ]] 패턴을 소제목으로 스타일링
+function formatContent(content: string): string {
+  return content
+    .split('\n')
+    .map(line => {
+      const trimmed = line.trim();
+      
+      // [[ 소제목 ]] 패턴
+      const headingMatch = trimmed.match(/^\[\[\s*(.+?)\s*\]\]$/);
+      if (headingMatch) {
+        return `<h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">${headingMatch[1]}</h3>`;
+      }
+      // ★로 시작하는 줄 (기존 시황 글 형식)
+      if (trimmed.startsWith('★')) {
+        return `<h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">${trimmed}</h3>`;
+      }
+      // 구분선
+      if (trimmed.startsWith('━')) {
+        return '<hr class="my-2 border-gray-200" />';
+      }
+      // 빈 줄
+      if (!trimmed) {
+        return '<br />';
+      }
+      // 일반 텍스트
+      return `<p class="mb-2">${line}</p>`;
+    })
+    .join('');
+}
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
@@ -150,7 +180,7 @@ export default async function PostPage({ params }: PageProps) {
       
       <div 
         className="prose prose-sm sm:prose-base md:prose-lg max-w-none text-gray-900 [&_p]:text-gray-900 [&_strong]:text-gray-900 [&_li]:text-gray-900 [&_span]:text-gray-900"
-        dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }}
+        dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
       />
 
       {/* 본문 하단 광고 */}
