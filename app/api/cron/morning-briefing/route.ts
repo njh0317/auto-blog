@@ -6,23 +6,24 @@ import { Post, GenerateResponse } from '@/lib/types';
 // Vercel Cron 설정 - 한국시간 오전 8시 45분 (국내 장 시작 전)
 export const dynamic = 'force-dynamic';
 
-// 모닝 브리핑 전용 Gemini 호출
+// 모닝 브리핑 전용 Gemini 호출 (Google Search Grounding 포함)
 async function generateMorningBriefing(newsText: string): Promise<GenerateResponse> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY가 설정되지 않았습니다');
 
   const prompt = "당신은 증권사 리서치센터 출신의 투자 블로거 '코딩하다 주식하는 사람'입니다.\n\n" +
-    "아래는 오늘의 최신 경제/증시 뉴스 헤드라인입니다. 이 중에서 투자자들이 주목해야 할 핵심 이슈를 직접 선별하여 \"오늘의 모닝 브리핑\" 글을 작성해주세요.\n\n" +
-    "[오늘의 뉴스 헤드라인]\n" + newsText + "\n\n" +
+    "Google 검색을 통해 오늘의 최신 경제/증시 뉴스를 직접 확인하고, 투자자들이 주목해야 할 핵심 이슈를 선별하여 \"오늘의 모닝 브리핑\" 글을 작성해주세요.\n\n" +
+    "[참고 뉴스 헤드라인]\n" + newsText + "\n\n" +
     "작성 가이드:\n" +
-    "1. 위 뉴스 중 가장 중요한 이슈 2-3가지를 직접 선정\n" +
+    "1. Google 검색으로 최신 정보를 확인하고 가장 중요한 이슈 2-3가지를 선정\n" +
     "2. 왜 이 이슈가 중요한지, 국내 증시에 미칠 영향 분석\n" +
     "3. 관련 섹터나 종목군 언급\n" +
     "4. 전문적이면서도 읽기 쉬운 존댓말 사용\n" +
     "5. 문단은 2-3문장으로 짧게\n" +
     "6. 소제목은 반드시 [[ ]] 형식으로 작성 (예: [[ 📊 반도체 업황 점검 ]])\n" +
     "7. 최소 800자 이상 작성\n\n" +
-    "중요: 마크다운 문법 절대 사용 금지! 소제목은 반드시 [[ ]] 안에 작성하세요.\n\n" +
+    "중요: 마크다운 문법 절대 사용 금지! 소제목은 반드시 [[ ]] 안에 작성하세요.\n" +
+    "중요: 확인되지 않은 정보는 작성하지 마세요. 검색 결과 기반으로만 작성하세요.\n\n" +
     "반드시 아래 JSON 형식으로만 응답하세요 (다른 텍스트 없이):\n" +
     '{"title": "글 제목", "content": "본문 내용", "excerpt": "2줄 요약", "keywords": ["키워드1", "키워드2"]}';
 
@@ -33,7 +34,8 @@ async function generateMorningBriefing(newsText: string): Promise<GenerateRespon
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.8 }
+        generationConfig: { temperature: 0.7 },
+        tools: [{ googleSearch: {} }]
       })
     }
   );
