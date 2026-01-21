@@ -82,7 +82,14 @@ export default async function PostPage({ params }: PageProps) {
         </h1>
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500">
           <time dateTime={post.createdAt}>
-            {new Date(post.createdAt).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}
+            {new Date(post.createdAt).toLocaleString('ko-KR', { 
+              timeZone: 'Asia/Seoul',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
           </time>
           <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {post.keywords.slice(0, 4).map((keyword) => (
