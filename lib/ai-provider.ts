@@ -67,8 +67,8 @@ async function generateWithGroq(topic: string, keywords?: string[]): Promise<Gen
   return JSON.parse(content) as GenerateResponse;
 }
 
-// Gemini API 호출
-export async function generateWithGemini(topic: string, keywords?: string[]): Promise<GenerateResponse> {
+// Gemini API 호출 (Google Search Grounding 포함)
+export async function generateWithGemini(topic: string, keywords?: string[], useGrounding: boolean = true): Promise<GenerateResponse> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY가 설정되지 않았습니다');
 
@@ -76,19 +76,29 @@ export async function generateWithGemini(topic: string, keywords?: string[]): Pr
     ? `주제: ${topic}\n관련 키워드: ${keywords.join(', ')}`
     : `주제: ${topic}`;
 
+  // Grounding 설정 - 실시간 웹 검색 결과 기반 응답
+  const requestBody: Record<string, unknown> = {
+    contents: [{
+      parts: [{ text: `${SYSTEM_PROMPT}\n\n${userPrompt}\n\nJSON 형식으로만 응답하세요.` }]
+    }],
+    generationConfig: {
+      temperature: 0.7,
+    }
+  };
+
+  // Google Search Grounding 활성화
+  if (useGrounding) {
+    requestBody.tools = [{
+      googleSearch: {}
+    }];
+  }
+
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{ text: `${SYSTEM_PROMPT}\n\n${userPrompt}\n\nJSON 형식으로만 응답하세요.` }]
-        }],
-        generationConfig: {
-          temperature: 0.8,
-        }
-      })
+      body: JSON.stringify(requestBody)
     }
   );
 
@@ -110,6 +120,13 @@ export async function generateWithGemini(topic: string, keywords?: string[]): Pr
   const jsonMatch = text.match(/```json\s*([\s\S]*?)\s*```/);
   if (jsonMatch) {
     jsonText = jsonMatch[1];
+  }
+  
+  // JSON 시작/끝 찾기
+  const startIdx = jsonText.indexOf('{');
+  const endIdx = jsonText.lastIndexOf('}');
+  if (startIdx !== -1 && endIdx !== -1) {
+    jsonText = jsonText.slice(startIdx, endIdx + 1);
   }
 
   return JSON.parse(jsonText) as GenerateResponse;
