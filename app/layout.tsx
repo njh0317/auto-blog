@@ -31,14 +31,11 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {process.env.NEXT_PUBLIC_ADSENSE_ID && 
-         process.env.NEXT_PUBLIC_ADSENSE_ID !== 'your_adsense_id_here' && (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
-            crossOrigin="anonymous"
-          />
-        )}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3032491110695099"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className={`${geistSans.variable} antialiased bg-gray-50`}>
         <header className="bg-white shadow-sm border-b">
