@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getKoreanMarketNews, formatNewsForAI } from '@/lib/news';
+import { getKoreanMarketNews, getKoreanMarketData, formatNewsForAI } from '@/lib/news';
 import { generateContent } from '@/lib/ai-provider';
 import { savePosts, getPosts } from '@/lib/storage';
 import { Post } from '@/lib/types';
@@ -17,8 +17,11 @@ export async function GET(request: Request) {
   }
 
   try {
-    // 1. 한국 증시 뉴스 수집
-    const news = await getKoreanMarketNews();
+    // 1. 한국 증시 뉴스 및 실시간 데이터 수집
+    const [news, marketData] = await Promise.all([
+      getKoreanMarketNews(),
+      getKoreanMarketData(),
+    ]);
     const newsText = formatNewsForAI(news);
     
     // 2. AI로 글 생성
@@ -29,7 +32,19 @@ export async function GET(request: Request) {
       day: 'numeric' 
     });
     
-    const topic = `${today} 한국 증시 마감 시황\n\n오늘의 주요 뉴스:\n${newsText}`;
+    // 실제 시장 데이터를 포함
+    let marketSummary = '';
+    if (marketData) {
+      const kospiDir = marketData.kospi.changePercent >= 0 ? '상승' : '하락';
+      const kosdaqDir = marketData.kosdaq.changePercent >= 0 ? '상승' : '하락';
+      marketSummary = `
+[오늘의 실제 지수 데이터 - 반드시 이 데이터 기준으로 작성하세요]
+코스피: ${marketData.kospi.price.toFixed(2)}p (${marketData.kospi.changePercent >= 0 ? '+' : ''}${marketData.kospi.changePercent.toFixed(2)}% ${kospiDir})
+코스닥: ${marketData.kosdaq.price.toFixed(2)}p (${marketData.kosdaq.changePercent >= 0 ? '+' : ''}${marketData.kosdaq.changePercent.toFixed(2)}% ${kosdaqDir})
+`;
+    }
+    
+    const topic = `${today} 한국 증시 마감 시황\n${marketSummary}\n오늘의 주요 뉴스:\n${newsText}`;
     
     const generated = await generateContent(topic, ['코스피', '코스닥', '한국증시']);
     

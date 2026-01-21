@@ -48,6 +48,47 @@ export async function getKoreanMarketNews(): Promise<NewsItem[]> {
   return fetchGoogleNews('코스피 코스닥 증시');
 }
 
+// 한국 증시 데이터 (코스피, 코스닥)
+export async function getKoreanMarketData(): Promise<{
+  kospi: { price: number; change: number; changePercent: number };
+  kosdaq: { price: number; change: number; changePercent: number };
+} | null> {
+  try {
+    const fetchQuote = async (symbol: string) => {
+      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`;
+      const res = await fetch(url, {
+        headers: { 'User-Agent': 'Mozilla/5.0' },
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      const meta = data.chart?.result?.[0]?.meta;
+      if (!meta) return null;
+      
+      const price = meta.regularMarketPrice || 0;
+      const prevClose = meta.chartPreviousClose || meta.previousClose || price;
+      const change = price - prevClose;
+      const changePercent = prevClose ? (change / prevClose) * 100 : 0;
+      
+      return {
+        price: Math.round(price * 100) / 100,
+        change: Math.round(change * 100) / 100,
+        changePercent: Math.round(changePercent * 100) / 100,
+      };
+    };
+    
+    const [kospi, kosdaq] = await Promise.all([
+      fetchQuote('^KS11'),  // 코스피
+      fetchQuote('^KQ11'),  // 코스닥
+    ]);
+    
+    if (!kospi || !kosdaq) return null;
+    
+    return { kospi, kosdaq };
+  } catch {
+    return null;
+  }
+}
+
 // 미국 증시 뉴스
 export async function getUSMarketNews(): Promise<NewsItem[]> {
   return fetchGoogleNews('나스닥 S&P500 미국증시');
