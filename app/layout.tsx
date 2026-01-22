@@ -40,7 +40,8 @@ export default function RootLayout({
       <body className={`${geistSans.variable} antialiased bg-gray-50`}>
         <header className="bg-white shadow-sm border-b">
           <nav className="max-w-4xl mx-auto px-4 py-4">
-            <a href="/" className="text-xl font-bold text-gray-900">
+            <a href="/" className="flex items-center gap-2 text-xl font-bold text-gray-900">
+              <img src="/icon.png" alt="logo" className="w-8 h-8" />
               코딩하다 주식하는 사람
             </a>
           </nav>
