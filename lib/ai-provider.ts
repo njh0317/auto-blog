@@ -144,7 +144,7 @@ export async function generateWithGemini(topic: string, keywords?: string[], use
     // 이스케이프된 문자 복원
     content = content.replace(/\\n/g, '\n').replace(/\\"/g, '"');
     const excerpt = excerptMatch?.[1] || content.slice(0, 100);
-    const keywords = keywordsMatch?.[1]?.match(/"([^"]+)"/g)?.map(k => k.replace(/"/g, '')) || ['증시', '시황'];
+    const keywords = keywordsMatch?.[1]?.match(/"([^"]+)"/g)?.map((k: string) => k.replace(/"/g, '')) || ['증시', '시황'];
     
     return { title, content, excerpt, keywords };
   }
