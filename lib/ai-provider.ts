@@ -129,7 +129,25 @@ export async function generateWithGemini(topic: string, keywords?: string[], use
     jsonText = jsonText.slice(startIdx, endIdx + 1);
   }
 
-  return JSON.parse(jsonText) as GenerateResponse;
+  // JSON 파싱 시도, 실패하면 수동 추출
+  try {
+    return JSON.parse(jsonText) as GenerateResponse;
+  } catch {
+    // JSON 파싱 실패 시 필드별 추출 시도
+    const titleMatch = jsonText.match(/"title"\s*:\s*"([^"]+)"/);
+    const contentMatch = jsonText.match(/"content"\s*:\s*"([\s\S]*?)(?:"\s*,\s*"excerpt|"\s*,\s*"keywords|"\s*})/);
+    const excerptMatch = jsonText.match(/"excerpt"\s*:\s*"([^"]+)"/);
+    const keywordsMatch = jsonText.match(/"keywords"\s*:\s*\[([\s\S]*?)\]/);
+    
+    const title = titleMatch?.[1] || '시황 분석';
+    let content = contentMatch?.[1] || text;
+    // 이스케이프된 문자 복원
+    content = content.replace(/\\n/g, '\n').replace(/\\"/g, '"');
+    const excerpt = excerptMatch?.[1] || content.slice(0, 100);
+    const keywords = keywordsMatch?.[1]?.match(/"([^"]+)"/g)?.map(k => k.replace(/"/g, '')) || ['증시', '시황'];
+    
+    return { title, content, excerpt, keywords };
+  }
 }
 
 // OpenAI API 호출
