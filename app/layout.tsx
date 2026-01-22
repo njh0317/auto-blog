@@ -50,7 +50,7 @@ export default function RootLayout({
         </main>
         <footer className="bg-white border-t mt-12">
           <div className="max-w-4xl mx-auto px-4 py-6 text-center text-gray-500 text-sm">
-            © 2026 코딩하다 주식하는 사람
+            © 2026 wisdomlab.com
           </div>
         </footer>
       </body>
