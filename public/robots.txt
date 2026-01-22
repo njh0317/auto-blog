@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://co-stock-daily.vercel.app/sitemap.xml
+Sitemap: https://co-stock.wisdomslab.com/sitemap.xml
