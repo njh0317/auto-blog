@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getGlobalEconomyNews, formatNewsForAI } from '@/lib/news';
 import { savePosts, getPosts } from '@/lib/storage';
+import { saveErrorLog } from '@/lib/error-log';
 import { Post, GenerateResponse } from '@/lib/types';
 
 // Vercel Cron 설정 - 한국시간 오전 8시 45분 (국내 장 시작 전)
@@ -122,6 +123,7 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Cron 실행 실패:', error);
+    await saveErrorLog('morning-briefing', error instanceof Error ? error : String(error));
     return NextResponse.json({ 
       error: '글 생성 실패', 
       details: error instanceof Error ? error.message : 'Unknown error' 

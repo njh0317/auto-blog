@@ -10,6 +10,14 @@ interface Branding {
   style: 'formal' | 'casual';
 }
 
+interface ErrorLog {
+  id: string;
+  timestamp: string;
+  source: string;
+  error: string;
+  details?: string;
+}
+
 interface MarketPreview {
   indices: {
     dow: { changePercent: number };
@@ -23,11 +31,12 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [posts, setPosts] = useState<Post[]>([]);
+  const [errorLogs, setErrorLogs] = useState<ErrorLog[]>([]);
   const [topic, setTopic] = useState('');
   const [keywords, setKeywords] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [message, setMessage] = useState('');
-  const [activeTab, setActiveTab] = useState<'posts' | 'branding'>('posts');
+  const [activeTab, setActiveTab] = useState<'posts' | 'branding' | 'logs'>('posts');
   const [branding, setBranding] = useState<Branding>({
     nickname: '투자하는 개발자',
     greeting: '안녕하세요 {nickname}입니다.\n오늘 미국증시 마감시황 알려드리겠습니다.',
@@ -191,6 +200,38 @@ export default function AdminPage() {
     }
   };
 
+  // 에러 로그 로드
+  const loadErrorLogs = async () => {
+    try {
+      const res = await fetch('/api/error-logs', {
+        headers: { 'Authorization': localStorage.getItem('adminAuth') || '' },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setErrorLogs(data);
+      }
+    } catch {
+      console.error('에러 로그 로드 실패');
+    }
+  };
+
+  // 에러 로그 삭제
+  const clearLogs = async () => {
+    if (!confirm('모든 에러 로그를 삭제하시겠습니까?')) return;
+    try {
+      const res = await fetch('/api/error-logs', {
+        method: 'DELETE',
+        headers: { 'Authorization': localStorage.getItem('adminAuth') || '' },
+      });
+      if (res.ok) {
+        setErrorLogs([]);
+        setMessage('에러 로그가 삭제되었습니다');
+      }
+    } catch {
+      setMessage('삭제 실패');
+    }
+  };
+
   useEffect(() => {
     const saved = localStorage.getItem('adminAuth');
     if (saved) {
@@ -203,6 +244,7 @@ export default function AdminPage() {
           setIsAuthenticated(true);
           loadPosts();
           loadBranding();
+          loadErrorLogs();
         }
       });
     }
@@ -254,6 +296,12 @@ export default function AdminPage() {
           className={`px-3 sm:px-4 py-2 font-medium text-sm sm:text-base whitespace-nowrap ${activeTab === 'branding' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'}`}
         >
           🎨 브랜딩
+        </button>
+        <button
+          onClick={() => { setActiveTab('logs'); loadErrorLogs(); }}
+          className={`px-3 sm:px-4 py-2 font-medium text-sm sm:text-base whitespace-nowrap ${activeTab === 'logs' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'}`}
+        >
+          🚨 에러 로그 {errorLogs.length > 0 && <span className="ml-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">{errorLogs.length}</span>}
         </button>
       </div>
 
@@ -428,6 +476,45 @@ export default function AdminPage() {
               💾 저장
             </button>
           </div>
+        </section>
+      )}
+
+      {activeTab === 'logs' && (
+        <section className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-base sm:text-xl font-semibold">🚨 에러 로그 ({errorLogs.length}개)</h2>
+            {errorLogs.length > 0 && (
+              <button
+                onClick={clearLogs}
+                className="text-red-500 hover:text-red-700 text-sm"
+              >
+                전체 삭제
+              </button>
+            )}
+          </div>
+          
+          {errorLogs.length === 0 ? (
+            <p className="text-gray-500 text-sm">에러 로그가 없습니다. 🎉</p>
+          ) : (
+            <ul className="space-y-3">
+              {errorLogs.map((log) => (
+                <li key={log.id} className="p-3 bg-red-50 border border-red-200 rounded">
+                  <div className="flex justify-between items-start mb-1">
+                    <span className="text-xs font-medium text-red-600 bg-red-100 px-2 py-0.5 rounded">
+                      {log.source}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {new Date(log.timestamp).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}
+                    </span>
+                  </div>
+                  <p className="text-sm text-red-800 font-medium">{log.error}</p>
+                  {log.details && (
+                    <p className="text-xs text-gray-600 mt-1 break-all">{log.details}</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
       )}
     </div>

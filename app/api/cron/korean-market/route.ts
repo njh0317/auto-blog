@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getKoreanMarketNews, getKoreanMarketData, formatNewsForAI } from '@/lib/news';
 import { generateContent } from '@/lib/ai-provider';
 import { savePosts, getPosts } from '@/lib/storage';
+import { saveErrorLog } from '@/lib/error-log';
 import { Post } from '@/lib/types';
 
 // Vercel Cron 설정 - 한국시간 오후 4시 (UTC 07:00)
@@ -73,6 +74,7 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Cron 실행 실패:', error);
+    await saveErrorLog('korean-market', error instanceof Error ? error : String(error));
     return NextResponse.json({ 
       error: '글 생성 실패', 
       details: error instanceof Error ? error.message : 'Unknown error' 
