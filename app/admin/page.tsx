@@ -299,8 +299,36 @@ export default function AdminPage() {
 
           <section className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border mb-6 sm:mb-8">
             <h2 className="text-base sm:text-xl font-semibold mb-3 sm:mb-4">✍️ AI 글 생성</h2>
+            
+            {/* 추천 주제 버튼 */}
+            <div className="mb-4">
+              <p className="text-xs text-gray-500 mb-2">추천 주제 (클릭하면 자동 입력)</p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { topic: '외국인이 주식 파는 이유', keywords: '외국인, 매도, 수급, 환율' },
+                  { topic: '환율 오르면 주식은 왜 떨어질까', keywords: '환율, 원달러, 외국인, 자금이탈' },
+                  { topic: '금리 인하하면 어떤 업종이 오를까', keywords: '금리, 인하, 성장주, 부동산' },
+                  { topic: '미국 CPI 발표 후 증시 반응 정리', keywords: 'CPI, 물가, 인플레이션, 연준' },
+                  { topic: 'FOMC 일정이 주식에 미치는 영향', keywords: 'FOMC, 연준, 금리, 파월' },
+                  { topic: 'PER, PBR 쉽게 이해하기', keywords: 'PER, PBR, 밸류에이션, 저평가' },
+                  { topic: '배당주 투자 입문 가이드', keywords: '배당, 배당주, 배당수익률, 패시브인컴' },
+                ].map((preset) => (
+                  <button
+                    key={preset.topic}
+                    onClick={() => {
+                      setTopic(preset.topic);
+                      setKeywords(preset.keywords);
+                    }}
+                    className="text-xs px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-700 transition-colors"
+                  >
+                    {preset.topic}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
             <div className="space-y-3 sm:space-y-4">
-              <input type="text" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="주제 입력" className="w-full p-2.5 sm:p-3 border rounded text-sm sm:text-base" />
+              <input type="text" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="주제 입력 (예: 외국인이 주식 파는 이유)" className="w-full p-2.5 sm:p-3 border rounded text-sm sm:text-base" />
               <input type="text" value={keywords} onChange={(e) => setKeywords(e.target.value)} placeholder="키워드 (쉼표로 구분)" className="w-full p-2.5 sm:p-3 border rounded text-sm sm:text-base" />
               <button onClick={handleGenerate} disabled={isGenerating} className="w-full sm:w-auto bg-green-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded hover:bg-green-700 disabled:bg-gray-400 text-sm sm:text-base">
                 {isGenerating ? '생성 중...' : 'AI로 글 생성'}
