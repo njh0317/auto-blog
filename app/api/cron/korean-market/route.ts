@@ -3,6 +3,7 @@ import { getKoreanMarketNews, getKoreanMarketData, getKoreanTopStocks, getUsdKrw
 import { savePosts, getPosts } from '@/lib/storage';
 import { saveErrorLog } from '@/lib/error-log';
 import { Post, GenerateResponse, KoreanMarketSnapshot } from '@/lib/types';
+import { postTweet, createBlogTweet } from '@/lib/twitter';
 
 // Vercel Cron 설정 - 한국시간 오후 4시 (UTC 07:00)
 export const dynamic = 'force-dynamic';
@@ -221,10 +222,16 @@ export async function GET(request: Request) {
     posts.unshift(newPost);
     await savePosts(posts);
     
+    // 6. 트위터에 자동 포스팅
+    const postUrl = `https://wisdomslab.com/posts/${slug}`;
+    const tweetText = createBlogTweet(newPost.title, newPost.excerpt, postUrl);
+    const tweetResult = await postTweet(tweetText);
+    
     return NextResponse.json({ 
       success: true, 
       message: '한국 증시 글 생성 완료',
-      postId: newPost.id 
+      postId: newPost.id,
+      tweet: tweetResult.success ? { id: tweetResult.tweetId } : { error: tweetResult.error }
     });
   } catch (error) {
     console.error('Cron 실행 실패:', error);
