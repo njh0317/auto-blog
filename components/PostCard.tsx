@@ -29,17 +29,12 @@ export default function PostCard({ post }: PostCardProps) {
           })}
         </time>
         <div className="flex flex-wrap gap-1.5 sm:gap-2">
-          {/* 모바일: 2개, 데스크톱: 3개 */}
-          {post.keywords.slice(0, 2).map((keyword) => (
+          {/* 모바일/데스크톱 모두 3개 */}
+          {post.keywords.slice(0, 3).map((keyword) => (
             <span key={keyword} className="bg-gray-100 px-2 py-0.5 sm:py-1 rounded text-xs">
               {keyword}
             </span>
           ))}
-          {post.keywords.length > 2 && (
-            <span className="hidden sm:inline-block bg-gray-100 px-2 py-1 rounded text-xs">
-              {post.keywords[2]}
-            </span>
-          )}
         </div>
       </div>
     </article>
