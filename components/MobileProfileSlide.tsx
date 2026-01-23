@@ -2,8 +2,21 @@
 
 import { useState, useEffect } from 'react';
 
+interface PopularPost {
+  slug: string;
+  title: string;
+}
+
+interface VisitorData {
+  today: number;
+  total: number;
+}
+
 export default function MobileProfileSlide() {
   const [isOpen, setIsOpen] = useState(false);
+  const [visitor, setVisitor] = useState<VisitorData | null>(null);
+  const [popularPosts, setPopularPosts] = useState<PopularPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // ESC 키로 닫기
   useEffect(() => {
@@ -19,6 +32,24 @@ export default function MobileProfileSlide() {
       document.body.style.overflow = '';
     };
   }, [isOpen]);
+
+  // 패널 열릴 때 데이터 로드
+  useEffect(() => {
+    if (isOpen && isLoading) {
+      // 방문자 수
+      fetch('/api/visitor')
+        .then(r => r.json())
+        .then(d => setVisitor(d))
+        .catch(() => {});
+      
+      // 인기글
+      fetch('/api/posts/popular')
+        .then(r => r.json())
+        .then(posts => setPopularPosts(posts))
+        .catch(() => {})
+        .finally(() => setIsLoading(false));
+    }
+  }, [isOpen, isLoading]);
 
   return (
     <>
@@ -96,11 +127,15 @@ export default function MobileProfileSlide() {
             <div className="flex justify-center gap-4 text-sm">
               <div>
                 <span className="text-gray-500">오늘</span>
-                <span className="ml-1 font-semibold text-blue-600" id="slide-today">-</span>
+                <span className="ml-1 font-semibold text-blue-600">
+                  {visitor ? visitor.today.toLocaleString() : '-'}
+                </span>
               </div>
               <div>
                 <span className="text-gray-500">전체</span>
-                <span className="ml-1 font-semibold text-gray-900" id="slide-total">-</span>
+                <span className="ml-1 font-semibold text-gray-900">
+                  {visitor ? visitor.total.toLocaleString() : '-'}
+                </span>
               </div>
             </div>
           </div>
@@ -110,8 +145,23 @@ export default function MobileProfileSlide() {
           {/* 인기글 */}
           <div>
             <p className="text-xs text-gray-500 mb-2">인기글</p>
-            <div id="slide-popular" className="space-y-2 text-sm">
-              <p className="text-gray-400 text-xs">로딩중...</p>
+            <div className="space-y-2 text-sm">
+              {isLoading ? (
+                <p className="text-gray-400 text-xs">로딩중...</p>
+              ) : popularPosts.length === 0 ? (
+                <p className="text-gray-400 text-xs">아직 데이터가 없습니다</p>
+              ) : (
+                popularPosts.map((post, i) => (
+                  <a 
+                    key={post.slug}
+                    href={`/posts/${post.slug}`} 
+                    className="block hover:text-blue-600 truncate"
+                  >
+                    <span className="text-gray-400 mr-1">{i + 1}.</span>
+                    <span className="text-gray-700">{post.title}</span>
+                  </a>
+                ))
+              )}
             </div>
           </div>
           
@@ -124,45 +174,6 @@ export default function MobileProfileSlide() {
           </div>
         </div>
       </div>
-
-      {/* 데이터 로드 스크립트 */}
-      {isOpen && (
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            (function() {
-              // 방문자 수
-              fetch('/api/visitor')
-                .then(function(r) { return r.json(); })
-                .then(function(d) {
-                  var today = document.getElementById('slide-today');
-                  var total = document.getElementById('slide-total');
-                  if (today) today.textContent = d.today.toLocaleString();
-                  if (total) total.textContent = d.total.toLocaleString();
-                })
-                .catch(function() {});
-              
-              // 인기글
-              fetch('/api/posts/popular')
-                .then(function(r) { return r.json(); })
-                .then(function(posts) {
-                  var container = document.getElementById('slide-popular');
-                  if (!container) return;
-                  if (posts.length === 0) {
-                    container.innerHTML = '<p class="text-gray-400 text-xs">아직 데이터가 없습니다</p>';
-                    return;
-                  }
-                  container.innerHTML = posts.map(function(p, i) {
-                    return '<a href="/posts/' + p.slug + '" class="block hover:text-blue-600 truncate">' +
-                      '<span class="text-gray-400 mr-1">' + (i + 1) + '.</span>' +
-                      '<span class="text-gray-700">' + p.title + '</span>' +
-                    '</a>';
-                  }).join('');
-                })
-                .catch(function() {});
-            })();
-          `
-        }} />
-      )}
     </>
   );
 }
