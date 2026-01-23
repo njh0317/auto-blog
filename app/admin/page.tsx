@@ -309,7 +309,121 @@ export default function AdminPage() {
         <>
           {/* 상세 시황 글 생성 */}
           <section className="bg-gradient-to-r from-purple-50 to-blue-50 p-4 sm:p-6 rounded-lg shadow-sm border border-purple-200 mb-6 sm:mb-8">
-            <h2 className="text-base sm:text-xl font-semibold mb-3 sm:mb-4">📊 상세 시황 글 생성</h2>
+            <h2 className="text-base sm:text-xl font-semibold mb-3 sm:mb-4">📊 시황 글 생성</h2>
+            <p className="text-gray-600 mb-3 sm:mb-4 text-sm">
+              각 시황 글을 수동으로 생성합니다. (자동화된 cron job과 동일)
+            </p>
+            
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+              <button
+                onClick={async () => {
+                  setIsGenerating(true);
+                  setMessage('모닝 브리핑 생성 중...');
+                  try {
+                    const res = await fetch('/api/cron/morning-briefing');
+                    if (res.ok) {
+                      setMessage('모닝 브리핑이 생성되었습니다!');
+                      loadPosts();
+                    } else {
+                      const data = await res.json();
+                      setMessage(`오류: ${data.error || '생성 실패'}`);
+                    }
+                  } catch {
+                    setMessage('오류가 발생했습니다.');
+                  } finally {
+                    setIsGenerating(false);
+                  }
+                }}
+                disabled={isGenerating}
+                className="bg-yellow-500 text-white px-3 py-2.5 rounded-lg hover:bg-yellow-600 disabled:bg-gray-400 font-medium text-xs sm:text-sm"
+              >
+                ☀️ 모닝브리핑
+              </button>
+              
+              <button
+                onClick={async () => {
+                  setIsGenerating(true);
+                  setMessage('한국 증시 글 생성 중...');
+                  try {
+                    const res = await fetch('/api/cron/korean-market');
+                    if (res.ok) {
+                      setMessage('한국 증시 글이 생성되었습니다!');
+                      loadPosts();
+                    } else {
+                      const data = await res.json();
+                      setMessage(`오류: ${data.error || '생성 실패'}`);
+                    }
+                  } catch {
+                    setMessage('오류가 발생했습니다.');
+                  } finally {
+                    setIsGenerating(false);
+                  }
+                }}
+                disabled={isGenerating}
+                className="bg-blue-500 text-white px-3 py-2.5 rounded-lg hover:bg-blue-600 disabled:bg-gray-400 font-medium text-xs sm:text-sm"
+              >
+                🇰🇷 한국증시
+              </button>
+              
+              <button
+                onClick={async () => {
+                  setIsGenerating(true);
+                  setMessage('미국 증시 글 생성 중...');
+                  try {
+                    const res = await fetch('/api/cron/us-market');
+                    if (res.ok) {
+                      setMessage('미국 증시 글이 생성되었습니다!');
+                      loadPosts();
+                    } else {
+                      const data = await res.json();
+                      setMessage(`오류: ${data.error || '생성 실패'}`);
+                    }
+                  } catch {
+                    setMessage('오류가 발생했습니다.');
+                  } finally {
+                    setIsGenerating(false);
+                  }
+                }}
+                disabled={isGenerating}
+                className="bg-red-500 text-white px-3 py-2.5 rounded-lg hover:bg-red-600 disabled:bg-gray-400 font-medium text-xs sm:text-sm"
+              >
+                🇺🇸 미국증시
+              </button>
+              
+              <button
+                onClick={async () => {
+                  setIsGenerating(true);
+                  setMessage('마감 요약 글 생성 중...');
+                  try {
+                    const res = await fetch('/api/cron/market-summary');
+                    if (res.ok) {
+                      setMessage('마감 요약 글이 생성되었습니다!');
+                      loadPosts();
+                    } else {
+                      const data = await res.json();
+                      setMessage(`오류: ${data.error || '생성 실패'}`);
+                    }
+                  } catch {
+                    setMessage('오류가 발생했습니다.');
+                  } finally {
+                    setIsGenerating(false);
+                  }
+                }}
+                disabled={isGenerating}
+                className="bg-purple-500 text-white px-3 py-2.5 rounded-lg hover:bg-purple-600 disabled:bg-gray-400 font-medium text-xs sm:text-sm"
+              >
+                📈 마감요약
+              </button>
+            </div>
+            
+            {isGenerating && (
+              <p className="text-sm text-gray-500 mt-3">⏳ 글 생성에 10~30초 정도 소요됩니다...</p>
+            )}
+          </section>
+
+          {/* 상세 시황 글 생성 (기존) */}
+          <section className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border mb-6 sm:mb-8">
+            <h2 className="text-base sm:text-xl font-semibold mb-3 sm:mb-4">📊 상세 시황 글 생성 (레거시)</h2>
             <p className="text-gray-600 mb-3 sm:mb-4 text-sm">
               3대 지수, 섹터별 종목, 환율, 원자재 등 상세 시황 분석 글을 자동 생성합니다.
             </p>
@@ -318,7 +432,7 @@ export default function AdminPage() {
               <button
                 onClick={handleDetailedReport}
                 disabled={isGenerating}
-                className="bg-purple-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg hover:bg-purple-700 disabled:bg-gray-400 font-medium text-sm sm:text-base"
+                className="bg-gray-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg hover:bg-gray-700 disabled:bg-gray-400 font-medium text-sm sm:text-base"
               >
                 {isGenerating ? '생성 중...' : '🚀 상세 시황 글 생성'}
               </button>
@@ -326,7 +440,7 @@ export default function AdminPage() {
               <button
                 onClick={loadMarketPreview}
                 disabled={isLoadingPreview}
-                className="bg-white text-purple-600 border border-purple-300 px-4 py-2.5 sm:py-3 rounded-lg hover:bg-purple-50 text-sm sm:text-base"
+                className="bg-white text-gray-600 border border-gray-300 px-4 py-2.5 sm:py-3 rounded-lg hover:bg-gray-50 text-sm sm:text-base"
               >
                 {isLoadingPreview ? '로딩...' : '👁️ 미리보기'}
               </button>
