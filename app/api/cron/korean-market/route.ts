@@ -12,7 +12,7 @@ async function generateKoreanMarketReport(marketSummary: string, newsText: strin
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY가 설정되지 않았습니다');
 
-  const prompt = `당신은 10년차 개인 투자자이자 SEO를 이해하는 금융 콘텐츠 크리에이터입니다.
+  const prompt = `당신은 10년차 개발자이자 금융 투자자입니다.
 오늘 한국 증시 마감 시황 글을 작성합니다.
 
 [오늘 날짜]
