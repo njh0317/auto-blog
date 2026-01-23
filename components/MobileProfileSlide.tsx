@@ -28,7 +28,9 @@ export default function MobileProfileSlide() {
         className="lg:hidden p-2 rounded-full hover:bg-gray-100 transition-colors"
         aria-label="프로필 보기"
       >
-        <img src="/icon.png" alt="프로필" className="w-8 h-8 rounded-full" />
+        <svg className="w-7 h-7 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
       </button>
 
       {/* 오버레이 */}
