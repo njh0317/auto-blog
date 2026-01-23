@@ -45,6 +45,12 @@ export default function ProfileSidebar() {
       {/* 구분선 */}
       <hr className="my-4" />
       
+      {/* 인기글 */}
+      <PopularPosts />
+      
+      {/* 구분선 */}
+      <hr className="my-4" />
+      
       {/* 블로그 정보 */}
       <div className="text-xs text-gray-500 space-y-1">
         <p>매일 업데이트</p>
@@ -82,6 +88,42 @@ function VisitorCounter() {
                 if (!visited) sessionStorage.setItem('visited', '1');
               })
               .catch(function() {});
+          })();
+        `
+      }} />
+    </div>
+  );
+}
+
+// 인기글 컴포넌트
+function PopularPosts() {
+  return (
+    <div>
+      <p className="text-xs text-gray-500 mb-2">인기글</p>
+      <div id="popular-posts" className="space-y-2 text-sm">
+        <p className="text-gray-400 text-xs">로딩중...</p>
+      </div>
+      <script dangerouslySetInnerHTML={{
+        __html: `
+          (function() {
+            fetch('/api/posts/popular')
+              .then(function(r) { return r.json(); })
+              .then(function(posts) {
+                var container = document.getElementById('popular-posts');
+                if (posts.length === 0) {
+                  container.innerHTML = '<p class="text-gray-400 text-xs">아직 데이터가 없습니다</p>';
+                  return;
+                }
+                container.innerHTML = posts.map(function(p, i) {
+                  return '<a href="/posts/' + p.slug + '" class="block hover:text-blue-600 truncate">' +
+                    '<span class="text-gray-400 mr-1">' + (i + 1) + '.</span>' +
+                    '<span class="text-gray-700">' + p.title + '</span>' +
+                  '</a>';
+                }).join('');
+              })
+              .catch(function() {
+                document.getElementById('popular-posts').innerHTML = '<p class="text-gray-400 text-xs">로드 실패</p>';
+              });
           })();
         `
       }} />

@@ -91,6 +91,23 @@ export default async function PostPage({ params }: PageProps) {
         </Link>
       </div>
 
+      {/* 조회수 증가 스크립트 */}
+      <script dangerouslySetInnerHTML={{
+        __html: `
+          (function() {
+            var key = 'viewed:${post.slug}';
+            if (!sessionStorage.getItem(key)) {
+              fetch('/api/posts/view', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ slug: '${post.slug}' })
+              });
+              sessionStorage.setItem(key, '1');
+            }
+          })();
+        `
+      }} />
+
       <header className="mb-6 sm:mb-8">
         <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
           {post.title}

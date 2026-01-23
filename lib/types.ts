@@ -47,6 +47,7 @@ export interface Post {
   keywords: string[];
   createdAt: string;
   updatedAt: string;
+  viewCount?: number; // 조회수
   marketData?: MarketSnapshot; // 시황 글일 경우 데이터 포함
 }
 

@@ -42,6 +42,28 @@ export async function getPostBySlug(slug: string): Promise<Post | undefined> {
   return posts.find(p => p.slug === slug);
 }
 
+// 조회수 증가
+export async function incrementViewCount(slug: string): Promise<number> {
+  const posts = await getPosts();
+  const post = posts.find(p => p.slug === slug);
+  
+  if (!post) return 0;
+  
+  post.viewCount = (post.viewCount || 0) + 1;
+  await savePosts(posts);
+  
+  return post.viewCount;
+}
+
+// 인기글 조회 (조회수 기준 상위 N개)
+export async function getPopularPosts(limit: number = 3): Promise<Post[]> {
+  const posts = await getPosts();
+  return posts
+    .filter(p => (p.viewCount || 0) > 0)
+    .sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0))
+    .slice(0, limit);
+}
+
 // 이전글/다음글 조회
 export async function getAdjacentPosts(slug: string): Promise<{ prev: Post | null; next: Post | null }> {
   const posts = await getAllPosts(); // 정렬된 상태
