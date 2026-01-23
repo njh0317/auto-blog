@@ -42,6 +42,21 @@ export async function getPostBySlug(slug: string): Promise<Post | undefined> {
   return posts.find(p => p.slug === slug);
 }
 
+// 이전글/다음글 조회
+export async function getAdjacentPosts(slug: string): Promise<{ prev: Post | null; next: Post | null }> {
+  const posts = await getAllPosts(); // 정렬된 상태
+  const currentIndex = posts.findIndex(p => p.slug === slug);
+  
+  if (currentIndex === -1) {
+    return { prev: null, next: null };
+  }
+  
+  return {
+    prev: currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null, // 이전글 (더 오래된 글)
+    next: currentIndex > 0 ? posts[currentIndex - 1] : null, // 다음글 (더 최신 글)
+  };
+}
+
 export async function createPost(data: {
   title: string;
   content: string;

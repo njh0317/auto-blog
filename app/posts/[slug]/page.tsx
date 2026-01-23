@@ -1,10 +1,11 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { getPostBySlug } from '@/lib/posts';
+import { getPostBySlug, getAdjacentPosts } from '@/lib/posts';
 import StockHeatmap from '@/components/StockHeatmap';
 import TradingViewWidget from '@/components/TradingViewWidget';
 import AdBanner from '@/components/AdBanner';
 import FearGreedGauge from '@/components/FearGreedGauge';
+import Link from 'next/link';
 
 // 동적 렌더링으로 변경
 export const dynamic = 'force-dynamic';
@@ -72,10 +73,24 @@ export default async function PostPage({ params }: PageProps) {
     notFound();
   }
 
+  const { prev, next } = await getAdjacentPosts(decodeURIComponent(slug));
   const hasMarketData = !!post.marketData;
 
   return (
     <article className="bg-white rounded-lg shadow-sm border p-4 sm:p-6 md:p-8">
+      {/* 뒤로가기 버튼 */}
+      <div className="mb-4">
+        <Link 
+          href="/" 
+          className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900"
+        >
+          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          목록으로
+        </Link>
+      </div>
+
       <header className="mb-6 sm:mb-8">
         <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
           {post.title}
@@ -200,6 +215,47 @@ export default async function PostPage({ params }: PageProps) {
           <TradingViewWidget type="ticker" />
         </div>
       )}
+
+      {/* 이전글/다음글 네비게이션 */}
+      <nav className="mt-8 pt-6 border-t">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* 이전글 */}
+          <div>
+            {prev ? (
+              <Link 
+                href={`/posts/${prev.slug}`}
+                className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <span className="text-xs text-gray-500 mb-1 block">← 이전글</span>
+                <span className="text-sm font-medium text-gray-900 line-clamp-2">{prev.title}</span>
+              </Link>
+            ) : (
+              <div className="p-4 bg-gray-50 rounded-lg opacity-50">
+                <span className="text-xs text-gray-500 mb-1 block">← 이전글</span>
+                <span className="text-sm text-gray-400">이전글이 없습니다</span>
+              </div>
+            )}
+          </div>
+          
+          {/* 다음글 */}
+          <div>
+            {next ? (
+              <Link 
+                href={`/posts/${next.slug}`}
+                className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-right"
+              >
+                <span className="text-xs text-gray-500 mb-1 block">다음글 →</span>
+                <span className="text-sm font-medium text-gray-900 line-clamp-2">{next.title}</span>
+              </Link>
+            ) : (
+              <div className="p-4 bg-gray-50 rounded-lg opacity-50 text-right">
+                <span className="text-xs text-gray-500 mb-1 block">다음글 →</span>
+                <span className="text-sm text-gray-400">다음글이 없습니다</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </nav>
     </article>
   );
 }
