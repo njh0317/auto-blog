@@ -50,8 +50,15 @@ export default function RootLayout({
           {children}
         </main>
         <footer className="bg-white border-t mt-12">
-          <div className="max-w-4xl mx-auto px-4 py-6 text-center text-gray-500 text-sm">
-            © 2026 wisdomslab.com
+          <div className="max-w-4xl mx-auto px-4 py-6">
+            <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500 mb-4">
+              <a href="/about" className="hover:text-gray-700">소개</a>
+              <a href="/contact" className="hover:text-gray-700">문의</a>
+              <a href="/privacy" className="hover:text-gray-700">개인정보처리방침</a>
+            </div>
+            <p className="text-center text-gray-500 text-sm">
+              © 2026 wisdomslab.com
+            </p>
           </div>
         </footer>
       </body>
