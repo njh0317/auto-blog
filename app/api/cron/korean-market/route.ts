@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { getKoreanMarketNews, getKoreanMarketData, formatNewsForAI } from '@/lib/news';
+import { getKoreanMarketNews, getKoreanMarketData, getKoreanTopStocks, getUsdKrwRate, formatNewsForAI } from '@/lib/news';
 import { savePosts, getPosts } from '@/lib/storage';
 import { saveErrorLog } from '@/lib/error-log';
-import { Post, GenerateResponse } from '@/lib/types';
+import { Post, GenerateResponse, KoreanMarketSnapshot } from '@/lib/types';
 
 // Vercel Cron 설정 - 한국시간 오후 4시 (UTC 07:00)
 export const dynamic = 'force-dynamic';
@@ -120,9 +120,11 @@ export async function GET(request: Request) {
 
   try {
     // 1. 한국 증시 뉴스 및 실시간 데이터 수집
-    const [news, marketData] = await Promise.all([
+    const [news, marketData, topStocks, usdKrw] = await Promise.all([
       getKoreanMarketNews(),
       getKoreanMarketData(),
+      getKoreanTopStocks(),
+      getUsdKrwRate(),
     ]);
     const newsText = formatNewsForAI(news);
     
@@ -141,12 +143,34 @@ export async function GET(request: Request) {
       const kosdaqDir = marketData.kosdaq.changePercent >= 0 ? '상승' : '하락';
       marketSummary = `코스피: ${marketData.kospi.price.toFixed(2)}p (${marketData.kospi.changePercent >= 0 ? '+' : ''}${marketData.kospi.changePercent.toFixed(2)}% ${kospiDir})
 코스닥: ${marketData.kosdaq.price.toFixed(2)}p (${marketData.kosdaq.changePercent >= 0 ? '+' : ''}${marketData.kosdaq.changePercent.toFixed(2)}% ${kosdaqDir})`;
+      
+      if (usdKrw) {
+        marketSummary += `\n원/달러 환율: ${usdKrw.rate.toFixed(2)}원 (${usdKrw.changePercent >= 0 ? '+' : ''}${usdKrw.changePercent.toFixed(2)}%)`;
+      }
+      
+      if (topStocks.length > 0) {
+        marketSummary += `\n\n시총 상위 종목 등락:`;
+        topStocks.forEach(stock => {
+          marketSummary += `\n- ${stock.name}(${stock.sector}): ${stock.changePercent >= 0 ? '+' : ''}${stock.changePercent.toFixed(2)}%`;
+        });
+      }
     }
     
     // 3. AI로 글 생성
     const generated = await generateKoreanMarketReport(marketSummary, newsText);
     
-    // 3. 포스트 저장
+    // 4. 한국 시장 데이터 스냅샷 생성
+    const koreanMarketData: KoreanMarketSnapshot | undefined = marketData ? {
+      indices: {
+        kospi: { name: '코스피', price: marketData.kospi.price, changePercent: marketData.kospi.changePercent },
+        kosdaq: { name: '코스닥', price: marketData.kosdaq.price, changePercent: marketData.kosdaq.changePercent },
+      },
+      topStocks: topStocks.map(s => ({ name: s.name, sector: s.sector, changePercent: s.changePercent })),
+      usdKrw: usdKrw || { rate: 0, changePercent: 0 },
+      fetchedAt: new Date().toISOString(),
+    } : undefined;
+    
+    // 5. 포스트 저장
     const slug = `${today.replace(/\s/g, '-')}-한국증시-마감시황`.replace(/[년월일]/g, '');
     
     const newPost: Post = {
@@ -158,6 +182,7 @@ export async function GET(request: Request) {
       keywords: generated.keywords,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      koreanMarketData,
     };
     
     const posts = await getPosts();

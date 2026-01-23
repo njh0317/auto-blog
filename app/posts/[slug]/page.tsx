@@ -75,6 +75,7 @@ export default async function PostPage({ params }: PageProps) {
 
   const { prev, next } = await getAdjacentPosts(decodeURIComponent(slug));
   const hasMarketData = !!post.marketData;
+  const hasKoreanMarketData = !!post.koreanMarketData;
 
   return (
     <article className="bg-white rounded-lg shadow-sm border p-4 sm:p-6 md:p-8">
@@ -136,7 +137,81 @@ export default async function PostPage({ params }: PageProps) {
       {/* 상단 광고 */}
       <AdBanner slot={process.env.NEXT_PUBLIC_AD_SLOT_TOP || ''} className="mb-6" />
 
-      {/* 저장된 시장 데이터로 히트맵 표시 */}
+      {/* 한국 시장 데이터 표시 */}
+      {hasKoreanMarketData && post.koreanMarketData && (
+        <div className="mb-6 sm:mb-8">
+          {/* 코스피/코스닥 지수 카드 */}
+          <h2 className="text-base sm:text-lg md:text-xl font-semibold mb-3 sm:mb-4 text-gray-900">📊 오늘의 지수</h2>
+          <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-4 sm:mb-6">
+            {Object.values(post.koreanMarketData.indices).map((index) => (
+              <div 
+                key={index.name}
+                className={`p-3 sm:p-4 rounded-lg text-center ${
+                  index.changePercent >= 0 ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
+                }`}
+              >
+                <div className="text-xs sm:text-sm text-gray-600">{index.name}</div>
+                <div className="text-lg sm:text-xl font-bold">
+                  {index.price.toLocaleString()}
+                </div>
+                <div className={`text-sm sm:text-base font-medium ${
+                  index.changePercent >= 0 ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {index.changePercent >= 0 ? '+' : ''}{index.changePercent.toFixed(2)}%
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* 환율 */}
+          {post.koreanMarketData.usdKrw && post.koreanMarketData.usdKrw.rate > 0 && (
+            <div className="mb-4 sm:mb-6">
+              <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg ${
+                post.koreanMarketData.usdKrw.changePercent >= 0 ? 'bg-red-50 border border-red-200' : 'bg-green-50 border border-green-200'
+              }`}>
+                <span className="text-sm text-gray-600">원/달러</span>
+                <span className="font-bold">{post.koreanMarketData.usdKrw.rate.toLocaleString()}원</span>
+                <span className={`text-sm font-medium ${
+                  post.koreanMarketData.usdKrw.changePercent >= 0 ? 'text-red-600' : 'text-green-600'
+                }`}>
+                  {post.koreanMarketData.usdKrw.changePercent >= 0 ? '▲' : '▼'}{Math.abs(post.koreanMarketData.usdKrw.changePercent).toFixed(2)}%
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* 시총 상위 종목 히트맵 */}
+          {post.koreanMarketData.topStocks && post.koreanMarketData.topStocks.length > 0 && (
+            <div className="mb-4">
+              <h3 className="text-sm sm:text-base font-semibold mb-3 text-gray-900">📈 시총 상위 종목</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                {post.koreanMarketData.topStocks.map((stock) => (
+                  <div 
+                    key={stock.name}
+                    className={`p-2 sm:p-3 rounded-lg text-center ${
+                      stock.changePercent >= 0 ? 'bg-green-100' : 'bg-red-100'
+                    }`}
+                  >
+                    <div className="text-xs text-gray-600 truncate">{stock.name}</div>
+                    <div className={`text-sm sm:text-base font-bold ${
+                      stock.changePercent >= 0 ? 'text-green-700' : 'text-red-700'
+                    }`}>
+                      {stock.changePercent >= 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%
+                    </div>
+                    <div className="text-[10px] text-gray-500">{stock.sector}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          <p className="text-[10px] sm:text-xs text-gray-400 mt-2">
+            데이터 수집 시간: {new Date(post.koreanMarketData.fetchedAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}
+          </p>
+        </div>
+      )}
+
+      {/* 저장된 미국 시장 데이터로 히트맵 표시 */}
       {hasMarketData && post.marketData && (
         <div className="mb-6 sm:mb-8">
           {/* 3대 지수 카드 */}

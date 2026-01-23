@@ -89,6 +89,89 @@ export async function getKoreanMarketData(): Promise<{
   }
 }
 
+// 한국 시총 상위 종목 데이터
+export interface KoreanStock {
+  symbol: string;
+  name: string;
+  sector: string;
+  price: number;
+  changePercent: number;
+}
+
+// 한국 시총 상위 종목 (Yahoo Finance 심볼)
+const KOREAN_TOP_STOCKS = [
+  { symbol: '005930.KS', name: '삼성전자', sector: '반도체' },
+  { symbol: '000660.KS', name: 'SK하이닉스', sector: '반도체' },
+  { symbol: '373220.KS', name: 'LG에너지솔루션', sector: '2차전지' },
+  { symbol: '207940.KS', name: '삼성바이오로직스', sector: '바이오' },
+  { symbol: '005380.KS', name: '현대차', sector: '자동차' },
+  { symbol: '006400.KS', name: '삼성SDI', sector: '2차전지' },
+  { symbol: '051910.KS', name: 'LG화학', sector: '2차전지' },
+  { symbol: '035420.KS', name: 'NAVER', sector: 'IT' },
+  { symbol: '000270.KS', name: '기아', sector: '자동차' },
+  { symbol: '105560.KS', name: 'KB금융', sector: '금융' },
+];
+
+export async function getKoreanTopStocks(): Promise<KoreanStock[]> {
+  const results: KoreanStock[] = [];
+  
+  for (const stock of KOREAN_TOP_STOCKS) {
+    try {
+      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${stock.symbol}?interval=1d&range=1d`;
+      const res = await fetch(url, {
+        headers: { 'User-Agent': 'Mozilla/5.0' },
+      });
+      if (!res.ok) continue;
+      
+      const data = await res.json();
+      const meta = data.chart?.result?.[0]?.meta;
+      if (!meta) continue;
+      
+      const price = meta.regularMarketPrice || 0;
+      const prevClose = meta.chartPreviousClose || meta.previousClose || price;
+      const changePercent = prevClose ? ((price - prevClose) / prevClose) * 100 : 0;
+      
+      results.push({
+        symbol: stock.symbol,
+        name: stock.name,
+        sector: stock.sector,
+        price: Math.round(price),
+        changePercent: Math.round(changePercent * 100) / 100,
+      });
+    } catch {
+      continue;
+    }
+  }
+  
+  return results;
+}
+
+// 원/달러 환율
+export async function getUsdKrwRate(): Promise<{ rate: number; changePercent: number } | null> {
+  try {
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/USDKRW=X?interval=1d&range=1d`;
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0' },
+    });
+    if (!res.ok) return null;
+    
+    const data = await res.json();
+    const meta = data.chart?.result?.[0]?.meta;
+    if (!meta) return null;
+    
+    const rate = meta.regularMarketPrice || 0;
+    const prevClose = meta.chartPreviousClose || meta.previousClose || rate;
+    const changePercent = prevClose ? ((rate - prevClose) / prevClose) * 100 : 0;
+    
+    return {
+      rate: Math.round(rate * 100) / 100,
+      changePercent: Math.round(changePercent * 100) / 100,
+    };
+  } catch {
+    return null;
+  }
+}
+
 // 미국 증시 뉴스
 export async function getUSMarketNews(): Promise<NewsItem[]> {
   return fetchGoogleNews('나스닥 S&P500 미국증시');

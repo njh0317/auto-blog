@@ -48,7 +48,26 @@ export interface Post {
   createdAt: string;
   updatedAt: string;
   viewCount?: number; // 조회수
-  marketData?: MarketSnapshot; // 시황 글일 경우 데이터 포함
+  marketData?: MarketSnapshot; // 미국 시황 글일 경우 데이터 포함
+  koreanMarketData?: KoreanMarketSnapshot; // 한국 시황 글일 경우 데이터 포함
+}
+
+// 한국 시장 데이터 스냅샷
+export interface KoreanMarketSnapshot {
+  indices: {
+    kospi: { name: string; price: number; changePercent: number };
+    kosdaq: { name: string; price: number; changePercent: number };
+  };
+  topStocks: Array<{
+    name: string;
+    sector: string;
+    changePercent: number;
+  }>;
+  usdKrw: {
+    rate: number;
+    changePercent: number;
+  };
+  fetchedAt: string;
 }
 
 export interface GenerateRequest {
