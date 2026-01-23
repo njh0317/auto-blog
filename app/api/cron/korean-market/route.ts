@@ -114,7 +114,11 @@ export async function GET(request: Request) {
   const authHeader = request.headers.get('authorization');
   const isLocal = process.env.NODE_ENV === 'development';
   
-  if (!isLocal && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  // CRON_SECRET 또는 ADMIN_PASSWORD로 인증
+  const isValidCron = authHeader === `Bearer ${process.env.CRON_SECRET}`;
+  const isValidAdmin = authHeader === `Bearer ${process.env.ADMIN_PASSWORD}`;
+  
+  if (!isLocal && !isValidCron && !isValidAdmin) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
