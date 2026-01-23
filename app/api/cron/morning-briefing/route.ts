@@ -8,11 +8,14 @@ import { Post, GenerateResponse } from '@/lib/types';
 export const dynamic = 'force-dynamic';
 
 // 모닝 브리핑 전용 Gemini 호출 (Google Search Grounding 포함)
-async function generateMorningBriefing(newsText: string): Promise<GenerateResponse> {
+async function generateMorningBriefing(newsText: string, todayStr: string): Promise<GenerateResponse> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY가 설정되지 않았습니다');
 
   const prompt = `당신은 10년차 개인 투자자이자 개발자입니다. 매일 아침 출근 전에 시장 뉴스를 정리해서 블로그에 올리고 있어요.
+
+[오늘 날짜]
+${todayStr}
 
 [이 글의 목적]
 바쁜 직장인 투자자들이 출근길 5분 만에 "오늘 뭐가 중요하지?"를 파악할 수 있도록 핵심만 콕콕 짚어드리는 거예요.
@@ -24,6 +27,22 @@ ${newsText}
 1. Google 검색으로 최신 정보 확인 후 오늘 가장 중요한 이슈 2-3개 선정
 2. 각 이슈가 왜 중요한지, 내 포트폴리오에 어떤 영향이 있을지 분석
 3. 관련 섹터나 종목 언급 (구체적으로)
+
+[제목 작성 규칙 - 매우 중요]
+1. seo_title (검색엔진 최적화용)
+   - 반드시 날짜 포함: "${todayStr}"
+   - 반드시 "모닝 브리핑" 또는 "증시" 포함
+   - 40~60자 이내
+   - 감탄사, 이모지, 물음표 사용 금지
+   - 아래 패턴 중 하나 사용:
+     "${todayStr} 모닝 브리핑 | 오늘 증시 핵심 이슈 3가지"
+     "${todayStr} 증시 전망 | 미국장 영향과 주요 이슈"
+     "${todayStr} 장전 브리핑 | 투자자가 알아야 할 핵심"
+
+2. display_title (화면 표시용)
+   - seo_title 기반으로 더 자연스럽고 구어체로
+   - 질문형 허용 (예: "오늘 장은 어떻게 될까?")
+   - 과장된 표현, 투자 권유 표현 금지
 
 [문체 규칙 - 매우 중요]
 - 친근한 구어체 사용 ("오늘 주목할 건요", "솔직히 좀 걱정되네요")
@@ -44,7 +63,7 @@ ${newsText}
 - 확인 안 된 정보 작성 금지
 
 JSON 형식으로만 응답:
-{"title": "흥미로운 제목", "content": "본문", "excerpt": "2줄 요약", "keywords": ["키워드1", "키워드2"]}`;
+{"seo_title": "검색엔진 최적화용 제목", "display_title": "화면 표시용 제목", "content": "본문", "excerpt": "2줄 요약", "keywords": ["키워드1", "키워드2"]}`;
 
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
@@ -84,24 +103,35 @@ JSON 형식으로만 응답:
 
   // JSON 파싱 시도, 실패하면 수동 추출
   try {
-    const parsed = JSON.parse(jsonText) as GenerateResponse;
-    parsed.title = parsed.title.replace(/[\[\]]/g, '').trim();
-    return parsed;
+    const parsed = JSON.parse(jsonText);
+    const seoTitle = (parsed.seo_title || '').replace(/[\[\]]/g, '').trim();
+    const displayTitle = (parsed.display_title || parsed.title || '').replace(/[\[\]]/g, '').trim();
+    return {
+      title: displayTitle,
+      seoTitle: seoTitle,
+      content: parsed.content,
+      excerpt: parsed.excerpt,
+      keywords: parsed.keywords || ['모닝브리핑', '경제뉴스'],
+    };
   } catch {
     // JSON 파싱 실패 시 필드별 추출 시도
+    const seoTitleMatch = jsonText.match(/"seo_title"\s*:\s*"([^"]+)"/);
+    const displayTitleMatch = jsonText.match(/"display_title"\s*:\s*"([^"]+)"/);
     const titleMatch = jsonText.match(/"title"\s*:\s*"([^"]+)"/);
     const contentMatch = jsonText.match(/"content"\s*:\s*"([\s\S]*?)(?:"\s*,\s*"excerpt|"\s*,\s*"keywords|"\s*})/);
     const excerptMatch = jsonText.match(/"excerpt"\s*:\s*"([^"]+)"/);
     const keywordsMatch = jsonText.match(/"keywords"\s*:\s*\[([\s\S]*?)\]/);
     
-    let title = titleMatch?.[1] || '모닝 브리핑';
-    title = title.replace(/[\[\]]/g, '').trim();
+    let seoTitle = seoTitleMatch?.[1] || '';
+    seoTitle = seoTitle.replace(/[\[\]]/g, '').trim();
+    let displayTitle = displayTitleMatch?.[1] || titleMatch?.[1] || '모닝 브리핑';
+    displayTitle = displayTitle.replace(/[\[\]]/g, '').trim();
     let content = contentMatch?.[1] || text;
     content = content.replace(/\\n/g, '\n').replace(/\\"/g, '"');
     const excerpt = excerptMatch?.[1] || content.slice(0, 100);
     const keywords = keywordsMatch?.[1]?.match(/"([^"]+)"/g)?.map((k: string) => k.replace(/"/g, '')) || ['모닝브리핑', '경제뉴스'];
     
-    return { title, content, excerpt, keywords };
+    return { title: displayTitle, seoTitle, content, excerpt, keywords };
   }
 }
 
@@ -115,7 +145,15 @@ export async function GET(request: Request) {
   }
 
   try {
-    // 1. 글로벌 경제 뉴스 수집
+    // 1. 날짜 포맷 (AI 호출 전에 먼저 생성)
+    const today = new Date().toLocaleDateString('ko-KR', { 
+      timeZone: 'Asia/Seoul',
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    
+    // 2. 글로벌 경제 뉴스 수집
     const news = await getGlobalEconomyNews();
     
     if (news.length === 0) {
@@ -126,23 +164,16 @@ export async function GET(request: Request) {
     
     const newsText = formatNewsForAI(news);
     
-    // 2. AI로 모닝 브리핑 글 생성
-    const aiResponse = await generateMorningBriefing(newsText);
-    
-    // 3. 날짜 포맷
-    const today = new Date().toLocaleDateString('ko-KR', { 
-      timeZone: 'Asia/Seoul',
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
+    // 3. AI로 모닝 브리핑 글 생성 (날짜 전달)
+    const aiResponse = await generateMorningBriefing(newsText, today);
     
     // 4. 포스트 저장
     const slug = `${today.replace(/\s/g, '-')}-모닝브리핑`.replace(/[년월일]/g, '');
     
     const newPost: Post = {
       id: Date.now().toString(),
-      title: aiResponse.title || `[${today}] 오늘의 모닝 브리핑`,
+      title: aiResponse.title || `${today} 오늘의 모닝 브리핑`,
+      seoTitle: aiResponse.seoTitle || `${today} 모닝 브리핑 | 오늘 증시 핵심 이슈`,
       slug,
       content: aiResponse.content,
       excerpt: aiResponse.excerpt,

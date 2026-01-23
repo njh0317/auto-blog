@@ -9,48 +9,66 @@ import { Post, GenerateResponse } from '@/lib/types';
 export const dynamic = 'force-dynamic';
 
 // 미국 증시 마감 시황 전용 Gemini 호출
-async function generateUSMarketReport(marketSummary: string, newsText: string): Promise<GenerateResponse> {
+async function generateUSMarketReport(marketSummary: string, newsText: string, todayStr: string): Promise<GenerateResponse> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY가 설정되지 않았습니다');
 
-  const prompt = `당신은 10년차 개인 투자자이자 개발자입니다. 미국 장이 끝나고 한국 투자자들을 위해 시황을 정리하려고 해요.
+  const prompt = `당신은 10년차 개인 투자자이자 SEO를 이해하는 금융 콘텐츠 크리에이터입니다.
+오늘 미국 증시 마감 시황 글을 작성합니다.
 
-[이 글의 목적]
-아침에 일어나서 "어젯밤 미국장 어땠어?"라고 궁금해하는 한국 투자자들에게 핵심을 빠르게 전달하는 거예요.
+[오늘 날짜]
+${todayStr}
 
-[오늘의 실제 지수 데이터 - 반드시 이 숫자 기준으로 작성]
+[글의 목적]
+- 아침에 일어나서 "어젯밤 미국장 어땠어?"가 궁금한 한국 투자자에게 핵심 전달
+- Google 검색 노출과 애드센스 수익을 고려한 콘텐츠
+
+[오늘의 실제 지수 데이터 - 반드시 이 숫자 기준]
 ${marketSummary}
 
-[참고할 뉴스 헤드라인]
+[참고 뉴스 헤드라인]
 ${newsText}
 
-[작성 가이드]
-1. 위 지수 데이터를 정확히 반영해서 작성 (숫자 틀리면 안 됨!)
-2. Google 검색으로 어젯밤 미국장 주요 이슈 확인
-3. 빅테크 동향 분석 (Magnificent 7 중심)
-4. 한국 증시에 미칠 영향 분석
-5. 오늘 한국장 전망
+[작성 규칙 - 매우 중요]
+1. 제공된 지수 숫자만 사용 (임의 수정 금지)
+2. 어젯밤 미국장 주요 이슈와 빅테크(Magnificent 7) 동향 분석
+3. 한국 증시에 미칠 영향 분석
+4. 오늘 한국장 전망
+5. 개인적인 의견과 체감 포함
 
-[문체 규칙 - 매우 중요]
-- 친근한 구어체 ("어젯밤 나스닥 좀 올랐네요", "테슬라가 또 날뛰었어요")
-- 개인적인 생각 포함 ("솔직히 이 정도면 과열 아닌가 싶기도 하고요", "오늘 코스피는 갭업 예상해봅니다")
-- 독자에게 말 걸듯이 ("미국주식 들고 계신 분들 기분 좋으시겠네요", "오늘 장 어떻게 대응하실 건가요?")
-- 딱딱한 보고서 어투 금지 ("~하였습니다" X)
-- 이모지 사용 금지 (AI 티 나니까)
+[문체]
+- 친근한 구어체
+- 독자에게 말 거는 느낌
+- 딱딱한 보고서체 금지
+- 이모지, 과한 감정 표현 금지
+
+[SEO 규칙]
+- title: 사람이 클릭하고 싶어지는 제목 (30~40자)
+- seoTitle: Google 검색 최적화 제목 (45~60자)
+  - 반드시 아래 키워드 중 2개 이상 포함:
+    - 미국 증시
+    - 나스닥
+    - 다우존스
+    - S&P500
+    - 주식 시황
+  - 날짜 포함 (예: ${todayStr})
 
 [구조]
 - 도입: 어젯밤 미국장 한 줄 요약 + 개인 소감
-- 본문: 3대 지수 분석 → 빅테크 동향 → 환율/원자재 → 한국장 영향 (소제목은 [[ ]] 형식)
+- 본문:
+  [[3대 지수 분석]]
+  [[Magnificent 7 동향]]
+  [[환율/원자재]]
+  [[한국장 영향]]
 - 마무리: 오늘 한국장 전망 + 투자 유의사항
-- 최소 1000자 이상
+- 본문 최소 1000자 이상
 
-[금지]
-- 마크다운 문법 (**, ##, 백틱) 절대 금지
-- 타이틀에 [] 문자 금지
-- 제공된 지수 데이터와 다른 숫자 사용 금지
+[금지 사항]
+- 마크다운 문법 사용 금지
+- 제목에 특수문자 [] 사용 금지
 
-JSON 형식으로만 응답:
-{"title": "흥미로운 제목", "content": "본문", "excerpt": "2줄 요약", "keywords": ["키워드1", "키워드2"]}`;
+아래 JSON 형식으로만 응답하세요:
+{"title": "사람이 읽고 클릭하고 싶은 제목", "seoTitle": "${todayStr} 미국 증시 나스닥 다우존스 시황 정리", "content": "본문 전체", "excerpt": "2줄 요약", "keywords": ["미국 증시", "나스닥", "S&P500", "다우존스"]}`;
 
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
@@ -89,16 +107,26 @@ JSON 형식으로만 응답:
 
   // JSON 파싱 시도, 실패하면 수동 추출
   try {
-    const parsed = JSON.parse(jsonText) as GenerateResponse;
-    parsed.title = parsed.title.replace(/[\[\]]/g, '').trim();
-    return parsed;
+    const parsed = JSON.parse(jsonText);
+    const seoTitle = (parsed.seoTitle || parsed.seo_title || '').replace(/[\[\]]/g, '').trim();
+    const displayTitle = (parsed.title || '').replace(/[\[\]]/g, '').trim();
+    return {
+      title: displayTitle,
+      seoTitle: seoTitle,
+      content: parsed.content,
+      excerpt: parsed.excerpt,
+      keywords: parsed.keywords || ['나스닥', 'S&P500'],
+    };
   } catch {
     // JSON 파싱 실패 시 필드별 추출 시도
+    const seoTitleMatch = jsonText.match(/"seoTitle"\s*:\s*"([^"]+)"/);
     const titleMatch = jsonText.match(/"title"\s*:\s*"([^"]+)"/);
     const contentMatch = jsonText.match(/"content"\s*:\s*"([\s\S]*?)(?:"\s*,\s*"excerpt|"\s*,\s*"keywords|"\s*})/);
     const excerptMatch = jsonText.match(/"excerpt"\s*:\s*"([^"]+)"/);
     const keywordsMatch = jsonText.match(/"keywords"\s*:\s*\[([\s\S]*?)\]/);
     
+    let seoTitle = seoTitleMatch?.[1] || '';
+    seoTitle = seoTitle.replace(/[\[\]]/g, '').trim();
     let title = titleMatch?.[1] || '미국 증시 마감 시황';
     title = title.replace(/[\[\]]/g, '').trim();
     let content = contentMatch?.[1] || text;
@@ -106,7 +134,7 @@ JSON 형식으로만 응답:
     const excerpt = excerptMatch?.[1] || content.slice(0, 100);
     const keywords = keywordsMatch?.[1]?.match(/"([^"]+)"/g)?.map((k: string) => k.replace(/"/g, '')) || ['나스닥', 'S&P500'];
     
-    return { title, content, excerpt, keywords };
+    return { title, seoTitle, content, excerpt, keywords };
   }
 }
 
@@ -120,20 +148,20 @@ export async function GET(request: Request) {
   }
 
   try {
-    // 1. 미국 증시 뉴스 수집
-    const news = await getUSMarketNews();
-    const newsText = formatNewsForAI(news);
-    
-    // 2. 시장 데이터 수집
-    const marketData = await getDetailedMarketData();
-    
-    // 3. 날짜 포맷
+    // 1. 날짜 포맷 (AI 호출 전에 먼저 생성)
     const today = new Date().toLocaleDateString('ko-KR', { 
       timeZone: 'Asia/Seoul',
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
     });
+    
+    // 2. 미국 증시 뉴스 수집
+    const news = await getUSMarketNews();
+    const newsText = formatNewsForAI(news);
+    
+    // 3. 시장 데이터 수집
+    const marketData = await getDetailedMarketData();
     
     const dowDir = marketData.indices.dow.changePercent >= 0 ? '상승' : '하락';
     const nasdaqDir = marketData.indices.nasdaq.changePercent >= 0 ? '상승' : '하락';
@@ -156,15 +184,16 @@ S&P500: ${marketData.indices.sp500.price.toFixed(2)}p (${marketData.indices.sp50
 Magnificent 7:
 ${marketData.topCompanies.map(s => `- ${s.name}: ${s.changePercent >= 0 ? '+' : ''}${s.changePercent.toFixed(2)}%`).join('\n')}`;
     
-    // 4. AI로 글 생성
-    const generated = await generateUSMarketReport(marketSummary, newsText);
+    // 4. AI로 글 생성 (날짜 전달)
+    const generated = await generateUSMarketReport(marketSummary, newsText, today);
     
-    // 4. 포스트 저장
+    // 5. 포스트 저장
     const slug = `${today.replace(/\s/g, '-')}-미국증시-마감시황`.replace(/[년월일]/g, '');
     
     const newPost: Post = {
       id: Date.now().toString(),
       title: generated.title,
+      seoTitle: generated.seoTitle || `${today} 미국 증시 나스닥 다우존스 시황 정리`,
       slug,
       content: generated.content,
       excerpt: generated.excerpt,

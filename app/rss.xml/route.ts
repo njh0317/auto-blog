@@ -8,7 +8,7 @@ export async function GET() {
   
   const rssItems = posts.slice(0, 20).map(post => `
     <item>
-      <title><![CDATA[${post.title}]]></title>
+      <title><![CDATA[${post.seoTitle || post.title}]]></title>
       <link>${siteUrl}/posts/${post.slug}</link>
       <guid isPermaLink="true">${siteUrl}/posts/${post.slug}</guid>
       <description><![CDATA[${post.excerpt || post.content.slice(0, 200)}]]></description>

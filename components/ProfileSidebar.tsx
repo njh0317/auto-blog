@@ -68,11 +68,11 @@ function VisitorCounter() {
       <div className="flex justify-center gap-4 text-sm">
         <div>
           <span className="text-gray-500">오늘</span>
-          <span className="ml-1 font-semibold text-blue-600" id="today-visitors">-</span>
+          <span className="ml-1 font-semibold text-blue-600" id="today-visitors" suppressHydrationWarning>-</span>
         </div>
         <div>
           <span className="text-gray-500">전체</span>
-          <span className="ml-1 font-semibold text-gray-900" id="total-visitors">-</span>
+          <span className="ml-1 font-semibold text-gray-900" id="total-visitors" suppressHydrationWarning>-</span>
         </div>
       </div>
       <script dangerouslySetInnerHTML={{

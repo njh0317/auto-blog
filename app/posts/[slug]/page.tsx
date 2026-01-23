@@ -52,12 +52,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: '글을 찾을 수 없습니다' };
   }
 
+  // SEO용 제목이 있으면 meta/og에 사용
+  const seoTitle = post.seoTitle || post.title;
+  
   return {
-    title: post.title,
+    title: seoTitle,
     description: post.excerpt,
     keywords: post.keywords,
     openGraph: {
-      title: post.title,
+      title: seoTitle,
       description: post.excerpt,
       type: 'article',
       publishedTime: post.createdAt,

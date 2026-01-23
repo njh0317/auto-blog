@@ -42,6 +42,7 @@ export interface Post {
   id: string;
   slug: string;
   title: string;
+  seoTitle?: string; // SEO용 제목 (meta title, og:title, RSS용)
   content: string;
   excerpt: string;
   keywords: string[];
@@ -77,6 +78,7 @@ export interface GenerateRequest {
 
 export interface GenerateResponse {
   title: string;
+  seoTitle?: string; // SEO용 제목
   content: string;
   excerpt: string;
   keywords: string[];

@@ -13,7 +13,10 @@ export function generateDetailedMarketReport(data: DetailedMarketData): Generate
   const sp500Change = data.indices.sp500.changePercent;
   const marketMood = sp500Change >= 1 ? '강세' : sp500Change <= -1 ? '약세' : '보합';
   
-  const title = `[${today}] 미국증시 마감시황 - 3대지수 ${marketMood}`;
+  // 화면 표시용 제목 (클릭 유도)
+  const title = `${today} 미국증시 마감 시황 - 3대지수 ${marketMood}`;
+  // SEO용 제목 (검색 최적화)
+  const seoTitle = `${today} 미국 증시 나스닥 다우존스 S&P500 시황 정리`;
   
   let content = '';
   
@@ -161,6 +164,7 @@ export function generateDetailedMarketReport(data: DetailedMarketData): Generate
 
   return {
     title,
+    seoTitle,
     content,
     excerpt,
     keywords,

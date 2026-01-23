@@ -41,6 +41,7 @@ export async function GET(request: Request) {
     const newPost: Post = {
       id: Date.now().toString(),
       title: reportData.title,
+      seoTitle: reportData.seoTitle || `${today} 미국 증시 나스닥 다우존스 S&P500 시황 정리`,
       slug,
       content: reportData.content,
       excerpt: reportData.excerpt,
