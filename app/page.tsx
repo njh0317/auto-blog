@@ -1,6 +1,7 @@
 import { getAllPosts } from '@/lib/posts';
 import PostCard from '@/components/PostCard';
 import ProfileSidebar from '@/components/ProfileSidebar';
+import MobileProfileCard from '@/components/MobileProfileCard';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,6 +17,10 @@ export default async function HomePage() {
       
       {/* 우측 메인 콘텐츠 */}
       <div className="flex-1 min-w-0">
+        {/* 모바일 프로필 카드 */}
+        <div className="lg:hidden mb-6">
+          <MobileProfileCard />
+        </div>
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
           전체 글 ({posts.length})
         </h1>
