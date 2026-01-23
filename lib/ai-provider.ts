@@ -131,7 +131,10 @@ export async function generateWithGemini(topic: string, keywords?: string[], use
 
   // JSON 파싱 시도, 실패하면 수동 추출
   try {
-    return JSON.parse(jsonText) as GenerateResponse;
+    const parsed = JSON.parse(jsonText) as GenerateResponse;
+    // 타이틀에서 불필요한 문자 제거
+    parsed.title = parsed.title.replace(/[\[\]]/g, '').trim();
+    return parsed;
   } catch {
     // JSON 파싱 실패 시 필드별 추출 시도
     const titleMatch = jsonText.match(/"title"\s*:\s*"([^"]+)"/);
@@ -139,7 +142,8 @@ export async function generateWithGemini(topic: string, keywords?: string[], use
     const excerptMatch = jsonText.match(/"excerpt"\s*:\s*"([^"]+)"/);
     const keywordsMatch = jsonText.match(/"keywords"\s*:\s*\[([\s\S]*?)\]/);
     
-    const title = titleMatch?.[1] || '시황 분석';
+    let title = titleMatch?.[1] || '시황 분석';
+    title = title.replace(/[\[\]]/g, '').trim();
     let content = contentMatch?.[1] || text;
     // 이스케이프된 문자 복원
     content = content.replace(/\\n/g, '\n').replace(/\\"/g, '"');
