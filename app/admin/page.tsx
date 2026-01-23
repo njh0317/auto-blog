@@ -27,42 +27,6 @@ interface MarketPreview {
   fetchedAt: string;
 }
 
-interface Toast {
-  id: number;
-  type: 'success' | 'error' | 'loading';
-  message: string;
-}
-
-// 토스트 컴포넌트
-function ToastContainer({ toasts, onRemove }: { toasts: Toast[]; onRemove: (id: number) => void }) {
-  return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
-      {toasts.map((toast) => (
-        <div
-          key={toast.id}
-          className={`px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 min-w-[280px] max-w-[400px] animate-slide-in ${
-            toast.type === 'success' ? 'bg-green-500 text-white' :
-            toast.type === 'error' ? 'bg-red-500 text-white' :
-            'bg-gray-800 text-white'
-          }`}
-        >
-          {toast.type === 'loading' && (
-            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          )}
-          {toast.type === 'success' && <span>✓</span>}
-          {toast.type === 'error' && <span>✕</span>}
-          <span className="flex-1 text-sm">{toast.message}</span>
-          {toast.type !== 'loading' && (
-            <button onClick={() => onRemove(toast.id)} className="text-white/70 hover:text-white">
-              ✕
-            </button>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
-
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
@@ -71,7 +35,6 @@ export default function AdminPage() {
   const [topic, setTopic] = useState('');
   const [keywords, setKeywords] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatingType, setGeneratingType] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState<'posts' | 'branding' | 'logs'>('posts');
   const [branding, setBranding] = useState<Branding>({
@@ -82,59 +45,6 @@ export default function AdminPage() {
   });
   const [marketPreview, setMarketPreview] = useState<MarketPreview | null>(null);
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
-  const [toasts, setToasts] = useState<Toast[]>([]);
-
-  // 토스트 추가
-  const addToast = (type: Toast['type'], message: string): number => {
-    const id = Date.now();
-    setToasts(prev => [...prev, { id, type, message }]);
-    if (type !== 'loading') {
-      setTimeout(() => removeToast(id), 5000);
-    }
-    return id;
-  };
-
-  // 토스트 제거
-  const removeToast = (id: number) => {
-    setToasts(prev => prev.filter(t => t.id !== id));
-  };
-
-  // 토스트 업데이트
-  const updateToast = (id: number, type: Toast['type'], message: string) => {
-    setToasts(prev => prev.map(t => t.id === id ? { ...t, type, message } : t));
-    if (type !== 'loading') {
-      setTimeout(() => removeToast(id), 5000);
-    }
-  };
-
-  // Cron 트리거 (서버 프록시 사용)
-  const triggerCron = async (type: string, loadingMsg: string, successMsg: string) => {
-    setIsGenerating(true);
-    setGeneratingType(type);
-    const toastId = addToast('loading', loadingMsg);
-    try {
-      const res = await fetch('/api/admin/trigger-cron', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': localStorage.getItem('adminAuth') || '',
-        },
-        body: JSON.stringify({ type }),
-      });
-      if (res.ok) {
-        updateToast(toastId, 'success', successMsg);
-        loadPosts();
-      } else {
-        const data = await res.json();
-        updateToast(toastId, 'error', `오류: ${data.error || '생성 실패'}`);
-      }
-    } catch {
-      updateToast(toastId, 'error', '네트워크 오류가 발생했습니다.');
-    } finally {
-      setIsGenerating(false);
-      setGeneratingType(null);
-    }
-  };
 
   const handleLogin = async () => {
     const res = await fetch('/api/auth', {
@@ -341,16 +251,8 @@ export default function AdminPage() {
     );
   }
 
-  const cronButtons = [
-    { type: 'morning', label: '☀️ 모닝브리핑', loading: '모닝 브리핑 생성 중...', success: '모닝 브리핑이 생성되었습니다!', color: 'yellow' },
-    { type: 'korean', label: '🇰🇷 한국증시', loading: '한국 증시 글 생성 중...', success: '한국 증시 글이 생성되었습니다!', color: 'blue' },
-    { type: 'us', label: '🇺🇸 미국증시', loading: '미국 증시 글 생성 중...', success: '미국 증시 글이 생성되었습니다!', color: 'red' },
-    { type: 'summary', label: '📈 마감요약', loading: '마감 요약 글 생성 중...', success: '마감 요약 글이 생성되었습니다!', color: 'purple' },
-  ];
-
   return (
     <div className="px-2 sm:px-0">
-      <ToastContainer toasts={toasts} onRemove={removeToast} />
       <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">관리자 페이지</h1>
       
       {message && (
@@ -373,34 +275,10 @@ export default function AdminPage() {
 
       {activeTab === 'posts' && (
         <>
-          <section className="bg-gradient-to-r from-purple-50 to-blue-50 p-4 sm:p-6 rounded-lg shadow-sm border border-purple-200 mb-6 sm:mb-8">
-            <h2 className="text-base sm:text-xl font-semibold mb-3 sm:mb-4">📊 시황 글 생성</h2>
-            <p className="text-gray-600 mb-3 sm:mb-4 text-sm">각 시황 글을 수동으로 생성합니다.</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
-              {cronButtons.map((btn) => (
-                <button
-                  key={btn.type}
-                  onClick={() => triggerCron(btn.type, btn.loading, btn.success)}
-                  disabled={isGenerating}
-                  className={`relative text-white px-3 py-2.5 rounded-lg font-medium text-xs sm:text-sm transition-all disabled:opacity-70 ${
-                    generatingType === btn.type ? `bg-${btn.color}-400` : `bg-${btn.color}-500 hover:bg-${btn.color}-600`
-                  }`}
-                >
-                  {generatingType === btn.type && (
-                    <span className="absolute inset-0 flex items-center justify-center">
-                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    </span>
-                  )}
-                  <span className={generatingType === btn.type ? 'invisible' : ''}>{btn.label}</span>
-                </button>
-              ))}
-            </div>
-          </section>
-
           <section className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border mb-6 sm:mb-8">
-            <h2 className="text-base sm:text-xl font-semibold mb-3 sm:mb-4">📊 상세 시황 글 생성 (레거시)</h2>
+            <h2 className="text-base sm:text-xl font-semibold mb-3 sm:mb-4">📊 상세 시황 글 생성</h2>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-              <button onClick={handleDetailedReport} disabled={isGenerating} className="bg-gray-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg hover:bg-gray-700 disabled:bg-gray-400 font-medium text-sm sm:text-base">
+              <button onClick={handleDetailedReport} disabled={isGenerating} className="bg-purple-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg hover:bg-purple-700 disabled:bg-gray-400 font-medium text-sm sm:text-base">
                 {isGenerating ? '생성 중...' : '🚀 상세 시황 글 생성'}
               </button>
               <button onClick={loadMarketPreview} disabled={isLoadingPreview} className="bg-white text-gray-600 border border-gray-300 px-4 py-2.5 sm:py-3 rounded-lg hover:bg-gray-50 text-sm sm:text-base">
