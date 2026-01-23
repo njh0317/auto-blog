@@ -3,7 +3,6 @@ import { getGlobalEconomyNews, formatNewsForAI } from '@/lib/news';
 import { savePosts, getPosts } from '@/lib/storage';
 import { saveErrorLog } from '@/lib/error-log';
 import { Post, GenerateResponse } from '@/lib/types';
-import { postTweet, createBlogTweet } from '@/lib/twitter';
 
 // Vercel Cron 설정 - 한국시간 오전 8시 45분 (국내 장 시작 전)
 export const dynamic = 'force-dynamic';
@@ -187,16 +186,10 @@ export async function GET(request: Request) {
     posts.unshift(newPost);
     await savePosts(posts);
     
-    // 5. 트위터에 자동 포스팅
-    const postUrl = `https://wisdomslab.com/posts/${slug}`;
-    const tweetText = createBlogTweet(newPost.title, newPost.excerpt, postUrl);
-    const tweetResult = await postTweet(tweetText);
-    
     return NextResponse.json({ 
       success: true, 
       message: '모닝 브리핑 글 생성 완료',
-      postId: newPost.id,
-      tweet: tweetResult.success ? { id: tweetResult.tweetId } : { error: tweetResult.error }
+      postId: newPost.id
     });
   } catch (error) {
     console.error('Cron 실행 실패:', error);
