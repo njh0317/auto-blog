@@ -86,9 +86,27 @@ JSON 형식으로만 응답:
     jsonText = jsonText.slice(startIdx, endIdx + 1);
   }
 
-  const parsed = JSON.parse(jsonText) as GenerateResponse;
-  parsed.title = parsed.title.replace(/[\[\]]/g, '').trim();
-  return parsed;
+  // JSON 파싱 시도, 실패하면 수동 추출
+  try {
+    const parsed = JSON.parse(jsonText) as GenerateResponse;
+    parsed.title = parsed.title.replace(/[\[\]]/g, '').trim();
+    return parsed;
+  } catch {
+    // JSON 파싱 실패 시 필드별 추출 시도
+    const titleMatch = jsonText.match(/"title"\s*:\s*"([^"]+)"/);
+    const contentMatch = jsonText.match(/"content"\s*:\s*"([\s\S]*?)(?:"\s*,\s*"excerpt|"\s*,\s*"keywords|"\s*})/);
+    const excerptMatch = jsonText.match(/"excerpt"\s*:\s*"([^"]+)"/);
+    const keywordsMatch = jsonText.match(/"keywords"\s*:\s*\[([\s\S]*?)\]/);
+    
+    let title = titleMatch?.[1] || '한국 증시 마감 시황';
+    title = title.replace(/[\[\]]/g, '').trim();
+    let content = contentMatch?.[1] || text;
+    content = content.replace(/\\n/g, '\n').replace(/\\"/g, '"');
+    const excerpt = excerptMatch?.[1] || content.slice(0, 100);
+    const keywords = keywordsMatch?.[1]?.match(/"([^"]+)"/g)?.map((k: string) => k.replace(/"/g, '')) || ['코스피', '코스닥'];
+    
+    return { title, content, excerpt, keywords };
+  }
 }
 
 export async function GET(request: Request) {
