@@ -1,7 +1,4 @@
-// 에러 로그 관리 모듈
-import { promises as fs } from 'fs';
-import path from 'path';
-
+// 에러 로그 관리 모듈 - Vercel KV 지원
 export interface ErrorLog {
   id: string;
   timestamp: string;
@@ -10,15 +7,57 @@ export interface ErrorLog {
   details?: string;
 }
 
-const LOG_FILE = path.join(process.cwd(), 'data', 'error-logs.json');
+const isVercel = process.env.VERCEL === '1';
+const hasRedisConfig = !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
 
-export async function getErrorLogs(): Promise<ErrorLog[]> {
-  try {
-    const data = await fs.readFile(LOG_FILE, 'utf-8');
-    return JSON.parse(data);
-  } catch {
+// Upstash Redis 사용 시
+async function getRedis() {
+  if (!hasRedisConfig) {
+    throw new Error('Redis 환경변수가 설정되지 않았습니다');
+  }
+  const { Redis } = await import('@upstash/redis');
+  return new Redis({
+    url: process.env.KV_REST_API_URL!,
+    token: process.env.KV_REST_API_TOKEN!,
+  });
+}
+
+// 로컬 파일 시스템 사용 시
+function getLocalPath() {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const path = require('path');
+  return path.join(process.cwd(), 'data', 'error-logs.json');
+}
+
+function readLocalFile(): ErrorLog[] {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const fs = require('fs');
+  const filePath = getLocalPath();
+  if (!fs.existsSync(filePath)) {
     return [];
   }
+  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+}
+
+function writeLocalFile(data: ErrorLog[]) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const fs = require('fs');
+  const filePath = getLocalPath();
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+}
+
+export async function getErrorLogs(): Promise<ErrorLog[]> {
+  if (isVercel && hasRedisConfig) {
+    try {
+      const redis = await getRedis();
+      const logs = await redis.get<ErrorLog[]>('error-logs');
+      return logs || [];
+    } catch (e) {
+      console.error('Redis 에러 로그 조회 실패:', e);
+      return [];
+    }
+  }
+  return readLocalFile();
 }
 
 export async function saveErrorLog(source: string, error: Error | string, details?: string): Promise<void> {
@@ -38,9 +77,27 @@ export async function saveErrorLog(source: string, error: Error | string, detail
     logs.splice(100);
   }
   
-  await fs.writeFile(LOG_FILE, JSON.stringify(logs, null, 2));
+  if (isVercel && hasRedisConfig) {
+    try {
+      const redis = await getRedis();
+      await redis.set('error-logs', logs);
+    } catch (e) {
+      console.error('Redis 에러 로그 저장 실패:', e);
+    }
+    return;
+  }
+  writeLocalFile(logs);
 }
 
 export async function clearErrorLogs(): Promise<void> {
-  await fs.writeFile(LOG_FILE, '[]');
+  if (isVercel && hasRedisConfig) {
+    try {
+      const redis = await getRedis();
+      await redis.set('error-logs', []);
+    } catch (e) {
+      console.error('Redis 에러 로그 삭제 실패:', e);
+    }
+    return;
+  }
+  writeLocalFile([]);
 }
