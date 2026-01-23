@@ -385,7 +385,9 @@ export default function AdminPage() {
                   setGeneratingType('morning');
                   const toastId = addToast('loading', '모닝 브리핑 생성 중...');
                   try {
-                    const res = await fetch('/api/cron/morning-briefing');
+                    const res = await fetch('/api/cron/morning-briefing', {
+                      headers: { 'Authorization': `Bearer ${localStorage.getItem('adminAuth') || ''}` }
+                    });
                     if (res.ok) {
                       updateToast(toastId, 'success', '모닝 브리핑이 생성되었습니다!');
                       loadPosts();
@@ -419,7 +421,9 @@ export default function AdminPage() {
                   setGeneratingType('korean');
                   const toastId = addToast('loading', '한국 증시 글 생성 중...');
                   try {
-                    const res = await fetch('/api/cron/korean-market');
+                    const res = await fetch('/api/cron/korean-market', {
+                      headers: { 'Authorization': `Bearer ${localStorage.getItem('adminAuth') || ''}` }
+                    });
                     if (res.ok) {
                       updateToast(toastId, 'success', '한국 증시 글이 생성되었습니다!');
                       loadPosts();
@@ -453,7 +457,9 @@ export default function AdminPage() {
                   setGeneratingType('us');
                   const toastId = addToast('loading', '미국 증시 글 생성 중...');
                   try {
-                    const res = await fetch('/api/cron/us-market');
+                    const res = await fetch('/api/cron/us-market', {
+                      headers: { 'Authorization': `Bearer ${localStorage.getItem('adminAuth') || ''}` }
+                    });
                     if (res.ok) {
                       updateToast(toastId, 'success', '미국 증시 글이 생성되었습니다!');
                       loadPosts();
@@ -487,7 +493,9 @@ export default function AdminPage() {
                   setGeneratingType('summary');
                   const toastId = addToast('loading', '마감 요약 글 생성 중...');
                   try {
-                    const res = await fetch('/api/cron/market-summary');
+                    const res = await fetch('/api/cron/market-summary', {
+                      headers: { 'Authorization': `Bearer ${localStorage.getItem('adminAuth') || ''}` }
+                    });
                     if (res.ok) {
                       updateToast(toastId, 'success', '마감 요약 글이 생성되었습니다!');
                       loadPosts();
