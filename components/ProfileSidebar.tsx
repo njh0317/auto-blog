@@ -39,11 +39,52 @@ export default function ProfileSidebar() {
       {/* 구분선 */}
       <hr className="my-4" />
       
+      {/* 방문자 수 */}
+      <VisitorCounter />
+      
+      {/* 구분선 */}
+      <hr className="my-4" />
+      
       {/* 블로그 정보 */}
       <div className="text-xs text-gray-500 space-y-1">
         <p>매일 업데이트</p>
         <p>한국증시 / 미국증시 / 모닝브리핑</p>
       </div>
     </aside>
+  );
+}
+
+// 방문자 카운터 클라이언트 컴포넌트
+function VisitorCounter() {
+  return (
+    <div className="text-center">
+      <p className="text-xs text-gray-500 mb-2">방문자</p>
+      <div className="flex justify-center gap-4 text-sm">
+        <div>
+          <span className="text-gray-500">오늘</span>
+          <span className="ml-1 font-semibold text-blue-600" id="today-visitors">-</span>
+        </div>
+        <div>
+          <span className="text-gray-500">전체</span>
+          <span className="ml-1 font-semibold text-gray-900" id="total-visitors">-</span>
+        </div>
+      </div>
+      <script dangerouslySetInnerHTML={{
+        __html: `
+          (function() {
+            var visited = sessionStorage.getItem('visited');
+            var method = visited ? 'GET' : 'POST';
+            fetch('/api/visitor', { method: method })
+              .then(function(r) { return r.json(); })
+              .then(function(d) {
+                document.getElementById('today-visitors').textContent = d.today.toLocaleString();
+                document.getElementById('total-visitors').textContent = d.total.toLocaleString();
+                if (!visited) sessionStorage.setItem('visited', '1');
+              })
+              .catch(function() {});
+          })();
+        `
+      }} />
+    </div>
   );
 }
