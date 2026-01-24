@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/market-summary",
-      "schedule": "30 22 * * 0-4"
+      "schedule": "30 22 * * 1-5"
     },
     {
       "path": "/api/cron/korean-market",
@@ -10,11 +10,11 @@
     },
     {
       "path": "/api/cron/us-market",
-      "schedule": "0 1 * * 1-5"
+      "schedule": "0 1 * * 2-6"
     },
     {
       "path": "/api/cron/morning-briefing",
-      "schedule": "0 0 * * 1-5"
+      "schedule": "0 0 * * 2-6"
     }
   ]
 }
