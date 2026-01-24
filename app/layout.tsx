@@ -13,6 +13,10 @@ export const metadata: Metadata = {
   title: "코딩하다 주식하는 사람",
   description: "매일 미국증시 마감시황을 정리해드립니다. 3대 지수, 빅테크, 환율, 원자재 등 한눈에 확인하세요.",
   keywords: ["미국증시", "주식", "시황", "나스닥", "S&P500", "투자"],
+  icons: {
+    icon: '/icon.png',
+    apple: '/icon.png',
+  },
   verification: {
     google: "g0k23fRklD5CcgzkuQ1QqA9tPC0HU__l11-OEDl2oKU",
   },
