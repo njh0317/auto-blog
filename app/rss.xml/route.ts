@@ -31,7 +31,7 @@ export async function GET() {
   return new Response(rss, {
     headers: {
       'Content-Type': 'application/xml',
-      'Cache-Control': 'public, max-age=60', // 1분 캐시 (테스트용)
+      'Cache-Control': 'public, max-age=3600', // 1시간 캐시
     },
   });
 }
