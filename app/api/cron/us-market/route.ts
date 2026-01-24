@@ -9,15 +9,20 @@ import { Post, GenerateResponse } from '@/lib/types';
 export const dynamic = 'force-dynamic';
 
 // 미국 증시 마감 시황 전용 Gemini 호출
-async function generateUSMarketReport(marketSummary: string, newsText: string, todayStr: string): Promise<GenerateResponse> {
+async function generateUSMarketReport(marketSummary: string, newsText: string, todayStr: string, dayOfWeek: string): Promise<GenerateResponse> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY가 설정되지 않았습니다');
+
+  const isWeekend = dayOfWeek === '토요일';
+  const koreanMarketNote = isWeekend 
+    ? '(오늘은 토요일이라 한국장 휴장입니다. 한국장 전망은 생략하고 다음 주 월요일 영향 분석으로 대체하세요)'
+    : '';
 
   const prompt = `당신은 10년차 개발자이자 금융 투자자입니다.
 오늘 미국 증시 마감 시황 글을 작성합니다.
 
 [오늘 날짜]
-${todayStr}
+${todayStr} (${dayOfWeek})
 
 [글의 목적]
 - 아침에 일어나서 "어젯밤 미국장 어땠어?"가 궁금한 한국 투자자에게 핵심 전달
@@ -32,8 +37,8 @@ ${newsText}
 [작성 규칙 - 매우 중요]
 1. 제공된 지수 숫자만 사용 (임의 수정 금지)
 2. 어젯밤 미국장 주요 이슈와 빅테크(Magnificent 7) 동향 분석
-3. 한국 증시에 미칠 영향 분석
-4. 오늘 한국장 전망
+3. 한국 증시에 미칠 영향 분석 ${koreanMarketNote}
+4. 오늘 한국장 전망 ${koreanMarketNote}
 5. 개인적인 의견과 체감 포함
 
 [문체]
@@ -149,11 +154,16 @@ export async function GET(request: Request) {
 
   try {
     // 1. 날짜 포맷 (AI 호출 전에 먼저 생성)
-    const today = new Date().toLocaleDateString('ko-KR', { 
+    const now = new Date();
+    const today = now.toLocaleDateString('ko-KR', { 
       timeZone: 'Asia/Seoul',
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
+    });
+    const dayOfWeek = now.toLocaleDateString('ko-KR', { 
+      timeZone: 'Asia/Seoul',
+      weekday: 'long' 
     });
     
     // 2. 미국 증시 뉴스 수집
@@ -184,8 +194,8 @@ S&P500: ${marketData.indices.sp500.price.toFixed(2)}p (${marketData.indices.sp50
 Magnificent 7:
 ${marketData.topCompanies.map(s => `- ${s.name}: ${s.changePercent >= 0 ? '+' : ''}${s.changePercent.toFixed(2)}%`).join('\n')}`;
     
-    // 4. AI로 글 생성 (날짜 전달)
-    const generated = await generateUSMarketReport(marketSummary, newsText, today);
+    // 4. AI로 글 생성 (날짜, 요일 전달)
+    const generated = await generateUSMarketReport(marketSummary, newsText, today, dayOfWeek);
     
     // 5. 포스트 저장
     const slug = `${today.replace(/\s/g, '-')}-미국증시-마감시황`.replace(/[년월일]/g, '');
