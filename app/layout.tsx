@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   },
   verification: {
     google: "g0k23fRklD5CcgzkuQ1QqA9tPC0HU__l11-OEDl2oKU",
+    other: {
+      "naver-site-verification": "266111d8559fac6373d87f2b88df5f4dc957419c",
+    },
   },
   openGraph: {
     title: "코딩하다 주식하는 사람",
