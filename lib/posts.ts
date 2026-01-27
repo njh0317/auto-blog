@@ -3,11 +3,9 @@ import {
   getPostsV2, 
   getPostsPaginatedV2,
   getPostBySlugV2,
-  getPostByIdV2,
   savePostV2,
   incrementViewCountV2,
   deletePostV2,
-  getPostsCountV2,
 } from './storage';
 
 // 한글을 영문 slug로 변환 (간단 버전)
