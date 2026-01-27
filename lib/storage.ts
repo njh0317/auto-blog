@@ -160,20 +160,33 @@ export async function savePostV2(post: Post): Promise<void> {
 }
 
 // Hash 데이터를 Post 객체로 변환
-function parsePostFromHash(data: Record<string, string>): Post {
+function parsePostFromHash(data: Record<string, unknown>): Post {
+  const parseJSON = (value: unknown) => {
+    if (!value) return undefined;
+    if (typeof value === 'string') {
+      if (value === '') return undefined;
+      try {
+        return JSON.parse(value);
+      } catch {
+        return value;
+      }
+    }
+    return value;
+  };
+
   return {
-    id: data.id,
-    slug: data.slug,
-    title: data.title,
-    seoTitle: data.seoTitle || undefined,
-    content: data.content,
-    excerpt: data.excerpt,
-    keywords: data.keywords ? JSON.parse(data.keywords) : [],
-    createdAt: data.createdAt,
-    updatedAt: data.updatedAt,
+    id: String(data.id),
+    slug: String(data.slug),
+    title: String(data.title),
+    seoTitle: data.seoTitle ? String(data.seoTitle) : undefined,
+    content: String(data.content),
+    excerpt: String(data.excerpt),
+    keywords: parseJSON(data.keywords) || [],
+    createdAt: String(data.createdAt),
+    updatedAt: String(data.updatedAt),
     viewCount: 0, // 별도로 조회
-    marketData: data.marketData ? JSON.parse(data.marketData) : undefined,
-    koreanMarketData: data.koreanMarketData ? JSON.parse(data.koreanMarketData) : undefined,
+    marketData: parseJSON(data.marketData),
+    koreanMarketData: parseJSON(data.koreanMarketData),
   };
 }
 
@@ -205,7 +218,7 @@ export async function getPostsPaginatedV2(page: number = 1, limit: number = 20):
       ids.map(async (id) => {
         const data = await redis.hgetall(`posts:data:${id}`);
         const viewCount = await redis.get<number>(`posts:views:${id}`) || 0;
-        const post = parsePostFromHash(data as Record<string, string>);
+        const post = parsePostFromHash(data as Record<string, unknown>);
         post.viewCount = viewCount;
         return post;
       })
@@ -253,7 +266,7 @@ export async function getPostsV2(): Promise<Post[]> {
       ids.map(async (id) => {
         const data = await redis.hgetall(`posts:data:${id}`);
         const viewCount = await redis.get<number>(`posts:views:${id}`) || 0;
-        const post = parsePostFromHash(data as Record<string, string>);
+        const post = parsePostFromHash(data as Record<string, unknown>);
         post.viewCount = viewCount;
         return post;
       })
@@ -282,7 +295,7 @@ export async function getPostBySlugV2(slug: string): Promise<Post | null> {
     if (!data || Object.keys(data).length === 0) return null;
     
     const viewCount = await redis.get<number>(`posts:views:${id}`) || 0;
-    const post = parsePostFromHash(data as Record<string, string>);
+    const post = parsePostFromHash(data as Record<string, unknown>);
     post.viewCount = viewCount;
     
     return post;
@@ -302,7 +315,7 @@ export async function getPostByIdV2(id: string): Promise<Post | null> {
     if (!data || Object.keys(data).length === 0) return null;
     
     const viewCount = await redis.get<number>(`posts:views:${id}`) || 0;
-    const post = parsePostFromHash(data as Record<string, string>);
+    const post = parsePostFromHash(data as Record<string, unknown>);
     post.viewCount = viewCount;
     
     return post;
@@ -340,7 +353,7 @@ export async function deletePostV2(id: string): Promise<boolean> {
     const data = await redis.hgetall(`posts:data:${id}`);
     if (!data || Object.keys(data).length === 0) return false;
     
-    const slug = (data as Record<string, string>).slug;
+    const slug = String((data as Record<string, unknown>).slug);
     
     // 여러 키 삭제
     await Promise.all([
