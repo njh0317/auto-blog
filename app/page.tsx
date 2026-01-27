@@ -1,6 +1,6 @@
 import { getPostsPaginated } from '@/lib/posts';
-import PostCard from '@/components/PostCard';
 import ProfileSidebar from '@/components/ProfileSidebar';
+import InfinitePostList from '@/components/InfinitePostList';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,18 +26,7 @@ export default async function HomePage() {
             <p className="text-sm mt-2">관리자 페이지에서 새 글을 작성해보세요.</p>
           </div>
         ) : (
-          <div className="space-y-6">
-            {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-            
-            {/* 더보기 안내 */}
-            {total > 20 && (
-              <div className="text-center py-8 text-gray-500">
-                <p className="text-sm">최신 20개 글을 표시하고 있습니다.</p>
-              </div>
-            )}
-          </div>
+          <InfinitePostList initialPosts={posts} initialTotal={total} />
         )}
       </div>
     </div>
