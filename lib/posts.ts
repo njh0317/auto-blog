@@ -5,6 +5,7 @@ import {
   getPostBySlugV2,
   getPostByIdV2,
   savePostV2,
+  updatePostV2,
   incrementViewCountV2,
   deletePostV2,
 } from './storage';
@@ -137,7 +138,7 @@ export async function togglePinPost(id: string): Promise<boolean> {
   
   post.pinned = !post.pinned;
   post.updatedAt = new Date().toISOString();
-  await savePostV2(post);
+  await updatePostV2(post);
   
   return true;
 }

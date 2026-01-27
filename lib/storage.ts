@@ -150,14 +150,50 @@ export async function savePostV2(post: Post): Promise<void> {
       await redis.set(`posts:views:${post.id}`, post.viewCount);
     }
     
-    // 전체 개수 증가
-    await redis.incr('posts:count');
+    // 전체 개수 증가 (이미 존재하는 경우 중복 증가 방지)
+    const exists = await redis.exists(`posts:data:${post.id}`);
+    if (!exists) {
+      await redis.incr('posts:count');
+    }
     
     return;
   }
   
   // 로컬은 기존 방식
   addPost(post);
+}
+
+// 포스트 업데이트 (기존 글 수정용)
+export async function updatePostV2(post: Post): Promise<void> {
+  if (isVercel) {
+    const redis = await getRedis();
+    
+    // Hash 데이터만 업데이트 (Sorted Set의 score는 유지)
+    await redis.hset(`posts:data:${post.id}`, {
+      id: post.id,
+      slug: post.slug,
+      title: post.title,
+      seoTitle: post.seoTitle || '',
+      content: post.content,
+      excerpt: post.excerpt,
+      keywords: JSON.stringify(post.keywords),
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      pinned: post.pinned ? '1' : '0',
+      marketData: post.marketData ? JSON.stringify(post.marketData) : '',
+      koreanMarketData: post.koreanMarketData ? JSON.stringify(post.koreanMarketData) : '',
+    });
+    
+    return;
+  }
+  
+  // 로컬은 기존 방식
+  const posts = readPosts();
+  const index = posts.findIndex(p => p.id === post.id);
+  if (index !== -1) {
+    posts[index] = post;
+    writeLocalFile('posts.json', { posts });
+  }
 }
 
 // Hash 데이터를 Post 객체로 변환
