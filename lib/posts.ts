@@ -1,5 +1,14 @@
 import { Post, MarketSnapshot } from './types';
-import { getPosts, savePosts } from './storage';
+import { 
+  getPostsV2, 
+  getPostsPaginatedV2,
+  getPostBySlugV2,
+  getPostByIdV2,
+  savePostV2,
+  incrementViewCountV2,
+  deletePostV2,
+  getPostsCountV2,
+} from './storage';
 
 // 한글을 영문 slug로 변환 (간단 버전)
 function toSlug(title: string): string {
@@ -31,33 +40,29 @@ function generateUniqueSlug(title: string, existingPosts: Post[]): string {
 }
 
 export async function getAllPosts(): Promise<Post[]> {
-  const posts = await getPosts();
-  return posts.sort((a, b) => 
-    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
+  return await getPostsV2();
+}
+
+export async function getPostsPaginated(page: number = 1, limit: number = 20) {
+  return await getPostsPaginatedV2(page, limit);
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | undefined> {
-  const posts = await getPosts();
-  return posts.find(p => p.slug === slug);
+  const post = await getPostBySlugV2(slug);
+  return post || undefined;
 }
 
 // 조회수 증가
 export async function incrementViewCount(slug: string): Promise<number> {
-  const posts = await getPosts();
-  const post = posts.find(p => p.slug === slug);
-  
+  const post = await getPostBySlugV2(slug);
   if (!post) return 0;
   
-  post.viewCount = (post.viewCount || 0) + 1;
-  await savePosts(posts);
-  
-  return post.viewCount;
+  return await incrementViewCountV2(post.id);
 }
 
 // 인기글 조회 (조회수 기준 상위 N개)
 export async function getPopularPosts(limit: number = 3): Promise<Post[]> {
-  const posts = await getPosts();
+  const posts = await getPostsV2();
   return posts
     .filter(p => (p.viewCount || 0) > 0)
     .sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0))
@@ -86,7 +91,7 @@ export async function createPost(data: {
   keywords: string[];
   marketData?: MarketSnapshot;
 }): Promise<Post> {
-  const posts = await getPosts();
+  const posts = await getPostsV2();
   const now = new Date().toISOString();
   
   const post: Post = {
@@ -101,16 +106,10 @@ export async function createPost(data: {
     marketData: data.marketData,
   };
   
-  posts.unshift(post);
-  await savePosts(posts);
+  await savePostV2(post);
   return post;
 }
 
 export async function deletePostById(id: string): Promise<boolean> {
-  const posts = await getPosts();
-  const index = posts.findIndex(p => p.id === id);
-  if (index === -1) return false;
-  posts.splice(index, 1);
-  await savePosts(posts);
-  return true;
+  return await deletePostV2(id);
 }

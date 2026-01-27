@@ -114,3 +114,259 @@ export function deletePost(id: string): boolean {
   writeLocalFile('posts.json', { posts });
   return true;
 }
+
+// ===== V2: Redis Sorted Set 기반 (Vercel 전용) =====
+
+// 개별 포스트 저장
+export async function savePostV2(post: Post): Promise<void> {
+  if (isVercel) {
+    const redis = await getRedis();
+    const timestamp = new Date(post.createdAt).getTime();
+    
+    // Sorted Set에 추가 (score: timestamp, member: id)
+    await redis.zadd('posts:sorted', { score: timestamp, member: post.id });
+    
+    // Hash에 데이터 저장
+    await redis.hset(`posts:data:${post.id}`, {
+      id: post.id,
+      slug: post.slug,
+      title: post.title,
+      seoTitle: post.seoTitle || '',
+      content: post.content,
+      excerpt: post.excerpt,
+      keywords: JSON.stringify(post.keywords),
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      marketData: post.marketData ? JSON.stringify(post.marketData) : '',
+      koreanMarketData: post.koreanMarketData ? JSON.stringify(post.koreanMarketData) : '',
+    });
+    
+    // Slug 매핑
+    await redis.set(`posts:slug:${post.slug}`, post.id);
+    
+    // 조회수 초기화
+    if (post.viewCount) {
+      await redis.set(`posts:views:${post.id}`, post.viewCount);
+    }
+    
+    // 전체 개수 증가
+    await redis.incr('posts:count');
+    
+    return;
+  }
+  
+  // 로컬은 기존 방식
+  addPost(post);
+}
+
+// Hash 데이터를 Post 객체로 변환
+function parsePostFromHash(data: Record<string, string>): Post {
+  return {
+    id: data.id,
+    slug: data.slug,
+    title: data.title,
+    seoTitle: data.seoTitle || undefined,
+    content: data.content,
+    excerpt: data.excerpt,
+    keywords: data.keywords ? JSON.parse(data.keywords) : [],
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+    viewCount: 0, // 별도로 조회
+    marketData: data.marketData ? JSON.parse(data.marketData) : undefined,
+    koreanMarketData: data.koreanMarketData ? JSON.parse(data.koreanMarketData) : undefined,
+  };
+}
+
+// 페이지네이션 조회
+export async function getPostsPaginatedV2(page: number = 1, limit: number = 20): Promise<{
+  posts: Post[];
+  total: number;
+  page: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}> {
+  if (isVercel) {
+    const redis = await getRedis();
+    
+    // 전체 개수
+    const total = await redis.get<number>('posts:count') || 0;
+    const totalPages = Math.ceil(total / limit);
+    
+    // 페이지 범위 계산 (최신순이므로 rev: true)
+    const start = (page - 1) * limit;
+    const end = start + limit - 1;
+    
+    // Sorted Set에서 ID 목록 조회 (최신순)
+    const ids = await redis.zrange('posts:sorted', start, end, { rev: true });
+    
+    // 각 포스트 데이터 조회 (병렬)
+    const postsData = await Promise.all(
+      ids.map(async (id) => {
+        const data = await redis.hgetall(`posts:data:${id}`);
+        const viewCount = await redis.get<number>(`posts:views:${id}`) || 0;
+        const post = parsePostFromHash(data as Record<string, string>);
+        post.viewCount = viewCount;
+        return post;
+      })
+    );
+    
+    return {
+      posts: postsData,
+      total,
+      page,
+      totalPages,
+      hasNext: page < totalPages,
+      hasPrev: page > 1,
+    };
+  }
+  
+  // 로컬은 기존 방식
+  const allPosts = readPosts().sort((a, b) => 
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+  const total = allPosts.length;
+  const totalPages = Math.ceil(total / limit);
+  const start = (page - 1) * limit;
+  const posts = allPosts.slice(start, start + limit);
+  
+  return {
+    posts,
+    total,
+    page,
+    totalPages,
+    hasNext: page < totalPages,
+    hasPrev: page > 1,
+  };
+}
+
+// 전체 조회 (하위 호환)
+export async function getPostsV2(): Promise<Post[]> {
+  if (isVercel) {
+    const redis = await getRedis();
+    
+    // 모든 ID 조회 (최신순)
+    const ids = await redis.zrange('posts:sorted', 0, -1, { rev: true });
+    
+    // 각 포스트 데이터 조회 (병렬)
+    const posts = await Promise.all(
+      ids.map(async (id) => {
+        const data = await redis.hgetall(`posts:data:${id}`);
+        const viewCount = await redis.get<number>(`posts:views:${id}`) || 0;
+        const post = parsePostFromHash(data as Record<string, string>);
+        post.viewCount = viewCount;
+        return post;
+      })
+    );
+    
+    return posts;
+  }
+  
+  // 로컬은 기존 방식
+  return readPosts().sort((a, b) => 
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+}
+
+// Slug로 조회
+export async function getPostBySlugV2(slug: string): Promise<Post | null> {
+  if (isVercel) {
+    const redis = await getRedis();
+    
+    // Slug → ID 매핑 조회
+    const id = await redis.get<string>(`posts:slug:${slug}`);
+    if (!id) return null;
+    
+    // 포스트 데이터 조회
+    const data = await redis.hgetall(`posts:data:${id}`);
+    if (!data || Object.keys(data).length === 0) return null;
+    
+    const viewCount = await redis.get<number>(`posts:views:${id}`) || 0;
+    const post = parsePostFromHash(data as Record<string, string>);
+    post.viewCount = viewCount;
+    
+    return post;
+  }
+  
+  // 로컬은 기존 방식
+  const posts = readPosts();
+  return posts.find(p => p.slug === slug) || null;
+}
+
+// ID로 조회
+export async function getPostByIdV2(id: string): Promise<Post | null> {
+  if (isVercel) {
+    const redis = await getRedis();
+    
+    const data = await redis.hgetall(`posts:data:${id}`);
+    if (!data || Object.keys(data).length === 0) return null;
+    
+    const viewCount = await redis.get<number>(`posts:views:${id}`) || 0;
+    const post = parsePostFromHash(data as Record<string, string>);
+    post.viewCount = viewCount;
+    
+    return post;
+  }
+  
+  // 로컬은 기존 방식
+  const posts = readPosts();
+  return posts.find(p => p.id === id) || null;
+}
+
+// 조회수 증가
+export async function incrementViewCountV2(id: string): Promise<number> {
+  if (isVercel) {
+    const redis = await getRedis();
+    const newCount = await redis.incr(`posts:views:${id}`);
+    return newCount;
+  }
+  
+  // 로컬은 기존 방식
+  const posts = readPosts();
+  const post = posts.find(p => p.id === id);
+  if (!post) return 0;
+  
+  post.viewCount = (post.viewCount || 0) + 1;
+  writeLocalFile('posts.json', { posts });
+  return post.viewCount;
+}
+
+// 삭제
+export async function deletePostV2(id: string): Promise<boolean> {
+  if (isVercel) {
+    const redis = await getRedis();
+    
+    // 포스트 데이터 조회 (slug 확인용)
+    const data = await redis.hgetall(`posts:data:${id}`);
+    if (!data || Object.keys(data).length === 0) return false;
+    
+    const slug = (data as Record<string, string>).slug;
+    
+    // 여러 키 삭제
+    await Promise.all([
+      redis.zrem('posts:sorted', id),
+      redis.del(`posts:data:${id}`),
+      redis.del(`posts:slug:${slug}`),
+      redis.del(`posts:views:${id}`),
+    ]);
+    
+    // 전체 개수 감소
+    await redis.decr('posts:count');
+    
+    return true;
+  }
+  
+  // 로컬은 기존 방식
+  return deletePost(id);
+}
+
+// 전체 개수
+export async function getPostsCountV2(): Promise<number> {
+  if (isVercel) {
+    const redis = await getRedis();
+    return await redis.get<number>('posts:count') || 0;
+  }
+  
+  // 로컬은 기존 방식
+  return readPosts().length;
+}

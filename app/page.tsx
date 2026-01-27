@@ -1,11 +1,11 @@
-import { getAllPosts } from '@/lib/posts';
+import { getPostsPaginated } from '@/lib/posts';
 import PostCard from '@/components/PostCard';
 import ProfileSidebar from '@/components/ProfileSidebar';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  const posts = await getAllPosts();
+  const { posts, total } = await getPostsPaginated(1, 20);
 
   return (
     <div className="flex gap-8">
@@ -17,7 +17,7 @@ export default async function HomePage() {
       {/* 우측 메인 콘텐츠 */}
       <div className="flex-1 min-w-0">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          전체 글 ({posts.length})
+          전체 글 ({total})
         </h1>
         
         {posts.length === 0 ? (
@@ -30,6 +30,13 @@ export default async function HomePage() {
             {posts.map((post) => (
               <PostCard key={post.id} post={post} />
             ))}
+            
+            {/* 더보기 안내 */}
+            {total > 20 && (
+              <div className="text-center py-8 text-gray-500">
+                <p className="text-sm">최신 20개 글을 표시하고 있습니다.</p>
+              </div>
+            )}
           </div>
         )}
       </div>
