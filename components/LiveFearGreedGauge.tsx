@@ -4,23 +4,23 @@ import { useState, useEffect } from 'react';
 import FearGreedGauge from './FearGreedGauge';
 
 export default function LiveFearGreedGauge() {
-  const [data, setData] = useState<{ score: number; rating: string } | null>(null);
+  const [data, setData] = useState<{ score: number; rating: string; history?: Array<{ x: number; y: number; rating: string }> } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // CNN Fear & Greed Index API (무료)
-    fetch('https://fear-and-greed-index.p.rapidapi.com/v1/fgi', {
-      headers: {
-        'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY || '',
-      }
-    })
+    // 서버 API를 통해 공포탐욕지수 가져오기
+    fetch('/api/fear-greed')
       .then(res => res.json())
       .then(data => {
-        if (data.fgi) {
+        if (data.score !== undefined) {
           setData({
-            score: data.fgi.now.value,
-            rating: data.fgi.now.valueText,
+            score: data.score,
+            rating: data.rating,
+            history: data.history,
           });
+        } else {
+          // 기본값
+          setData({ score: 50, rating: 'Neutral' });
         }
       })
       .catch(() => {
@@ -43,11 +43,14 @@ export default function LiveFearGreedGauge() {
 
   if (!data) {
     return (
-      <div className="bg-white border rounded-lg p-6 text-center text-gray-500">
-        데이터를 불러올 수 없습니다.
+      <div className="bg-white border rounded-lg p-6">
+        <FearGreedGauge score={50} rating="Neutral" />
+        <p className="text-center text-sm text-gray-500 mt-4">
+          * 실시간 데이터를 불러올 수 없어 기본값을 표시합니다.
+        </p>
       </div>
     );
   }
 
-  return <FearGreedGauge score={data.score} rating={data.rating} />;
+  return <FearGreedGauge score={data.score} rating={data.rating} history={data.history} />;
 }

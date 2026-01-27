@@ -21,15 +21,8 @@ export default function MarketLivePage() {
       {/* Stock Heatmap */}
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4">S&P 500 히트맵</h2>
-        <div className="bg-white rounded-lg shadow-sm border overflow-hidden" style={{ height: '600px' }}>
-          <iframe
-            src="https://www.tradingview-widget.com/embed-widget/stock-heatmap/?locale=kr#%7B%22exchanges%22%3A%5B%22US%22%5D%2C%22dataSource%22%3A%22SPX500%22%2C%22grouping%22%3A%22sector%22%2C%22blockSize%22%3A%22market_cap_basic%22%2C%22blockColor%22%3A%22change%22%2C%22hasTopBar%22%3Atrue%2C%22isDataSetEnabled%22%3Atrue%2C%22isZoomEnabled%22%3Atrue%2C%22hasSymbolTooltip%22%3Atrue%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22100%25%22%2C%22colorTheme%22%3A%22light%22%7D"
-            title="Stock Heatmap"
-            className="w-full h-full"
-            frameBorder="0"
-            allowTransparency={true}
-            scrolling="no"
-          />
+        <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+          <TradingViewWidget type="heatmap" height={600} />
         </div>
       </section>
 
