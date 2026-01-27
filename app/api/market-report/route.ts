@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     const authHeader = request.headers.get('authorization');
     const adminPassword = process.env.ADMIN_PASSWORD;
     
-    if (adminPassword && authHeader !== `Bearer ${adminPassword}`) {
+    if (adminPassword && authHeader !== adminPassword) {
       return NextResponse.json(
         { error: '인증이 필요합니다' },
         { status: 401 }
