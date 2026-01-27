@@ -1,5 +1,5 @@
 import TradingViewWidget from '@/components/TradingViewWidget';
-import FearGreedGauge from '@/components/FearGreedGauge';
+import LiveFearGreedGauge from '@/components/LiveFearGreedGauge';
 
 export const metadata = {
   title: '실시간 시장 현황 | Wisdom\'s Lab',
@@ -36,7 +36,7 @@ export default function MarketLivePage() {
       {/* 공포탐욕지수 */}
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4">공포탐욕지수</h2>
-        <FearGreedGauge />
+        <LiveFearGreedGauge />
       </section>
 
       {/* 안내 */}
