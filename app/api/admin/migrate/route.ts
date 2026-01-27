@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { verifyAuth } from '@/lib/auth';
+import { verifyPassword } from '@/lib/auth';
 import { migrateToSortedSet, rollbackMigration } from '@/scripts/migrate-to-sorted-set';
 
 export async function POST(request: Request) {
   // 인증 확인
-  const authResult = await verifyAuth(request);
-  if (!authResult.authenticated) {
+  const authHeader = request.headers.get('Authorization');
+  if (!authHeader || !verifyPassword(authHeader)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
