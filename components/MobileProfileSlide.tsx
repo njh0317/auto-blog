@@ -167,6 +167,24 @@ export default function MobileProfileSlide() {
           
           <hr className="my-4" />
           
+          {/* 실시간 시장 현황 버튼 */}
+          <a 
+            href="/market-live"
+            className="block w-full bg-gradient-to-r from-gray-100 to-gray-50 hover:from-gray-200 hover:to-gray-100 border border-gray-200 text-gray-800 font-medium py-3 px-4 rounded-lg transition-all duration-300 text-center mb-4 relative overflow-hidden shadow-sm"
+            onClick={() => setIsOpen(false)}
+          >
+            {/* 반짝임 효과 */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/80 to-transparent animate-shimmer w-1/3"></div>
+            
+            <div className="relative flex items-center justify-center gap-2">
+              <span className="text-lg">📊</span>
+              <span>실시간 시장 현황</span>
+            </div>
+            <div className="relative text-xs text-gray-600 mt-1">
+              S&P 500 히트맵 · 공포탐욕지수
+            </div>
+          </a>
+          
           {/* 블로그 정보 */}
           <div className="text-xs text-gray-500 space-y-1">
             <p>매일 업데이트</p>

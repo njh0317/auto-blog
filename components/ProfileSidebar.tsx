@@ -1,3 +1,7 @@
+'use client';
+
+import { useEffect } from 'react';
+
 export default function ProfileSidebar() {
   return (
     <aside className="bg-white rounded-lg shadow-sm p-6 sticky top-8">
@@ -51,6 +55,23 @@ export default function ProfileSidebar() {
       {/* 구분선 */}
       <hr className="my-4" />
       
+      {/* 실시간 시장 현황 버튼 */}
+      <a 
+        href="/market-live"
+        className="block w-full bg-gradient-to-r from-gray-100 to-gray-50 hover:from-gray-200 hover:to-gray-100 border border-gray-200 text-gray-800 font-medium py-3 px-4 rounded-lg transition-all duration-300 text-center mb-4 relative overflow-hidden shadow-sm"
+      >
+        {/* 반짝임 효과 */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/80 to-transparent animate-shimmer w-1/3"></div>
+        
+        <div className="relative flex items-center justify-center gap-2">
+          <span className="text-lg">📊</span>
+          <span>실시간 시장 현황</span>
+        </div>
+        <div className="relative text-xs text-gray-600 mt-1">
+          S&P 500 히트맵 · 공포탐욕지수
+        </div>
+      </a>
+      
       {/* 블로그 정보 */}
       <div className="text-xs text-gray-500 space-y-1">
         <p>매일 업데이트</p>
@@ -62,6 +83,22 @@ export default function ProfileSidebar() {
 
 // 방문자 카운터 클라이언트 컴포넌트
 function VisitorCounter() {
+  useEffect(() => {
+    const visited = sessionStorage.getItem('visited');
+    const method = visited ? 'GET' : 'POST';
+    
+    fetch('/api/visitor', { method })
+      .then(r => r.json())
+      .then(d => {
+        const todayEl = document.getElementById('today-visitors');
+        const totalEl = document.getElementById('total-visitors');
+        if (todayEl) todayEl.textContent = d.today.toLocaleString();
+        if (totalEl) totalEl.textContent = d.total.toLocaleString();
+        if (!visited) sessionStorage.setItem('visited', '1');
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="text-center">
       <p className="text-xs text-gray-500 mb-2">방문자</p>
@@ -75,58 +112,43 @@ function VisitorCounter() {
           <span className="ml-1 font-semibold text-gray-900" id="total-visitors" suppressHydrationWarning>-</span>
         </div>
       </div>
-      <script dangerouslySetInnerHTML={{
-        __html: `
-          (function() {
-            var visited = sessionStorage.getItem('visited');
-            var method = visited ? 'GET' : 'POST';
-            fetch('/api/visitor', { method: method })
-              .then(function(r) { return r.json(); })
-              .then(function(d) {
-                document.getElementById('today-visitors').textContent = d.today.toLocaleString();
-                document.getElementById('total-visitors').textContent = d.total.toLocaleString();
-                if (!visited) sessionStorage.setItem('visited', '1');
-              })
-              .catch(function() {});
-          })();
-        `
-      }} />
     </div>
   );
 }
 
 // 인기글 컴포넌트
 function PopularPosts() {
+  useEffect(() => {
+    fetch('/api/posts/popular')
+      .then(r => r.json())
+      .then(posts => {
+        const container = document.getElementById('popular-posts');
+        if (!container) return;
+        
+        if (posts.length === 0) {
+          container.innerHTML = '<p class="text-gray-400 text-xs">아직 데이터가 없습니다</p>';
+          return;
+        }
+        
+        container.innerHTML = posts.map((p: { slug: string; title: string }, i: number) => 
+          `<a href="/posts/${p.slug}" class="block hover:text-blue-600 truncate">` +
+          `<span class="text-gray-400 mr-1">${i + 1}.</span>` +
+          `<span class="text-gray-700">${p.title}</span>` +
+          `</a>`
+        ).join('');
+      })
+      .catch(() => {
+        const container = document.getElementById('popular-posts');
+        if (container) container.innerHTML = '<p class="text-gray-400 text-xs">로드 실패</p>';
+      });
+  }, []);
+
   return (
     <div>
       <p className="text-xs text-gray-500 mb-2">인기글</p>
       <div id="popular-posts" className="space-y-2 text-sm">
         <p className="text-gray-400 text-xs">로딩중...</p>
       </div>
-      <script dangerouslySetInnerHTML={{
-        __html: `
-          (function() {
-            fetch('/api/posts/popular')
-              .then(function(r) { return r.json(); })
-              .then(function(posts) {
-                var container = document.getElementById('popular-posts');
-                if (posts.length === 0) {
-                  container.innerHTML = '<p class="text-gray-400 text-xs">아직 데이터가 없습니다</p>';
-                  return;
-                }
-                container.innerHTML = posts.map(function(p, i) {
-                  return '<a href="/posts/' + p.slug + '" class="block hover:text-blue-600 truncate">' +
-                    '<span class="text-gray-400 mr-1">' + (i + 1) + '.</span>' +
-                    '<span class="text-gray-700">' + p.title + '</span>' +
-                  '</a>';
-                }).join('');
-              })
-              .catch(function() {
-                document.getElementById('popular-posts').innerHTML = '<p class="text-gray-400 text-xs">로드 실패</p>';
-              });
-          })();
-        `
-      }} />
     </div>
   );
 }
