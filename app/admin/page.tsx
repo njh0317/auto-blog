@@ -36,9 +36,7 @@ export default function AdminPage() {
   const [keywords, setKeywords] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [message, setMessage] = useState('');
-  const [activeTab, setActiveTab] = useState<'posts' | 'branding' | 'logs' | 'migrate'>('posts');
-  const [isMigrating, setIsMigrating] = useState(false);
-  const [migrationResult, setMigrationResult] = useState<string>('');
+  const [activeTab, setActiveTab] = useState<'posts' | 'branding' | 'logs'>('posts');
   const [branding, setBranding] = useState<Branding>({
     nickname: '투자하는 개발자',
     greeting: '안녕하세요 {nickname}입니다.\n오늘 미국증시 마감시황 알려드리겠습니다.',
@@ -230,60 +228,6 @@ export default function AdminPage() {
     }
   };
 
-  const handleMigrate = async () => {
-    if (!confirm('Redis 데이터를 Sorted Set 구조로 마이그레이션하시겠습니까?\n\n기존 데이터는 posts:backup으로 백업됩니다.')) return;
-    setIsMigrating(true);
-    setMigrationResult('마이그레이션 진행 중...');
-    try {
-      const res = await fetch('/api/admin/migrate', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': localStorage.getItem('adminAuth') || '',
-        },
-        body: JSON.stringify({ action: 'migrate' }),
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setMigrationResult(`✅ 마이그레이션 완료!\n성공: ${data.successCount}개\n실패: ${data.errorCount}개`);
-        setMessage('마이그레이션이 완료되었습니다!');
-      } else {
-        setMigrationResult(`❌ 마이그레이션 실패: ${data.message || data.error}`);
-      }
-    } catch (error) {
-      setMigrationResult(`❌ 오류 발생: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
-    } finally {
-      setIsMigrating(false);
-    }
-  };
-
-  const handleRollback = async () => {
-    if (!confirm('마이그레이션을 롤백하시겠습니까?\n\n새 구조의 데이터가 삭제되고 백업 데이터로 복구됩니다.')) return;
-    setIsMigrating(true);
-    setMigrationResult('롤백 진행 중...');
-    try {
-      const res = await fetch('/api/admin/migrate', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': localStorage.getItem('adminAuth') || '',
-        },
-        body: JSON.stringify({ action: 'rollback' }),
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setMigrationResult(`✅ 롤백 완료!`);
-        setMessage('롤백이 완료되었습니다!');
-      } else {
-        setMigrationResult(`❌ 롤백 실패: ${data.message || data.error}`);
-      }
-    } catch (error) {
-      setMigrationResult(`❌ 오류 발생: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
-    } finally {
-      setIsMigrating(false);
-    }
-  };
-
   useEffect(() => {
     const saved = localStorage.getItem('adminAuth');
     if (saved) {
@@ -341,9 +285,6 @@ export default function AdminPage() {
         </button>
         <button onClick={() => { setActiveTab('logs'); loadErrorLogs(); }} className={`px-3 sm:px-4 py-2 font-medium text-sm sm:text-base whitespace-nowrap ${activeTab === 'logs' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'}`}>
           🚨 에러 로그 {errorLogs.length > 0 && <span className="ml-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">{errorLogs.length}</span>}
-        </button>
-        <button onClick={() => setActiveTab('migrate')} className={`px-3 sm:px-4 py-2 font-medium text-sm sm:text-base whitespace-nowrap ${activeTab === 'migrate' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'}`}>
-          🔄 마이그레이션
         </button>
       </div>
 
@@ -454,47 +395,6 @@ export default function AdminPage() {
               ))}
             </ul>
           )}
-        </section>
-      )}
-
-      {activeTab === 'migrate' && (
-        <section className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border">
-          <h2 className="text-base sm:text-xl font-semibold mb-3 sm:mb-4">🔄 Redis Sorted Set 마이그레이션</h2>
-          <div className="space-y-4">
-            <div className="bg-blue-50 border border-blue-200 p-4 rounded">
-              <h3 className="font-medium text-blue-900 mb-2">마이그레이션 정보</h3>
-              <ul className="text-sm text-blue-800 space-y-1">
-                <li>• 기존 배열 구조 → Redis Sorted Set 구조로 변경</li>
-                <li>• 100개 이상의 글에서 페이지네이션 성능 향상</li>
-                <li>• 기존 데이터는 posts:backup으로 백업됨</li>
-                <li>• 문제 발생 시 롤백 가능</li>
-              </ul>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-              <button 
-                onClick={handleMigrate} 
-                disabled={isMigrating}
-                className="bg-green-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg hover:bg-green-700 disabled:bg-gray-400 font-medium text-sm sm:text-base"
-              >
-                {isMigrating ? '진행 중...' : '🚀 마이그레이션 실행'}
-              </button>
-              <button 
-                onClick={handleRollback} 
-                disabled={isMigrating}
-                className="bg-red-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg hover:bg-red-700 disabled:bg-gray-400 font-medium text-sm sm:text-base"
-              >
-                {isMigrating ? '진행 중...' : '↩️ 롤백 (복구)'}
-              </button>
-            </div>
-
-            {migrationResult && (
-              <div className="bg-gray-50 border border-gray-200 p-4 rounded">
-                <h3 className="font-medium mb-2">실행 결과</h3>
-                <pre className="text-sm whitespace-pre-wrap">{migrationResult}</pre>
-              </div>
-            )}
-          </div>
         </section>
       )}
     </div>
