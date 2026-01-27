@@ -15,7 +15,7 @@ export default function MarketLivePage() {
       {/* 주요 지수 */}
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4">주요 지수</h2>
-        <TradingViewWidget />
+        <TradingViewWidget type="ticker" />
       </section>
 
       {/* Stock Heatmap */}
