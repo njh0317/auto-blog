@@ -1,9 +1,9 @@
-import { getPosts } from '@/lib/storage';
+import { getPostsV2 } from '@/lib/storage';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const posts = await getPosts();
+  const posts = await getPostsV2();
   const siteUrl = 'https://wisdomslab.com';
   
   const rssItems = posts.slice(0, 20).map(post => `
@@ -31,7 +31,7 @@ export async function GET() {
   return new Response(rss, {
     headers: {
       'Content-Type': 'application/xml',
-      'Cache-Control': 'public, max-age=3600', // 1시간 캐시
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
     },
   });
 }
