@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getGlobalEconomyNews, formatNewsForAI } from '@/lib/news';
-import { savePosts, getPosts } from '@/lib/storage';
+import { savePostV2 } from '@/lib/storage';
 import { saveErrorLog } from '@/lib/error-log';
 import { Post, GenerateResponse } from '@/lib/types';
 
@@ -182,9 +182,7 @@ export async function GET(request: Request) {
       updatedAt: new Date().toISOString(),
     };
     
-    const posts = await getPosts();
-    posts.unshift(newPost);
-    await savePosts(posts);
+    await savePostV2(newPost);
     
     return NextResponse.json({ 
       success: true, 

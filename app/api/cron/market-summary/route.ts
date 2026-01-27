@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDetailedMarketData, getFearGreedData } from '@/lib/market-data';
 import { generateDetailedMarketReport } from '@/lib/detailed-report';
-import { savePosts, getPosts } from '@/lib/storage';
+import { savePostV2 } from '@/lib/storage';
 import { saveErrorLog } from '@/lib/error-log';
 import { Post } from '@/lib/types';
 
@@ -62,9 +62,7 @@ export async function GET(request: Request) {
       },
     };
     
-    const posts = await getPosts();
-    posts.unshift(newPost);
-    await savePosts(posts);
+    await savePostV2(newPost);
     
     return NextResponse.json({ 
       success: true, 

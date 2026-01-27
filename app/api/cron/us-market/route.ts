@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getUSMarketNews, formatNewsForAI } from '@/lib/news';
 import { getDetailedMarketData } from '@/lib/market-data';
-import { savePosts, getPosts } from '@/lib/storage';
+import { savePostV2 } from '@/lib/storage';
 import { saveErrorLog } from '@/lib/error-log';
 import { Post, GenerateResponse } from '@/lib/types';
 
@@ -219,9 +219,7 @@ ${marketData.topCompanies.map(s => `- ${s.name}: ${s.changePercent >= 0 ? '+' : 
       },
     };
     
-    const posts = await getPosts();
-    posts.unshift(newPost);
-    await savePosts(posts);
+    await savePostV2(newPost);
     
     return NextResponse.json({ 
       success: true, 

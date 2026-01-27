@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getKoreanMarketNews, getKoreanMarketData, getKoreanTopStocks, getUsdKrwRate, formatNewsForAI } from '@/lib/news';
-import { savePosts, getPosts } from '@/lib/storage';
+import { savePostV2 } from '@/lib/storage';
 import { saveErrorLog } from '@/lib/error-log';
 import { Post, GenerateResponse, KoreanMarketSnapshot } from '@/lib/types';
 
@@ -217,9 +217,7 @@ export async function GET(request: Request) {
       koreanMarketData,
     };
     
-    const posts = await getPosts();
-    posts.unshift(newPost);
-    await savePosts(posts);
+    await savePostV2(newPost);
     
     return NextResponse.json({ 
       success: true, 
