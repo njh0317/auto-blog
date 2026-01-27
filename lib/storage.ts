@@ -185,7 +185,7 @@ function parsePostFromHash(data: Record<string, unknown>): Post {
     keywords: parseJSON(data.keywords) || [],
     createdAt: String(data.createdAt),
     updatedAt: String(data.updatedAt),
-    pinned: data.pinned === '1' || data.pinned === true,
+    pinned: data.pinned === '1' || data.pinned === true || false, // 기본값 false
     viewCount: 0, // 별도로 조회
     marketData: parseJSON(data.marketData),
     koreanMarketData: parseJSON(data.koreanMarketData),

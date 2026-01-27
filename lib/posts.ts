@@ -3,6 +3,7 @@ import {
   getPostsV2, 
   getPostsPaginatedV2,
   getPostBySlugV2,
+  getPostByIdV2,
   savePostV2,
   incrementViewCountV2,
   deletePostV2,
