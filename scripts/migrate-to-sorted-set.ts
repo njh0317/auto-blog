@@ -42,6 +42,7 @@ export async function migrateToSortedSet() {
         keywords: JSON.stringify(post.keywords),
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
+        pinned: post.pinned ? '1' : '0',
         marketData: post.marketData ? JSON.stringify(post.marketData) : '',
         koreanMarketData: post.koreanMarketData ? JSON.stringify(post.koreanMarketData) : '',
       });

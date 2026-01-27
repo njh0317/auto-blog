@@ -119,6 +119,21 @@ export default function AdminPage() {
     }
   };
 
+  const handleTogglePin = async (id: string) => {
+    const res = await fetch('/api/posts/pin', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('adminAuth') || '',
+      },
+      body: JSON.stringify({ id }),
+    });
+    if (res.ok) {
+      setMessage('고정 상태가 변경되었습니다');
+      loadPosts();
+    }
+  };
+
   const handleDetailedReport = async () => {
     setIsGenerating(true);
     setMessage('상세 시황 데이터를 수집하고 글을 생성 중입니다...');
@@ -376,10 +391,18 @@ export default function AdminPage() {
                 {posts.map((post) => (
                   <li key={post.id} className="flex items-start sm:items-center justify-between p-2.5 sm:p-3 bg-gray-50 rounded gap-2">
                     <div className="min-w-0 flex-1">
-                      <a href={`/posts/${post.slug}`} className="font-medium hover:text-blue-600 text-sm sm:text-base line-clamp-2 sm:line-clamp-1">{post.title}</a>
+                      <div className="flex items-center gap-2">
+                        {post.pinned && <span className="text-blue-600 text-sm">📌</span>}
+                        <a href={`/posts/${post.slug}`} className="font-medium hover:text-blue-600 text-sm sm:text-base line-clamp-2 sm:line-clamp-1">{post.title}</a>
+                      </div>
                       <p className="text-xs sm:text-sm text-gray-500">{new Date(post.createdAt).toLocaleDateString('ko-KR')}</p>
                     </div>
-                    <button onClick={() => handleDelete(post.id)} className="text-red-500 hover:text-red-700 text-xs sm:text-sm shrink-0">삭제</button>
+                    <div className="flex gap-2 shrink-0">
+                      <button onClick={() => handleTogglePin(post.id)} className="text-blue-500 hover:text-blue-700 text-xs sm:text-sm">
+                        {post.pinned ? '고정해제' : '고정'}
+                      </button>
+                      <button onClick={() => handleDelete(post.id)} className="text-red-500 hover:text-red-700 text-xs sm:text-sm">삭제</button>
+                    </div>
                   </li>
                 ))}
               </ul>

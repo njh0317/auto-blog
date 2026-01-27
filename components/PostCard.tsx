@@ -9,9 +9,14 @@ export default function PostCard({ post }: PostCardProps) {
   return (
     <article className="bg-white rounded-lg shadow-sm border p-4 sm:p-6 hover:shadow-md transition-shadow">
       <Link href={`/posts/${post.slug}`}>
-        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 hover:text-blue-600">
-          {post.title}
-        </h2>
+        <div className="flex items-start gap-2 mb-2">
+          {post.pinned && (
+            <span className="text-blue-600 text-lg shrink-0" title="고정된 글">📌</span>
+          )}
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 hover:text-blue-600">
+            {post.title}
+          </h2>
+        </div>
       </Link>
       <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 line-clamp-2">
         {post.excerpt}

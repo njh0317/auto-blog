@@ -49,6 +49,7 @@ export interface Post {
   createdAt: string;
   updatedAt: string;
   viewCount?: number; // 조회수
+  pinned?: boolean; // 고정 글 여부
   marketData?: MarketSnapshot; // 미국 시황 글일 경우 데이터 포함
   koreanMarketData?: KoreanMarketSnapshot; // 한국 시황 글일 경우 데이터 포함
 }

@@ -38,11 +38,28 @@ function generateUniqueSlug(title: string, existingPosts: Post[]): string {
 }
 
 export async function getAllPosts(): Promise<Post[]> {
-  return await getPostsV2();
+  const posts = await getPostsV2();
+  // 고정 글을 최상단으로, 나머지는 날짜순
+  return posts.sort((a, b) => {
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
+    return 0; // 이미 날짜순 정렬되어 있음
+  });
 }
 
 export async function getPostsPaginated(page: number = 1, limit: number = 20) {
-  return await getPostsPaginatedV2(page, limit);
+  const result = await getPostsPaginatedV2(page, limit);
+  
+  // 첫 페이지에만 고정 글을 최상단에 배치
+  if (page === 1) {
+    result.posts.sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      return 0;
+    });
+  }
+  
+  return result;
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | undefined> {
@@ -110,4 +127,16 @@ export async function createPost(data: {
 
 export async function deletePostById(id: string): Promise<boolean> {
   return await deletePostV2(id);
+}
+
+// 글 고정/해제
+export async function togglePinPost(id: string): Promise<boolean> {
+  const post = await getPostByIdV2(id);
+  if (!post) return false;
+  
+  post.pinned = !post.pinned;
+  post.updatedAt = new Date().toISOString();
+  await savePostV2(post);
+  
+  return true;
 }
