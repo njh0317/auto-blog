@@ -77,10 +77,11 @@ export async function incrementViewCount(slug: string): Promise<number> {
   return await incrementViewCountV2(post.id);
 }
 
-// 인기글 조회 (조회수 기준 상위 N개)
+// 인기글 조회 (최근 10개 글 중 조회수 기준 상위 N개)
 export async function getPopularPosts(limit: number = 3): Promise<Post[]> {
   const posts = await getPostsV2();
-  return posts
+  const recentPosts = posts.slice(0, 10); // 최근 10개 글만
+  return recentPosts
     .filter(p => (p.viewCount || 0) > 0)
     .sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0))
     .slice(0, limit);
