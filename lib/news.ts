@@ -58,6 +58,7 @@ export async function getKoreanMarketData(): Promise<{
       const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`;
       const res = await fetch(url, {
         headers: { 'User-Agent': 'Mozilla/5.0' },
+        cache: 'no-store',
       });
       if (!res.ok) return null;
       const data = await res.json();
@@ -124,6 +125,7 @@ export async function getKoreanTopStocks(): Promise<KoreanStock[]> {
       const url = `https://query1.finance.yahoo.com/v8/finance/chart/${stock.symbol}?interval=1d&range=1d`;
       const res = await fetch(url, {
         headers: { 'User-Agent': 'Mozilla/5.0' },
+        cache: 'no-store',
       });
       if (!res.ok) continue;
       
@@ -160,6 +162,7 @@ export async function getUsdKrwRate(): Promise<{ rate: number; changePercent: nu
     const url = `https://query1.finance.yahoo.com/v8/finance/chart/USDKRW=X?interval=1d&range=1d`;
     const res = await fetch(url, {
       headers: { 'User-Agent': 'Mozilla/5.0' },
+      cache: 'no-store',
     });
     if (!res.ok) return null;
     
