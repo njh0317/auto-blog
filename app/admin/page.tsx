@@ -288,6 +288,17 @@ export default function AdminPage() {
         </button>
       </div>
 
+      {/* Cron 스케줄 안내 */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
+        <h3 className="font-semibold text-sm sm:text-base mb-2 text-blue-900">⏰ 자동 글 생성 스케줄 (한국시간)</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-blue-800">
+          <div>• <span className="font-medium">모닝 브리핑</span>: 평일 오전 9시</div>
+          <div>• <span className="font-medium">미국 증시 마감</span>: 평일 오전 10시</div>
+          <div>• <span className="font-medium">한국 증시 마감</span>: 평일 오후 4시 30분</div>
+          <div>• <span className="font-medium">시장 요약</span>: 평일 오전 7시 30분</div>
+        </div>
+      </div>
+
       {activeTab === 'posts' && (
         <>
           <section className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border mb-6 sm:mb-8">
