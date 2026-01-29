@@ -10,33 +10,9 @@ import {
   deletePostV2,
 } from './storage';
 
-// 한글을 영문 slug로 변환 (간단 버전)
-function toSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9가-힣\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .substring(0, 50);
-}
-
 // 고유 ID 생성
 function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
-}
-
-// 고유 slug 생성
-function generateUniqueSlug(title: string, existingPosts: Post[]): string {
-  const baseSlug = toSlug(title) || 'post';
-  let slug = baseSlug;
-  let counter = 1;
-  
-  while (existingPosts.some(p => p.slug === slug)) {
-    slug = `${baseSlug}-${counter}`;
-    counter++;
-  }
-  
-  return slug;
 }
 
 export async function getAllPosts(): Promise<Post[]> {
@@ -109,7 +85,6 @@ export async function createPost(data: {
   keywords: string[];
   marketData?: MarketSnapshot;
 }): Promise<Post> {
-  const posts = await getPostsV2();
   const now = new Date();
   const nowISO = now.toISOString();
   
