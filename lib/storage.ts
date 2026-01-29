@@ -123,6 +123,9 @@ export async function savePostV2(post: Post): Promise<void> {
     const redis = await getRedis();
     const timestamp = new Date(post.createdAt).getTime();
     
+    // 전체 개수 증가 (이미 존재하는 경우 중복 증가 방지) - 저장 전에 체크!
+    const exists = await redis.exists(`posts:data:${post.id}`);
+    
     // Sorted Set에 추가 (score: timestamp, member: id)
     await redis.zadd('posts:sorted', { score: timestamp, member: post.id });
     
@@ -150,8 +153,7 @@ export async function savePostV2(post: Post): Promise<void> {
       await redis.set(`posts:views:${post.id}`, post.viewCount);
     }
     
-    // 전체 개수 증가 (이미 존재하는 경우 중복 증가 방지)
-    const exists = await redis.exists(`posts:data:${post.id}`);
+    // 새 글이면 카운트 증가
     if (!exists) {
       await redis.incr('posts:count');
     }

@@ -36,7 +36,9 @@ export async function GET(request: Request) {
     });
     
     // 4. 포스트 저장
-    const slug = `${today.replace(/\s/g, '-')}-미국증시-마감시황-3대지수`.replace(/[년월일]/g, '');
+    const now = new Date();
+    const yymmdd = now.toISOString().slice(2, 10).replace(/-/g, '').slice(0, 6); // 250129
+    const slug = `${yymmdd}-market-summary`;
     
     const newPost: Post = {
       id: Date.now().toString(),

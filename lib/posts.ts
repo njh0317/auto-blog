@@ -110,17 +110,23 @@ export async function createPost(data: {
   marketData?: MarketSnapshot;
 }): Promise<Post> {
   const posts = await getPostsV2();
-  const now = new Date().toISOString();
+  const now = new Date();
+  const nowISO = now.toISOString();
+  
+  // AI 생성 글은 날짜 + 랜덤 ID 형식으로 slug 생성
+  const yymmdd = nowISO.slice(2, 10).replace(/-/g, '').slice(0, 6); // 250129
+  const randomId = Math.random().toString(36).substring(2, 6); // a3f2
+  const slug = `${yymmdd}-${randomId}`;
   
   const post: Post = {
     id: generateId(),
-    slug: generateUniqueSlug(data.title, posts),
+    slug,
     title: data.title,
     content: data.content,
     excerpt: data.excerpt,
     keywords: data.keywords,
-    createdAt: now,
-    updatedAt: now,
+    createdAt: nowISO,
+    updatedAt: nowISO,
     marketData: data.marketData,
   };
   

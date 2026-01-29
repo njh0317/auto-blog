@@ -168,7 +168,9 @@ export async function GET(request: Request) {
     const aiResponse = await generateMorningBriefing(newsText, today);
     
     // 4. 포스트 저장
-    const slug = `${today.replace(/\s/g, '-')}-모닝브리핑`.replace(/[년월일]/g, '');
+    const now = new Date();
+    const yymmdd = now.toISOString().slice(2, 10).replace(/-/g, '').slice(0, 6); // 250129
+    const slug = `${yymmdd}-morning`;
     
     const newPost: Post = {
       id: Date.now().toString(),
