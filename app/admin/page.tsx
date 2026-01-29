@@ -296,6 +296,7 @@ export default function AdminPage() {
           <div>• <span className="font-medium">미국 증시 마감</span>: 평일 오전 10시</div>
           <div>• <span className="font-medium">한국 증시 마감</span>: 평일 오후 4시 30분</div>
           <div>• <span className="font-medium">시장 요약</span>: 평일 오전 7시 30분</div>
+          <div>• <span className="font-medium">실적 캘린더</span>: 매주 일요일 낮 12시</div>
         </div>
       </div>
 
