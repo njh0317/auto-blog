@@ -101,29 +101,20 @@ export default function EarningsCalendar({ data }: EarningsCalendarProps) {
               {/* 일반 기업 테이블 */}
               {regularEvents.length > 0 && (
                 <div className="overflow-x-auto">
-                  {/* 데스크탑: 2열 그리드, 모바일: 1열 */}
-                  <div className="hidden md:grid md:grid-cols-2 md:gap-4 p-4">
-                    {/* 왼쪽 열 */}
-                    <table className="w-full border border-gray-200 rounded-lg overflow-hidden">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-4 py-2 text-left text-xs font-semibold text-gray-700 uppercase">티커</th>
-                          <th className="px-4 py-2 text-left text-xs font-semibold text-gray-700 uppercase">기업명</th>
-                          <th className="px-4 py-2 text-center text-xs font-semibold text-gray-700 uppercase">시간</th>
-                          <th className="px-4 py-2 text-right text-xs font-semibold text-gray-700 uppercase">EPS</th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {regularEvents.slice(0, Math.ceil(regularEvents.length / 2)).map(event => (
-                          <tr key={event.symbol} className="hover:bg-gray-50 transition-colors">
-                            <td className="px-4 py-3 whitespace-nowrap">
+                  {/* 데스크탑: 2열 그리드 */}
+                  <div className="hidden md:block p-4">
+                    <div className="grid grid-cols-2 gap-4 auto-rows-fr">
+                      {regularEvents.map((event) => (
+                        <div key={event.symbol} className="border border-gray-200 rounded-lg overflow-hidden">
+                          <div className="grid grid-cols-[80px_1fr_60px_80px] bg-white hover:bg-gray-50 transition-colors">
+                            <div className="px-4 py-3 border-r border-gray-100">
                               <div className="font-semibold text-gray-900 text-sm">{event.symbol}</div>
-                            </td>
-                            <td className="px-4 py-3">
+                            </div>
+                            <div className="px-4 py-3 border-r border-gray-100">
                               <div className="text-xs text-gray-700 line-clamp-1">{event.name}</div>
-                            </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-center">
-                              <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                            </div>
+                            <div className="px-4 py-3 border-r border-gray-100 flex items-center justify-center">
+                              <span className={`text-xs px-2 py-1 rounded-full font-medium whitespace-nowrap ${
                                 event.timeOfTheDay === 'pre-market' 
                                   ? 'bg-blue-100 text-blue-700' 
                                   : event.timeOfTheDay === 'post-market'
@@ -132,56 +123,16 @@ export default function EarningsCalendar({ data }: EarningsCalendarProps) {
                               }`}>
                                 {event.timeOfTheDay === 'pre-market' ? '장전' : event.timeOfTheDay === 'post-market' ? '장후' : '-'}
                               </span>
-                            </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-right">
+                            </div>
+                            <div className="px-4 py-3 flex items-center justify-end">
                               <div className="text-sm font-medium text-gray-900">
                                 {event.estimate ? `$${event.estimate}` : '-'}
                               </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-
-                    {/* 오른쪽 열 */}
-                    <table className="w-full border border-gray-200 rounded-lg overflow-hidden">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-4 py-2 text-left text-xs font-semibold text-gray-700 uppercase">티커</th>
-                          <th className="px-4 py-2 text-left text-xs font-semibold text-gray-700 uppercase">기업명</th>
-                          <th className="px-4 py-2 text-center text-xs font-semibold text-gray-700 uppercase">시간</th>
-                          <th className="px-4 py-2 text-right text-xs font-semibold text-gray-700 uppercase">EPS</th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {regularEvents.slice(Math.ceil(regularEvents.length / 2)).map(event => (
-                          <tr key={event.symbol} className="hover:bg-gray-50 transition-colors">
-                            <td className="px-4 py-3 whitespace-nowrap">
-                              <div className="font-semibold text-gray-900 text-sm">{event.symbol}</div>
-                            </td>
-                            <td className="px-4 py-3">
-                              <div className="text-xs text-gray-700 line-clamp-1">{event.name}</div>
-                            </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-center">
-                              <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                                event.timeOfTheDay === 'pre-market' 
-                                  ? 'bg-blue-100 text-blue-700' 
-                                  : event.timeOfTheDay === 'post-market'
-                                  ? 'bg-purple-100 text-purple-700'
-                                  : 'bg-gray-100 text-gray-700'
-                              }`}>
-                                {event.timeOfTheDay === 'pre-market' ? '장전' : event.timeOfTheDay === 'post-market' ? '장후' : '-'}
-                              </span>
-                            </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-right">
-                              <div className="text-sm font-medium text-gray-900">
-                                {event.estimate ? `$${event.estimate}` : '-'}
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   {/* 모바일: 1열 테이블 */}
