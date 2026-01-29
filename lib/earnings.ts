@@ -26,24 +26,40 @@ export interface EarningsEvent {
   timeOfTheDay: string;
 }
 
-// 주요 기업 리스트 (시가총액 상위 + 주목도 높은 기업)
-const MAJOR_COMPANIES = new Set([
-  // 빅테크
-  'AAPL', 'MSFT', 'GOOGL', 'GOOG', 'AMZN', 'META', 'NVDA', 'TSLA',
+// ⭐ 메가캡 (시총 상위 글로벌 기업)
+const CORE_MAJORS = new Set([
+  'AAPL', 'MSFT', 'AMZN', 'GOOGL', 'GOOG',
+  'META', 'NVDA', 'TSLA',
+  'JPM', 'JNJ', 'UNH', 'XOM', 'V', 'MA'
+]);
+
+// 💎 섹터 대표 (각 섹터 주요 기업)
+const SECTOR_LEADERS = new Set([
   // 반도체
-  'AMD', 'INTC', 'QCOM', 'AVGO', 'NXPI',
-  // 금융
-  'JPM', 'BAC', 'WFC', 'GS', 'MS', 'C', 'BLK', 'SCHW',
+  'AMD', 'AVGO', 'QCOM', 'NXPI', 'INTC',
   // 헬스케어
-  'JNJ', 'UNH', 'PFE', 'ABBV', 'MRK', 'LLY', 'TMO',
-  // 소비재
-  'WMT', 'HD', 'COST', 'NKE', 'MCD', 'SBUX', 'DIS',
-  // 에너지
-  'XOM', 'CVX',
+  'LLY', 'ABBV', 'MRK', 'TMO', 'PFE',
+  // 소비
+  'WMT', 'COST', 'HD', 'MCD', 'SBUX', 'DIS', 'NKE',
+  // 금융
+  'BAC', 'GS', 'MS', 'BLK', 'WFC', 'C', 'SCHW',
   // 통신
   'T', 'VZ', 'CMCSA',
-  // 기타 주요 기업
-  'V', 'MA', 'PYPL', 'CRM', 'ORCL', 'ADBE', 'NFLX', 'COIN',
+  // 기타
+  'CRM', 'ORCL', 'ADBE', 'NFLX'
+]);
+
+// 🔥 고관심 종목 (최근 시장 주목도 상승)
+const HOT_COMPANIES = new Set([
+  'PLTR', 'COIN', 'PYPL', 'UBER', 'ABNB',
+  'SNOW', 'PANW', 'CRWD', 'NET', 'DDOG'
+]);
+
+// 전체 주요 기업 (3단계 통합)
+const MAJOR_COMPANIES = new Set([
+  ...Array.from(CORE_MAJORS),
+  ...Array.from(SECTOR_LEADERS),
+  ...Array.from(HOT_COMPANIES)
 ]);
 
 // S&P 500 티커 리스트 로드
@@ -180,7 +196,7 @@ export function filterNextWeekEarnings(
   });
 }
 
-// 포스트 콘텐츠 생성 (테이블 형식)
+// 포스트 콘텐츠 생성 (간단한 요약만)
 export function generateEarningsContent(events: EarningsEvent[]): string {
   if (events.length === 0) {
     return '다음 주에는 S&P 500 기업의 실적 발표가 예정되어 있지 않습니다.';
@@ -192,40 +208,50 @@ export function generateEarningsContent(events: EarningsEvent[]): string {
   // 주요 기업 개수 계산
   const majorCount = events.filter(e => MAJOR_COMPANIES.has(e.symbol)).length;
   
-  let content = `다음 주 S&P 500 기업 중 ${events.length}개 기업의 실적 발표가 예정되어 있습니다.\n`;
-  content += `이 중 주요 기업은 ${majorCount}개입니다.\n\n`;
-  content += `⭐ 표시는 시가총액 상위 및 주목도 높은 기업입니다.\n\n`;
+  // 주요 기업 리스트 추출
+  const majorCompanies = events
+    .filter(e => MAJOR_COMPANIES.has(e.symbol))
+    .map(e => e.symbol)
+    .filter((v, i, a) => a.indexOf(v) === i) // 중복 제거
+    .sort();
+  
+  let content = `다음 주 S&P 500 기업 중 ${events.length}개 기업의 실적 발표가 예정되어 있습니다.\n\n`;
+  
+  if (majorCount > 0) {
+    content += `[[주요 기업 (${majorCount}개)]]\n\n`;
+    content += `${majorCompanies.join(', ')}\n\n`;
+  }
+  
+  content += `[[날짜별 분포]]\n\n`;
   
   for (const date of sortedDates) {
     const dateObj = new Date(date);
     const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][dateObj.getDay()];
     const formattedDate = `${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일 (${dayOfWeek})`;
-    
     const dayEvents = grouped.get(date)!;
+    const dayMajorCount = dayEvents.filter(e => MAJOR_COMPANIES.has(e.symbol)).length;
     
-    content += `\n## 📅 ${formattedDate}\n\n`;
-    content += `| 티커 | 기업명 | 시간 | 예상 EPS |\n`;
-    content += `|------|--------|------|----------|\n`;
-    
-    for (const event of dayEvents) {
-      const isMajor = MAJOR_COMPANIES.has(event.symbol);
-      const ticker = isMajor ? `⭐ ${event.symbol}` : event.symbol;
-      const name = event.name.length > 30 ? event.name.substring(0, 30) + '...' : event.name;
-      const timing = event.timeOfTheDay === 'pre-market' ? '장전' : 
-                     event.timeOfTheDay === 'post-market' ? '장후' : '-';
-      const estimate = event.estimate || '-';
-      
-      content += `| ${ticker} | ${name} | ${timing} | ${estimate} |\n`;
+    content += `• ${formattedDate}: ${dayEvents.length}개 기업`;
+    if (dayMajorCount > 0) {
+      content += ` (주요 기업 ${dayMajorCount}개)`;
     }
-    
-    content += '\n';
+    content += `\n`;
   }
   
-  content += '\n---\n\n';
+  content += '\n━━━━━━━━━━━━━━━━━━━━\n\n';
   content += '※ 실적 발표 일정은 변경될 수 있습니다.\n';
-  content += '※ 예상 EPS는 애널리스트 컨센서스 기준입니다.';
+  content += '※ 예상 EPS는 애널리스트 컨센서스 기준입니다.\n';
+  content += '※ 상세 일정은 위의 실적 캘린더를 참고하세요.';
   
   return content;
+}
+
+// 주요 기업 등급 판단
+function getMajorTier(symbol: string): 'core' | 'sector' | 'hot' | null {
+  if (CORE_MAJORS.has(symbol)) return 'core';
+  if (SECTOR_LEADERS.has(symbol)) return 'sector';
+  if (HOT_COMPANIES.has(symbol)) return 'hot';
+  return null;
 }
 
 // 실적 캘린더 데이터 생성 (FE 컴포넌트용)
@@ -240,6 +266,7 @@ export function generateEarningsCalendarData(events: EarningsEvent[]): {
     estimate: string;
     timeOfTheDay: string;
     isMajor: boolean;
+    tier?: 'core' | 'sector' | 'hot';
   }>>;
 } {
   const { start, end } = getNextWeekRange();
@@ -256,14 +283,18 @@ export function generateEarningsCalendarData(events: EarningsEvent[]): {
   
   // Map을 Array로 변환하여 순회
   Array.from(grouped.entries()).forEach(([date, dayEvents]) => {
-    eventsByDate[date] = dayEvents.map(event => ({
-      symbol: event.symbol,
-      name: event.name,
-      reportDate: event.reportDate,
-      estimate: event.estimate,
-      timeOfTheDay: event.timeOfTheDay,
-      isMajor: MAJOR_COMPANIES.has(event.symbol),
-    }));
+    eventsByDate[date] = dayEvents.map(event => {
+      const tier = getMajorTier(event.symbol);
+      return {
+        symbol: event.symbol,
+        name: event.name,
+        reportDate: event.reportDate,
+        estimate: event.estimate,
+        timeOfTheDay: event.timeOfTheDay,
+        isMajor: tier !== null,
+        tier: tier || undefined,
+      };
+    });
   });
   
   return {

@@ -46,6 +46,7 @@ export interface EarningsEvent {
   estimate: string;
   timeOfTheDay: string;
   isMajor?: boolean; // 주요 기업 여부
+  tier?: 'core' | 'sector' | 'hot'; // 주요 기업 등급
 }
 
 // 실적 캘린더 데이터
