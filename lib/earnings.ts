@@ -26,6 +26,26 @@ export interface EarningsEvent {
   timeOfTheDay: string;
 }
 
+// 주요 기업 리스트 (시가총액 상위 + 주목도 높은 기업)
+const MAJOR_COMPANIES = new Set([
+  // 빅테크
+  'AAPL', 'MSFT', 'GOOGL', 'GOOG', 'AMZN', 'META', 'NVDA', 'TSLA',
+  // 반도체
+  'AMD', 'INTC', 'QCOM', 'AVGO', 'NXPI',
+  // 금융
+  'JPM', 'BAC', 'WFC', 'GS', 'MS', 'C', 'BLK', 'SCHW',
+  // 헬스케어
+  'JNJ', 'UNH', 'PFE', 'ABBV', 'MRK', 'LLY', 'TMO',
+  // 소비재
+  'WMT', 'HD', 'COST', 'NKE', 'MCD', 'SBUX', 'DIS',
+  // 에너지
+  'XOM', 'CVX',
+  // 통신
+  'T', 'VZ', 'CMCSA',
+  // 기타 주요 기업
+  'V', 'MA', 'PYPL', 'CRM', 'ORCL', 'ADBE', 'NFLX', 'COIN',
+]);
+
 // S&P 500 티커 리스트 로드
 export function loadSP500Tickers(): Set<string> {
   const csvPath = path.join(process.cwd(), 'data', 'sp500.csv');
@@ -169,7 +189,12 @@ export function generateEarningsContent(events: EarningsEvent[]): string {
   const grouped = groupByDate(events);
   const sortedDates = Array.from(grouped.keys()).sort();
   
-  let content = `다음 주 S&P 500 기업 중 ${events.length}개 기업의 실적 발표가 예정되어 있습니다.\n\n`;
+  // 주요 기업 개수 계산
+  const majorCount = events.filter(e => MAJOR_COMPANIES.has(e.symbol)).length;
+  
+  let content = `다음 주 S&P 500 기업 중 ${events.length}개 기업의 실적 발표가 예정되어 있습니다.\n`;
+  content += `이 중 주요 기업은 ${majorCount}개입니다.\n\n`;
+  content += `⭐ 표시는 시가총액 상위 및 주목도 높은 기업입니다.\n\n`;
   
   for (const date of sortedDates) {
     const dateObj = new Date(date);
@@ -183,7 +208,8 @@ export function generateEarningsContent(events: EarningsEvent[]): string {
     content += `|------|--------|------|----------|\n`;
     
     for (const event of dayEvents) {
-      const ticker = event.symbol;
+      const isMajor = MAJOR_COMPANIES.has(event.symbol);
+      const ticker = isMajor ? `⭐ ${event.symbol}` : event.symbol;
       const name = event.name.length > 30 ? event.name.substring(0, 30) + '...' : event.name;
       const timing = event.timeOfTheDay === 'pre-market' ? '장전' : 
                      event.timeOfTheDay === 'post-market' ? '장후' : '-';
@@ -200,4 +226,50 @@ export function generateEarningsContent(events: EarningsEvent[]): string {
   content += '※ 예상 EPS는 애널리스트 컨센서스 기준입니다.';
   
   return content;
+}
+
+// 실적 캘린더 데이터 생성 (FE 컴포넌트용)
+export function generateEarningsCalendarData(events: EarningsEvent[]): {
+  weekStart: string;
+  weekEnd: string;
+  totalCount: number;
+  eventsByDate: Record<string, Array<{
+    symbol: string;
+    name: string;
+    reportDate: string;
+    estimate: string;
+    timeOfTheDay: string;
+    isMajor: boolean;
+  }>>;
+} {
+  const { start, end } = getNextWeekRange();
+  const grouped = groupByDate(events);
+  
+  const eventsByDate: Record<string, Array<{
+    symbol: string;
+    name: string;
+    reportDate: string;
+    estimate: string;
+    timeOfTheDay: string;
+    isMajor: boolean;
+  }>> = {};
+  
+  // Map을 Array로 변환하여 순회
+  Array.from(grouped.entries()).forEach(([date, dayEvents]) => {
+    eventsByDate[date] = dayEvents.map(event => ({
+      symbol: event.symbol,
+      name: event.name,
+      reportDate: event.reportDate,
+      estimate: event.estimate,
+      timeOfTheDay: event.timeOfTheDay,
+      isMajor: MAJOR_COMPANIES.has(event.symbol),
+    }));
+  });
+  
+  return {
+    weekStart: start.toISOString(),
+    weekEnd: end.toISOString(),
+    totalCount: events.length,
+    eventsByDate,
+  };
 }

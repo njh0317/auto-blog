@@ -143,6 +143,7 @@ export async function savePostV2(post: Post): Promise<void> {
       pinned: post.pinned ? '1' : '0',
       marketData: post.marketData ? JSON.stringify(post.marketData) : '',
       koreanMarketData: post.koreanMarketData ? JSON.stringify(post.koreanMarketData) : '',
+      earningsData: post.earningsData ? JSON.stringify(post.earningsData) : '',
     });
     
     // Slug 매핑
@@ -184,6 +185,7 @@ export async function updatePostV2(post: Post): Promise<void> {
       pinned: post.pinned ? '1' : '0',
       marketData: post.marketData ? JSON.stringify(post.marketData) : '',
       koreanMarketData: post.koreanMarketData ? JSON.stringify(post.koreanMarketData) : '',
+      earningsData: post.earningsData ? JSON.stringify(post.earningsData) : '',
     });
     
     return;
@@ -227,6 +229,7 @@ function parsePostFromHash(data: Record<string, unknown>): Post {
     viewCount: 0, // 별도로 조회
     marketData: parseJSON(data.marketData),
     koreanMarketData: parseJSON(data.koreanMarketData),
+    earningsData: parseJSON(data.earningsData),
   };
 }
 

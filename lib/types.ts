@@ -38,6 +38,24 @@ export interface MarketSnapshot {
   fetchedAt: string;
 }
 
+// 실적 발표 이벤트
+export interface EarningsEvent {
+  symbol: string;
+  name: string;
+  reportDate: string;
+  estimate: string;
+  timeOfTheDay: string;
+  isMajor?: boolean; // 주요 기업 여부
+}
+
+// 실적 캘린더 데이터
+export interface EarningsCalendarData {
+  weekStart: string;
+  weekEnd: string;
+  totalCount: number;
+  eventsByDate: Record<string, EarningsEvent[]>;
+}
+
 export interface Post {
   id: string;
   slug: string;
@@ -52,6 +70,7 @@ export interface Post {
   pinned?: boolean; // 고정 글 여부
   marketData?: MarketSnapshot; // 미국 시황 글일 경우 데이터 포함
   koreanMarketData?: KoreanMarketSnapshot; // 한국 시황 글일 경우 데이터 포함
+  earningsData?: EarningsCalendarData; // 실적 캘린더 글일 경우 데이터 포함
 }
 
 // 한국 시장 데이터 스냅샷

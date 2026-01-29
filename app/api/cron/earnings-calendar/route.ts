@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { loadSP500Tickers, fetchEarningsCalendar, filterNextWeekEarnings, generateEarningsContent, getNextWeekRange } from '@/lib/earnings';
+import { loadSP500Tickers, fetchEarningsCalendar, filterNextWeekEarnings, generateEarningsContent, generateEarningsCalendarData, getNextWeekRange } from '@/lib/earnings';
 import { savePostV2 } from '@/lib/storage';
 import { saveErrorLog } from '@/lib/error-log';
 import { Post } from '@/lib/types';
@@ -36,6 +36,9 @@ export async function GET(request: Request) {
     // 4. 포스트 콘텐츠 생성
     const content = generateEarningsContent(nextWeekEvents);
     
+    // 4-1. 실적 캘린더 데이터 생성 (FE 컴포넌트용)
+    const earningsData = generateEarningsCalendarData(nextWeekEvents);
+    
     // 5. 날짜 정보
     const { start, end } = getNextWeekRange();
     const startDate = start.toLocaleDateString('ko-KR', { 
@@ -68,6 +71,7 @@ export async function GET(request: Request) {
       keywords: ['실적 발표', 'S&P 500', '어닝 시즌', '주식', '투자'],
       createdAt: now.toISOString(),
       updatedAt: now.toISOString(),
+      earningsData, // 실적 캘린더 데이터 추가
     };
     
     await savePostV2(newPost);

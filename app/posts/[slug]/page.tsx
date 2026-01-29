@@ -5,6 +5,7 @@ import StockHeatmap from '@/components/StockHeatmap';
 import TradingViewWidget from '@/components/TradingViewWidget';
 import AdBanner from '@/components/AdBanner';
 import FearGreedGauge from '@/components/FearGreedGauge';
+import EarningsCalendar from '@/components/EarningsCalendar';
 import Link from 'next/link';
 
 // 동적 렌더링으로 변경
@@ -79,6 +80,7 @@ export default async function PostPage({ params }: PageProps) {
   const { prev, next } = await getAdjacentPosts(decodeURIComponent(slug));
   const hasMarketData = !!post.marketData;
   const hasKoreanMarketData = !!post.koreanMarketData;
+  const hasEarningsData = !!post.earningsData;
 
   return (
     <article className="bg-white rounded-lg shadow-sm border p-4 sm:p-6 md:p-8">
@@ -139,6 +141,11 @@ export default async function PostPage({ params }: PageProps) {
 
       {/* 상단 광고 */}
       <AdBanner slot={process.env.NEXT_PUBLIC_AD_SLOT_TOP || ''} className="mb-6" />
+
+      {/* 실적 캘린더 컴포넌트 */}
+      {hasEarningsData && post.earningsData && (
+        <EarningsCalendar data={post.earningsData} />
+      )}
 
       {/* 한국 시장 데이터 표시 */}
       {hasKoreanMarketData && post.koreanMarketData && (
