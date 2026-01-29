@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     const invalidIds: string[] = [];
 
     for (const postId of allPostIds) {
-      const post = await redis.hgetall(`post:${postId}`);
+      const post = await redis.hgetall(`posts:data:${postId}`);
       
       if (!post || Object.keys(post).length === 0) {
         invalidIds.push(postId as string);
