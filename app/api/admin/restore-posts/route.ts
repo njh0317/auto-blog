@@ -19,16 +19,16 @@ export async function POST(request: Request) {
     });
 
     // Redis에서 모든 posts:data:* 키 스캔
-    let cursor = 0;
+    let cursor: number | string = 0;
     const allDataKeys: string[] = [];
     
     do {
-      const result = await redis.scan(cursor, {
+      const result: [number | string, string[]] = await redis.scan(cursor, {
         match: 'posts:data:*',
         count: 100,
       });
       
-      cursor = result[0];
+      cursor = typeof result[0] === 'string' ? parseInt(result[0], 10) : result[0];
       const keys = result[1];
       allDataKeys.push(...keys);
     } while (cursor !== 0);
