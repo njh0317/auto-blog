@@ -160,7 +160,7 @@ export function filterNextWeekEarnings(
   });
 }
 
-// 포스트 콘텐츠 생성
+// 포스트 콘텐츠 생성 (테이블 형식)
 export function generateEarningsContent(events: EarningsEvent[]): string {
   if (events.length === 0) {
     return '다음 주에는 S&P 500 기업의 실적 발표가 예정되어 있지 않습니다.';
@@ -169,28 +169,35 @@ export function generateEarningsContent(events: EarningsEvent[]): string {
   const grouped = groupByDate(events);
   const sortedDates = Array.from(grouped.keys()).sort();
   
-  let content = '다음 주 주요 기업 실적 발표 일정을 정리했습니다.\n\n';
+  let content = `다음 주 S&P 500 기업 중 ${events.length}개 기업의 실적 발표가 예정되어 있습니다.\n\n`;
   
   for (const date of sortedDates) {
     const dateObj = new Date(date);
     const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][dateObj.getDay()];
     const formattedDate = `${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일 (${dayOfWeek})`;
     
-    content += `\n📅 ${formattedDate}\n\n`;
-    
     const dayEvents = grouped.get(date)!;
+    
+    content += `\n## 📅 ${formattedDate}\n\n`;
+    content += `| 티커 | 기업명 | 시간 | 예상 EPS |\n`;
+    content += `|------|--------|------|----------|\n`;
+    
     for (const event of dayEvents) {
-      const estimate = event.estimate ? `예상 EPS: $${event.estimate}` : '예상 EPS: -';
+      const ticker = event.symbol;
+      const name = event.name.length > 30 ? event.name.substring(0, 30) + '...' : event.name;
       const timing = event.timeOfTheDay === 'pre-market' ? '장전' : 
-                     event.timeOfTheDay === 'post-market' ? '장후' : '';
+                     event.timeOfTheDay === 'post-market' ? '장후' : '-';
+      const estimate = event.estimate || '-';
       
-      content += `• ${event.symbol} (${event.name})`;
-      if (timing) content += ` - ${timing}`;
-      content += `\n  ${estimate}\n\n`;
+      content += `| ${ticker} | ${name} | ${timing} | ${estimate} |\n`;
     }
+    
+    content += '\n';
   }
   
-  content += '\n※ 실적 발표 일정은 변경될 수 있습니다.';
+  content += '\n---\n\n';
+  content += '※ 실적 발표 일정은 변경될 수 있습니다.\n';
+  content += '※ 예상 EPS는 애널리스트 컨센서스 기준입니다.';
   
   return content;
 }
