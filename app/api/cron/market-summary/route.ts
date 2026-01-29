@@ -28,7 +28,8 @@ export async function GET(request: Request) {
     const reportData = generateDetailedMarketReport(marketData);
     
     // 3. 날짜 포맷
-    const today = new Date().toLocaleDateString('ko-KR', { 
+    const now = new Date();
+    const today = now.toLocaleDateString('ko-KR', { 
       timeZone: 'Asia/Seoul',
       year: 'numeric', 
       month: 'long', 
@@ -36,7 +37,6 @@ export async function GET(request: Request) {
     });
     
     // 4. 포스트 저장
-    const now = new Date();
     const yymmdd = now.toISOString().slice(2, 10).replace(/-/g, '').slice(0, 6); // 250129
     const slug = `${yymmdd}-market-summary`;
     

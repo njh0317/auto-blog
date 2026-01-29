@@ -146,7 +146,8 @@ export async function GET(request: Request) {
 
   try {
     // 1. 날짜 포맷 (AI 호출 전에 먼저 생성)
-    const today = new Date().toLocaleDateString('ko-KR', { 
+    const now = new Date();
+    const today = now.toLocaleDateString('ko-KR', { 
       timeZone: 'Asia/Seoul',
       year: 'numeric', 
       month: 'long', 
@@ -168,7 +169,6 @@ export async function GET(request: Request) {
     const aiResponse = await generateMorningBriefing(newsText, today);
     
     // 4. 포스트 저장
-    const now = new Date();
     const yymmdd = now.toISOString().slice(2, 10).replace(/-/g, '').slice(0, 6); // 250129
     const slug = `${yymmdd}-morning`;
     
