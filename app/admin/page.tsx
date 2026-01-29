@@ -46,6 +46,7 @@ export default function AdminPage() {
   const [marketPreview, setMarketPreview] = useState<MarketPreview | null>(null);
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(false);
 
   const handleLogin = async () => {
     const res = await fetch('/api/auth', {
@@ -252,6 +253,29 @@ export default function AdminPage() {
     }
   };
 
+  const restorePosts = async () => {
+    if (!confirm('Redis에서 삭제된 포스트를 복구하시겠습니까?')) return;
+    setIsRestoring(true);
+    setMessage('포스트 복구 중...');
+    try {
+      const res = await fetch('/api/admin/restore-posts', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('adminAuth')}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setMessage(`복구 완료! ${data.restoredCount}개의 포스트가 복구되었습니다.`);
+        loadPosts();
+      } else {
+        setMessage('복구 실패');
+      }
+    } catch {
+      setMessage('복구 중 오류 발생');
+    } finally {
+      setIsRestoring(false);
+    }
+  };
+
   useEffect(() => {
     const saved = localStorage.getItem('adminAuth');
     if (saved) {
@@ -362,13 +386,22 @@ export default function AdminPage() {
           <section className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border">
             <div className="flex justify-between items-center mb-3 sm:mb-4">
               <h2 className="text-base sm:text-xl font-semibold">글 목록 ({posts.length}개)</h2>
-              <button 
-                onClick={syncPosts} 
-                disabled={isSyncing}
-                className="bg-orange-600 text-white px-3 py-1.5 rounded text-xs sm:text-sm hover:bg-orange-700 disabled:bg-gray-400"
-              >
-                {isSyncing ? '동기화 중...' : '🔄 DB 동기화'}
-              </button>
+              <div className="flex gap-2">
+                <button 
+                  onClick={restorePosts} 
+                  disabled={isRestoring}
+                  className="bg-green-600 text-white px-3 py-1.5 rounded text-xs sm:text-sm hover:bg-green-700 disabled:bg-gray-400"
+                >
+                  {isRestoring ? '복구 중...' : '♻️ 복구'}
+                </button>
+                <button 
+                  onClick={syncPosts} 
+                  disabled={isSyncing}
+                  className="bg-orange-600 text-white px-3 py-1.5 rounded text-xs sm:text-sm hover:bg-orange-700 disabled:bg-gray-400"
+                >
+                  {isSyncing ? '동기화 중...' : '🔄 동기화'}
+                </button>
+              </div>
             </div>
             {posts.length === 0 ? (
               <p className="text-gray-500 text-sm">작성된 글이 없습니다.</p>
