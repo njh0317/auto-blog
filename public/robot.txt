@@ -1,13 +1,4 @@
-import { MetadataRoute } from 'next';
+User-agent: *
+Allow: /
 
-export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://wisdomslab.com';
-  
-  return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-    },
-    sitemap: `${baseUrl}/sitemap.xml`,
-  };
-}
+Sitemap: https://co-stock.wisdomslab.com/sitemap.xml
