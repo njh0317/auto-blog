@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   try {
     // 카테고리 필터가 있으면 직접 필터링
     if (category) {
-      const { posts: allPosts, total: allTotal } = await getPostsPaginatedV2(1, 1000);
+      const { posts: allPosts } = await getPostsPaginatedV2(1, 1000);
       const filteredPosts = allPosts.filter(post => post.category === category);
       
       const total = filteredPosts.length;
