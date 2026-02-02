@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { getPostsPaginatedV2, getCategoryBySlug } from '@/lib/storage';
 import ProfileSidebar from '@/components/ProfileSidebar';
-import PostCard from '@/components/PostCard';
+import InfinitePostList from '@/components/InfinitePostList';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,11 +32,12 @@ export default async function CategoryPage({ params }: PageProps) {
     notFound();
   }
   
-  // 모든 포스트 가져오기
+  // 첫 페이지 데이터 가져오기 (20개)
   const { posts: allPosts } = await getPostsPaginatedV2(1, 1000);
+  const filteredPosts = allPosts.filter(post => post.category === category.id);
   
-  // 카테고리별 필터링
-  const posts = allPosts.filter(post => post.category === category.id);
+  const total = filteredPosts.length;
+  const initialPosts = filteredPosts.slice(0, 20);
   
   return (
     <div className="flex gap-8">
@@ -52,19 +53,19 @@ export default async function CategoryPage({ params }: PageProps) {
             {category.name}
           </h1>
           <p className="text-gray-600">{category.description}</p>
-          <p className="text-sm text-gray-500 mt-2">총 {posts.length}개의 글</p>
+          <p className="text-sm text-gray-500 mt-2">총 {total}개의 글</p>
         </div>
         
-        {posts.length === 0 ? (
+        {total === 0 ? (
           <div className="text-center py-12 text-gray-500">
             <p>아직 작성된 글이 없습니다.</p>
           </div>
         ) : (
-          <div className="space-y-6">
-            {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-          </div>
+          <InfinitePostList 
+            initialPosts={initialPosts} 
+            initialTotal={total}
+            category={category.id}
+          />
         )}
       </div>
     </div>

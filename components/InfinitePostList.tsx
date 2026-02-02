@@ -7,9 +7,10 @@ import PostCard from './PostCard';
 interface InfinitePostListProps {
   initialPosts: Post[];
   initialTotal: number;
+  category?: string; // 카테고리 필터 추가
 }
 
-export default function InfinitePostList({ initialPosts, initialTotal }: InfinitePostListProps) {
+export default function InfinitePostList({ initialPosts, initialTotal, category }: InfinitePostListProps) {
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -37,7 +38,8 @@ export default function InfinitePostList({ initialPosts, initialTotal }: Infinit
     setLoading(true);
     try {
       const nextPage = page + 1;
-      const res = await fetch(`/api/posts/paginated?page=${nextPage}&limit=20`);
+      const categoryParam = category ? `&category=${category}` : '';
+      const res = await fetch(`/api/posts/paginated?page=${nextPage}&limit=20${categoryParam}`);
       const data = await res.json();
       
       if (data.posts && data.posts.length > 0) {
