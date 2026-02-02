@@ -65,6 +65,7 @@ export interface Post {
   content: string;
   excerpt: string;
   keywords: string[];
+  category?: string; // 카테고리 ID
   createdAt: string;
   updatedAt: string;
   viewCount?: number; // 조회수
@@ -108,4 +109,16 @@ export interface GenerateResponse {
 
 export interface PostsData {
   posts: Post[];
+}
+
+// 카테고리
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+}
+
+export interface CategoriesData {
+  categories: Category[];
 }

@@ -49,3 +49,25 @@ export async function DELETE(request: NextRequest) {
 
   return NextResponse.json({ success: true });
 }
+
+export async function PUT(request: NextRequest) {
+  const auth = request.headers.get('Authorization');
+  if (!auth || !verifyPassword(auth)) {
+    return NextResponse.json({ error: '인증 필요' }, { status: 401 });
+  }
+
+  const body = await request.json();
+  
+  if (!body.id) {
+    return NextResponse.json({ error: 'ID가 필요합니다' }, { status: 400 });
+  }
+
+  const { updatePost } = await import('@/lib/posts');
+  const updated = await updatePost(body.id, body);
+  
+  if (!updated) {
+    return NextResponse.json({ error: '글을 찾을 수 없습니다' }, { status: 404 });
+  }
+
+  return NextResponse.json(updated);
+}

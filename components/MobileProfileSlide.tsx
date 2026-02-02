@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 interface PopularPost {
   slug: string;
@@ -12,10 +13,19 @@ interface VisitorData {
   total: number;
 }
 
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  count: number;
+}
+
 export default function MobileProfileSlide() {
   const [isOpen, setIsOpen] = useState(false);
   const [visitor, setVisitor] = useState<VisitorData | null>(null);
   const [popularPosts, setPopularPosts] = useState<PopularPost[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
 
   // ESC 키로 닫기
@@ -46,6 +56,25 @@ export default function MobileProfileSlide() {
       fetch('/api/posts/popular')
         .then(r => r.json())
         .then(posts => setPopularPosts(posts))
+        .catch(() => {});
+      
+      // 카테고리 및 글 개수
+      Promise.all([
+        fetch('/api/categories').then(r => r.json()),
+        fetch('/api/posts/paginated?page=1&limit=1000').then(r => r.json())
+      ])
+        .then(([categoriesData, postsData]) => {
+          const cats = categoriesData.categories || [];
+          const posts = postsData.posts || [];
+          
+          const categoriesWithCount = cats.map((cat: { id: string; name: string; slug: string }) => ({
+            ...cat,
+            count: posts.filter((p: { category?: string }) => p.category === cat.id).length
+          }));
+          
+          setCategories(categoriesWithCount);
+          setTotalCount(posts.length); // 전체 글 개수
+        })
         .catch(() => {})
         .finally(() => setIsLoading(false));
     }
@@ -110,13 +139,39 @@ export default function MobileProfileSlide() {
             개발자 출신 개인 투자자
           </p>
           
-          <hr className="my-4" />
-          
           {/* 소개글 */}
-          <div className="text-sm text-gray-700 space-y-3">
+          <div className="text-sm text-gray-700 space-y-3 mb-4">
             <p>안녕하세요. 10년차 개발자이자 주식 투자자입니다.</p>
             <p>바쁜 직장인들을 위해 매일 아침/저녁 증시 시황을 정리해서 올리고 있어요.</p>
             <p>출퇴근길 5분이면 시장 흐름 파악 끝!</p>
+          </div>
+          
+          <hr className="my-4" />
+          
+          {/* 카테고리 */}
+          <div className="mb-4">
+            <p className="text-xs text-gray-500 mb-3 font-semibold">카테고리</p>
+            <div className="space-y-2">
+              <Link 
+                href="/" 
+                className="flex items-center justify-between text-sm text-gray-700 hover:text-blue-600 py-1"
+                onClick={() => setIsOpen(false)}
+              >
+                <span>전체</span>
+                <span className="text-xs text-gray-400">({totalCount})</span>
+              </Link>
+              {categories.map((cat) => (
+                <Link 
+                  key={cat.id}
+                  href={`/category/${cat.slug}`}
+                  className="flex items-center justify-between text-sm text-gray-700 hover:text-blue-600 py-1"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <span>{cat.name}</span>
+                  <span className="text-xs text-gray-400">({cat.count})</span>
+                </Link>
+              ))}
+            </div>
           </div>
           
           <hr className="my-4" />
@@ -152,14 +207,15 @@ export default function MobileProfileSlide() {
                 <p className="text-gray-400 text-xs">아직 데이터가 없습니다</p>
               ) : (
                 popularPosts.map((post, i) => (
-                  <a 
+                  <Link 
                     key={post.slug}
                     href={`/posts/${post.slug}`} 
                     className="block hover:text-blue-600 truncate"
+                    onClick={() => setIsOpen(false)}
                   >
                     <span className="text-gray-400 mr-1">{i + 1}.</span>
                     <span className="text-gray-700">{post.title}</span>
-                  </a>
+                  </Link>
                 ))
               )}
             </div>
@@ -168,7 +224,7 @@ export default function MobileProfileSlide() {
           <hr className="my-4" />
           
           {/* 실시간 시장 현황 버튼 */}
-          <a 
+          <Link 
             href="/market-live"
             className="block w-full bg-gradient-to-r from-gray-100 to-gray-50 hover:from-gray-200 hover:to-gray-100 border border-gray-200 text-gray-800 font-medium py-3 px-4 rounded-lg transition-all duration-300 text-center mb-4 relative overflow-hidden shadow-sm"
             onClick={() => setIsOpen(false)}
@@ -183,7 +239,7 @@ export default function MobileProfileSlide() {
             <div className="relative text-xs text-gray-600 mt-1">
               S&P 500 히트맵 · 공포탐욕지수
             </div>
-          </a>
+          </Link>
           
           {/* 블로그 정보 */}
           <div className="text-xs text-gray-500 space-y-1">

@@ -138,6 +138,7 @@ export async function savePostV2(post: Post): Promise<void> {
       content: post.content,
       excerpt: post.excerpt,
       keywords: JSON.stringify(post.keywords),
+      category: post.category || '',
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       pinned: post.pinned ? '1' : '0',
@@ -180,6 +181,7 @@ export async function updatePostV2(post: Post): Promise<void> {
       content: post.content,
       excerpt: post.excerpt,
       keywords: JSON.stringify(post.keywords),
+      category: post.category || '',
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       pinned: post.pinned ? '1' : '0',
@@ -223,6 +225,7 @@ function parsePostFromHash(data: Record<string, unknown>): Post {
     content: String(data.content),
     excerpt: String(data.excerpt),
     keywords: parseJSON(data.keywords) || [],
+    category: data.category ? String(data.category) : undefined,
     createdAt: String(data.createdAt),
     updatedAt: String(data.updatedAt),
     pinned: data.pinned === '1' || data.pinned === true || false, // 기본값 false
@@ -425,4 +428,41 @@ export async function getPostsCountV2(): Promise<number> {
   
   // 로컬은 기존 방식
   return readPosts().length;
+}
+
+
+// ===== 카테고리 관련 =====
+import { Category, CategoriesData } from './types';
+
+export async function getCategories(): Promise<Category[]> {
+  if (isVercel) {
+    const redis = await getRedis();
+    const categories = await redis.get<Category[]>('categories');
+    if (categories) return categories;
+    
+    // 기본 카테고리 반환
+    return [
+      { id: 'us-market', name: '미국 증시', slug: 'us-market', description: '미국 시장 시황 및 분석' },
+      { id: 'kr-market', name: '한국 증시', slug: 'kr-market', description: '한국 시장 시황 및 분석' },
+      { id: 'morning-brief', name: '모닝 브리핑', slug: 'morning-brief', description: '아침 경제 뉴스 브리핑' },
+      { id: 'earnings', name: '실적 발표', slug: 'earnings', description: '기업 실적 발표 일정 및 분석' },
+      { id: 'investment', name: '투자', slug: 'investment', description: '투자 전략 및 가이드' },
+    ];
+  }
+  const data = readLocalFile('categories.json') as CategoriesData | null;
+  return data?.categories || [];
+}
+
+export async function saveCategories(categories: Category[]): Promise<void> {
+  if (isVercel) {
+    const redis = await getRedis();
+    await redis.set('categories', categories);
+    return;
+  }
+  writeLocalFile('categories.json', { categories });
+}
+
+export async function getCategoryBySlug(slug: string): Promise<Category | null> {
+  const categories = await getCategories();
+  return categories.find(c => c.slug === slug) || null;
 }

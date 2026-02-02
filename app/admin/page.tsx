@@ -18,6 +18,13 @@ interface ErrorLog {
   details?: string;
 }
 
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+}
+
 interface MarketPreview {
   indices: {
     dow: { changePercent: number };
@@ -32,11 +39,12 @@ export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [posts, setPosts] = useState<Post[]>([]);
   const [errorLogs, setErrorLogs] = useState<ErrorLog[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [topic, setTopic] = useState('');
   const [keywords, setKeywords] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [message, setMessage] = useState('');
-  const [activeTab, setActiveTab] = useState<'posts' | 'branding' | 'logs'>('posts');
+  const [activeTab, setActiveTab] = useState<'posts' | 'branding' | 'categories' | 'logs'>('posts');
   const [branding, setBranding] = useState<Branding>({
     nickname: '투자하는 개발자',
     greeting: '안녕하세요 {nickname}입니다.\n오늘 미국증시 마감시황 알려드리겠습니다.',
@@ -47,6 +55,8 @@ export default function AdminPage() {
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
+  const [newCategory, setNewCategory] = useState({ name: '', slug: '', description: '' });
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
   const handleLogin = async () => {
     const res = await fetch('/api/auth', {
@@ -214,6 +224,85 @@ export default function AdminPage() {
     }
   };
 
+  const loadCategories = async () => {
+    try {
+      const res = await fetch('/api/categories');
+      if (res.ok) {
+        const data = await res.json();
+        setCategories(data.categories || []);
+      }
+    } catch {
+      console.error('카테고리 로드 실패');
+    }
+  };
+
+  const handleCreateCategory = async () => {
+    if (!newCategory.name || !newCategory.slug) {
+      setMessage('카테고리 이름과 슬러그를 입력해주세요');
+      return;
+    }
+    try {
+      const res = await fetch('/api/categories', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': localStorage.getItem('adminAuth') || '',
+        },
+        body: JSON.stringify(newCategory),
+      });
+      if (res.ok) {
+        setMessage('카테고리가 생성되었습니다!');
+        setNewCategory({ name: '', slug: '', description: '' });
+        loadCategories();
+      } else {
+        setMessage('카테고리 생성 실패');
+      }
+    } catch {
+      setMessage('오류가 발생했습니다');
+    }
+  };
+
+  const handleUpdateCategory = async () => {
+    if (!editingCategory) return;
+    try {
+      const res = await fetch('/api/categories', {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': localStorage.getItem('adminAuth') || '',
+        },
+        body: JSON.stringify(editingCategory),
+      });
+      if (res.ok) {
+        setMessage('카테고리가 수정되었습니다!');
+        setEditingCategory(null);
+        loadCategories();
+      } else {
+        setMessage('카테고리 수정 실패');
+      }
+    } catch {
+      setMessage('오류가 발생했습니다');
+    }
+  };
+
+  const handleDeleteCategory = async (id: string) => {
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+    try {
+      const res = await fetch(`/api/categories?id=${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': localStorage.getItem('adminAuth') || '' },
+      });
+      if (res.ok) {
+        setMessage('카테고리가 삭제되었습니다');
+        loadCategories();
+      } else {
+        setMessage('카테고리 삭제 실패');
+      }
+    } catch {
+      setMessage('오류가 발생했습니다');
+    }
+  };
+
   const clearLogs = async () => {
     if (!confirm('모든 에러 로그를 삭제하시겠습니까?')) return;
     try {
@@ -289,10 +378,39 @@ export default function AdminPage() {
           loadPosts();
           loadBranding();
           loadErrorLogs();
+          loadCategories();
         }
       });
     }
   }, []);
+
+  const handleUpdatePostCategory = async (postId: string, categoryId: string) => {
+    try {
+      const post = posts.find(p => p.id === postId);
+      if (!post) return;
+
+      const res = await fetch('/api/posts', {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': localStorage.getItem('adminAuth') || '',
+        },
+        body: JSON.stringify({
+          ...post,
+          category: categoryId || undefined,
+        }),
+      });
+
+      if (res.ok) {
+        setMessage('카테고리가 변경되었습니다');
+        loadPosts();
+      } else {
+        setMessage('카테고리 변경 실패');
+      }
+    } catch {
+      setMessage('오류가 발생했습니다');
+    }
+  };
 
   if (!isAuthenticated) {
     return (
@@ -330,6 +448,9 @@ export default function AdminPage() {
         </button>
         <button onClick={() => setActiveTab('branding')} className={`px-3 sm:px-4 py-2 font-medium text-sm sm:text-base whitespace-nowrap ${activeTab === 'branding' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'}`}>
           🎨 브랜딩
+        </button>
+        <button onClick={() => { setActiveTab('categories'); loadCategories(); }} className={`px-3 sm:px-4 py-2 font-medium text-sm sm:text-base whitespace-nowrap ${activeTab === 'categories' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'}`}>
+          📂 카테고리
         </button>
         <button onClick={() => { setActiveTab('logs'); loadErrorLogs(); }} className={`px-3 sm:px-4 py-2 font-medium text-sm sm:text-base whitespace-nowrap ${activeTab === 'logs' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'}`}>
           🚨 에러 로그 {errorLogs.length > 0 && <span className="ml-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">{errorLogs.length}</span>}
@@ -408,19 +529,34 @@ export default function AdminPage() {
             ) : (
               <ul className="space-y-2 sm:space-y-3">
                 {posts.map((post) => (
-                  <li key={post.id} className="flex items-start sm:items-center justify-between p-2.5 sm:p-3 bg-gray-50 rounded gap-2">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        {post.pinned && <span className="text-blue-600 text-sm">📌</span>}
-                        <a href={`/posts/${post.slug}`} className="font-medium hover:text-blue-600 text-sm sm:text-base line-clamp-2 sm:line-clamp-1">{post.title}</a>
+                  <li key={post.id} className="p-2.5 sm:p-3 bg-gray-50 rounded">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          {post.pinned && <span className="text-blue-600 text-sm">📌</span>}
+                          <a href={`/posts/${post.slug}`} className="font-medium hover:text-blue-600 text-sm sm:text-base line-clamp-2 sm:line-clamp-1">{post.title}</a>
+                        </div>
+                        <p className="text-xs sm:text-sm text-gray-500">{new Date(post.createdAt).toLocaleDateString('ko-KR')}</p>
                       </div>
-                      <p className="text-xs sm:text-sm text-gray-500">{new Date(post.createdAt).toLocaleDateString('ko-KR')}</p>
+                      <div className="flex gap-2 shrink-0">
+                        <button onClick={() => handleTogglePin(post.id)} className="text-blue-500 hover:text-blue-700 text-xs sm:text-sm">
+                          {post.pinned ? '고정해제' : '고정'}
+                        </button>
+                        <button onClick={() => handleDelete(post.id)} className="text-red-500 hover:text-red-700 text-xs sm:text-sm">삭제</button>
+                      </div>
                     </div>
-                    <div className="flex gap-2 shrink-0">
-                      <button onClick={() => handleTogglePin(post.id)} className="text-blue-500 hover:text-blue-700 text-xs sm:text-sm">
-                        {post.pinned ? '고정해제' : '고정'}
-                      </button>
-                      <button onClick={() => handleDelete(post.id)} className="text-red-500 hover:text-red-700 text-xs sm:text-sm">삭제</button>
+                    <div className="flex items-center gap-2">
+                      <label className="text-xs text-gray-600">카테고리:</label>
+                      <select 
+                        value={post.category || ''} 
+                        onChange={(e) => handleUpdatePostCategory(post.id, e.target.value)}
+                        className="text-xs border rounded px-2 py-1 bg-white"
+                      >
+                        <option value="">미지정</option>
+                        {categories.map((cat) => (
+                          <option key={cat.id} value={cat.id}>{cat.name}</option>
+                        ))}
+                      </select>
                     </div>
                   </li>
                 ))}
@@ -449,6 +585,124 @@ export default function AdminPage() {
             <button onClick={saveBranding} className="w-full sm:w-auto bg-blue-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded hover:bg-blue-700 text-sm sm:text-base">💾 저장</button>
           </div>
         </section>
+      )}
+
+      {activeTab === 'categories' && (
+        <>
+          <section className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border mb-6">
+            <h2 className="text-base sm:text-xl font-semibold mb-3 sm:mb-4">➕ 새 카테고리 추가</h2>
+            <div className="space-y-3 sm:space-y-4">
+              <div>
+                <label className="block font-medium mb-2 text-sm">카테고리 이름</label>
+                <input 
+                  type="text" 
+                  value={newCategory.name} 
+                  onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })} 
+                  placeholder="예: 미국 증시"
+                  className="w-full p-2.5 sm:p-3 border rounded text-sm sm:text-base" 
+                />
+              </div>
+              <div>
+                <label className="block font-medium mb-2 text-sm">슬러그 (URL용)</label>
+                <input 
+                  type="text" 
+                  value={newCategory.slug} 
+                  onChange={(e) => setNewCategory({ ...newCategory, slug: e.target.value })} 
+                  placeholder="예: us-market"
+                  className="w-full p-2.5 sm:p-3 border rounded text-sm sm:text-base" 
+                />
+              </div>
+              <div>
+                <label className="block font-medium mb-2 text-sm">설명</label>
+                <textarea 
+                  value={newCategory.description} 
+                  onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })} 
+                  placeholder="카테고리 설명"
+                  className="w-full p-2.5 sm:p-3 border rounded h-20 text-sm sm:text-base" 
+                />
+              </div>
+              <button 
+                onClick={handleCreateCategory} 
+                className="w-full sm:w-auto bg-blue-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded hover:bg-blue-700 text-sm sm:text-base"
+              >
+                ➕ 카테고리 추가
+              </button>
+            </div>
+          </section>
+
+          <section className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border">
+            <h2 className="text-base sm:text-xl font-semibold mb-3 sm:mb-4">📂 카테고리 목록 ({categories.length}개)</h2>
+            {categories.length === 0 ? (
+              <p className="text-gray-500 text-sm">카테고리가 없습니다.</p>
+            ) : (
+              <ul className="space-y-3">
+                {categories.map((cat) => (
+                  <li key={cat.id} className="p-3 sm:p-4 bg-gray-50 rounded border">
+                    {editingCategory?.id === cat.id ? (
+                      <div className="space-y-3">
+                        <input 
+                          type="text" 
+                          value={editingCategory.name} 
+                          onChange={(e) => setEditingCategory({ ...editingCategory, name: e.target.value })} 
+                          className="w-full p-2 border rounded text-sm"
+                        />
+                        <input 
+                          type="text" 
+                          value={editingCategory.slug} 
+                          onChange={(e) => setEditingCategory({ ...editingCategory, slug: e.target.value })} 
+                          className="w-full p-2 border rounded text-sm"
+                        />
+                        <textarea 
+                          value={editingCategory.description} 
+                          onChange={(e) => setEditingCategory({ ...editingCategory, description: e.target.value })} 
+                          className="w-full p-2 border rounded h-16 text-sm"
+                        />
+                        <div className="flex gap-2">
+                          <button 
+                            onClick={handleUpdateCategory} 
+                            className="bg-green-600 text-white px-3 py-1.5 rounded text-sm hover:bg-green-700"
+                          >
+                            저장
+                          </button>
+                          <button 
+                            onClick={() => setEditingCategory(null)} 
+                            className="bg-gray-400 text-white px-3 py-1.5 rounded text-sm hover:bg-gray-500"
+                          >
+                            취소
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <h3 className="font-semibold text-sm sm:text-base">{cat.name}</h3>
+                            <p className="text-xs text-gray-500">슬러그: {cat.slug}</p>
+                          </div>
+                          <div className="flex gap-2">
+                            <button 
+                              onClick={() => setEditingCategory(cat)} 
+                              className="text-blue-500 hover:text-blue-700 text-xs sm:text-sm"
+                            >
+                              수정
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteCategory(cat.id)} 
+                              className="text-red-500 hover:text-red-700 text-xs sm:text-sm"
+                            >
+                              삭제
+                            </button>
+                          </div>
+                        </div>
+                        <p className="text-xs sm:text-sm text-gray-600">{cat.description}</p>
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </>
       )}
 
       {activeTab === 'logs' && (

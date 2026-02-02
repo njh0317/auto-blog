@@ -214,6 +214,7 @@ export async function GET(request: Request) {
       content: generated.content,
       excerpt: generated.excerpt,
       keywords: generated.keywords,
+      category: 'kr-market', // 한국 증시 카테고리
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       koreanMarketData,

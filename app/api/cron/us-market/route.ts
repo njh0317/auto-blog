@@ -209,6 +209,7 @@ ${marketData.topCompanies.map(s => `- ${s.name}: ${s.changePercent >= 0 ? '+' : 
       content: generated.content,
       excerpt: generated.excerpt,
       keywords: generated.keywords,
+      category: 'us-market', // 미국 증시 카테고리
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       marketData: {

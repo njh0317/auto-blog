@@ -69,6 +69,7 @@ export async function GET(request: Request) {
       content,
       excerpt,
       keywords: ['실적 발표', 'S&P 500', '어닝 시즌', '주식', '투자'],
+      category: 'earnings', // 실적 발표 카테고리
       createdAt: now.toISOString(),
       updatedAt: now.toISOString(),
       earningsData, // 실적 캘린더 데이터 추가

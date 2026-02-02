@@ -1,0 +1,34 @@
+{
+  "categories": [
+    {
+      "id": "us-market",
+      "name": "미국 증시",
+      "slug": "us-market",
+      "description": "미국 시장 시황 및 분석"
+    },
+    {
+      "id": "kr-market",
+      "name": "한국 증시",
+      "slug": "kr-market",
+      "description": "한국 시장 시황 및 분석"
+    },
+    {
+      "id": "morning-brief",
+      "name": "모닝 브리핑",
+      "slug": "morning-brief",
+      "description": "아침 경제 뉴스 브리핑"
+    },
+    {
+      "id": "earnings",
+      "name": "실적 발표",
+      "slug": "earnings",
+      "description": "기업 실적 발표 일정 및 분석"
+    },
+    {
+      "id": "investment",
+      "name": "투자",
+      "slug": "investment",
+      "description": "투자 전략 및 가이드"
+    }
+  ]
+}

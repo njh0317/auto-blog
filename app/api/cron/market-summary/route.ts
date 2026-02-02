@@ -48,6 +48,7 @@ export async function GET(request: Request) {
       content: reportData.content,
       excerpt: reportData.excerpt,
       keywords: reportData.keywords,
+      category: 'us-market', // 미국 증시 카테고리
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       marketData: {

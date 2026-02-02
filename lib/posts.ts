@@ -124,3 +124,19 @@ export async function togglePinPost(id: string): Promise<boolean> {
   
   return true;
 }
+
+// 글 업데이트
+export async function updatePost(id: string, updates: Partial<Post>): Promise<Post | null> {
+  const post = await getPostByIdV2(id);
+  if (!post) return null;
+  
+  const updatedPost = {
+    ...post,
+    ...updates,
+    id: post.id, // ID는 변경 불가
+    updatedAt: new Date().toISOString(),
+  };
+  
+  await updatePostV2(updatedPost);
+  return updatedPost;
+}

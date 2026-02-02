@@ -180,6 +180,7 @@ export async function GET(request: Request) {
       content: aiResponse.content,
       excerpt: aiResponse.excerpt,
       keywords: aiResponse.keywords || ['모닝브리핑', '경제뉴스', '투자'],
+      category: 'morning-brief', // 모닝 브리핑 카테고리
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
