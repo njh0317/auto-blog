@@ -55,7 +55,7 @@ export async function getKoreanMarketData(): Promise<{
 } | null> {
   try {
     const fetchQuote = async (symbol: string) => {
-      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=5d`;
+      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`;
       const res = await fetch(url, {
         headers: { 'User-Agent': 'Mozilla/5.0' },
         cache: 'no-store',
@@ -66,31 +66,15 @@ export async function getKoreanMarketData(): Promise<{
       if (!result) return null;
       
       const meta = result.meta;
-      const quote = result.indicators?.quote?.[0];
       
-      // 5일치 데이터에서 마지막 2개 값 사용 (더 안정적)
-      const closeArray = quote?.close?.filter((c: number | null) => c !== null) || [];
-      
-      if (closeArray.length >= 2) {
-        // 전일 종가 = 배열의 끝에서 두 번째
-        // 당일 종가 = 배열의 마지막
-        const prevClose = closeArray[closeArray.length - 2];
-        const price = closeArray[closeArray.length - 1];
-        const change = price - prevClose;
-        const changePercent = prevClose ? (change / prevClose) * 100 : 0;
-        
-        return {
-          price: Math.round(price * 100) / 100,
-          change: Math.round(change * 100) / 100,
-          changePercent: Math.round(changePercent * 100) / 100,
-        };
-      }
-      
-      // 폴백: meta 데이터 사용
+      // regularMarketPrice와 chartPreviousClose 사용
       const price = meta.regularMarketPrice || 0;
-      const prevClose = meta.previousClose || meta.chartPreviousClose || price;
+      const prevClose = meta.chartPreviousClose || 0;
+      
+      if (!price || !prevClose) return null;
+      
       const change = price - prevClose;
-      const changePercent = prevClose ? (change / prevClose) * 100 : 0;
+      const changePercent = (change / prevClose) * 100;
       
       return {
         price: Math.round(price * 100) / 100,
@@ -140,7 +124,7 @@ export async function getKoreanTopStocks(): Promise<KoreanStock[]> {
   
   for (const stock of KOREAN_TOP_STOCKS) {
     try {
-      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${stock.symbol}?interval=1d&range=5d`;
+      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${stock.symbol}?interval=1d&range=1d`;
       const res = await fetch(url, {
         headers: { 'User-Agent': 'Mozilla/5.0' },
         cache: 'no-store',
@@ -152,25 +136,14 @@ export async function getKoreanTopStocks(): Promise<KoreanStock[]> {
       if (!result) continue;
       
       const meta = result.meta;
-      const quote = result.indicators?.quote?.[0];
       
-      // 5일치 데이터에서 null 제거 후 마지막 2개 값 사용
-      const closeArray = quote?.close?.filter((c: number | null) => c !== null) || [];
-      let price = 0;
-      let changePercent = 0;
+      // regularMarketPrice와 chartPreviousClose 사용
+      const price = meta.regularMarketPrice || 0;
+      const prevClose = meta.chartPreviousClose || 0;
       
-      if (closeArray.length >= 2) {
-        // 전일 종가 = 배열의 끝에서 두 번째
-        // 당일 종가 = 배열의 마지막
-        const prevClose = closeArray[closeArray.length - 2];
-        price = closeArray[closeArray.length - 1];
-        changePercent = prevClose ? ((price - prevClose) / prevClose) * 100 : 0;
-      } else {
-        // 폴백: meta 데이터 사용
-        price = meta.regularMarketPrice || 0;
-        const prevClose = meta.previousClose || meta.chartPreviousClose || price;
-        changePercent = prevClose ? ((price - prevClose) / prevClose) * 100 : 0;
-      }
+      if (!price || !prevClose) continue;
+      
+      const changePercent = ((price - prevClose) / prevClose) * 100;
       
       results.push({
         symbol: stock.symbol,
