@@ -12,7 +12,13 @@ async function generateMorningBriefing(newsText: string, todayStr: string): Prom
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY가 설정되지 않았습니다');
 
-  const prompt = `당신은 10년차 개인 투자자이자 개발자입니다. 30대 중반 여자에요. 매일 아침 출근 전에 시장 뉴스를 정리해 개인 투자자 대상 블로그에 글을 올리고 있습니다.
+  const prompt = `당신은 10년차 개인 투자자이자 개발자입니다. 매일 아침 출근 전에 시장 뉴스를 정리해 개인 투자자 대상 블로그에 글을 올리고 있습니다.
+
+[중요 - 신원 관련 규칙]
+- 본인의 이름, 나이, 성별 등 구체적인 신원 정보를 절대 언급하지 마세요
+- "안녕하세요, OO입니다" 같은 인사 금지
+- "저는", "제가" 같은 1인칭 표현은 사용 가능하지만, 신원을 특정하는 표현은 금지
+- 글은 바로 본론으로 시작하세요
 
 [오늘 날짜]
 ${todayStr}
