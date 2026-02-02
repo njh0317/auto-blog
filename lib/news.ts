@@ -68,8 +68,10 @@ export async function getKoreanMarketData(): Promise<{
       const meta = result.meta;
       const quote = result.indicators?.quote?.[0];
       
-      // 장 마감 후에는 quote.close를 우선 사용, 없으면 regularMarketPrice 사용
-      const price = quote?.close?.[0] || meta.regularMarketPrice || 0;
+      // 장 마감 후에는 quote.close 배열의 마지막 값을 사용, 없으면 regularMarketPrice 사용
+      const closeArray = quote?.close || [];
+      const lastClose = closeArray.length > 0 ? closeArray[closeArray.length - 1] : null;
+      const price = lastClose || meta.regularMarketPrice || 0;
       const prevClose = meta.chartPreviousClose || meta.previousClose || price;
       const change = price - prevClose;
       const changePercent = prevClose ? (change / prevClose) * 100 : 0;
@@ -136,8 +138,10 @@ export async function getKoreanTopStocks(): Promise<KoreanStock[]> {
       const meta = result.meta;
       const quote = result.indicators?.quote?.[0];
       
-      // 장 마감 후에는 quote.close를 우선 사용
-      const price = quote?.close?.[0] || meta.regularMarketPrice || 0;
+      // 장 마감 후에는 quote.close 배열의 마지막 값을 사용
+      const closeArray = quote?.close || [];
+      const lastClose = closeArray.length > 0 ? closeArray[closeArray.length - 1] : null;
+      const price = lastClose || meta.regularMarketPrice || 0;
       const prevClose = meta.chartPreviousClose || meta.previousClose || price;
       const changePercent = prevClose ? ((price - prevClose) / prevClose) * 100 : 0;
       
