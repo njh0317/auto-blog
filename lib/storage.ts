@@ -200,7 +200,12 @@ export async function updatePostV2(post: Post): Promise<void> {
 }
 
 // Hash 데이터를 Post 객체로 변환
-function parsePostFromHash(data: Record<string, unknown>): Post {
+function parsePostFromHash(data: Record<string, unknown>): Post | null {
+  // 데이터가 비어있거나 필수 필드가 없으면 null 반환
+  if (!data || Object.keys(data).length === 0 || !data.id || !data.slug) {
+    return null;
+  }
+
   const parseJSON = (value: unknown) => {
     if (!value) return undefined;
     if (typeof value === 'string') {
@@ -257,12 +262,12 @@ export async function getPostsPaginatedV2(page: number = 1, limit: number = 20):
     const ids = await redis.zrange('posts:sorted', start, end, { rev: true });
     
     // 각 포스트 데이터 조회 (병렬, viewCount는 Hash에 포함)
-    const postsData = await Promise.all(
+    const postsData = (await Promise.all(
       ids.map(async (id) => {
         const data = await redis.hgetall(`posts:data:${id}`);
         return parsePostFromHash(data as Record<string, unknown>);
       })
-    );
+    )).filter((post): post is Post => post !== null); // null 제거
     
     return {
       posts: postsData,
@@ -302,12 +307,12 @@ export async function getPostsV2(): Promise<Post[]> {
     const ids = await redis.zrange('posts:sorted', 0, -1, { rev: true });
     
     // 각 포스트 데이터 조회 (병렬, viewCount는 Hash에 포함)
-    const posts = await Promise.all(
+    const posts = (await Promise.all(
       ids.map(async (id) => {
         const data = await redis.hgetall(`posts:data:${id}`);
         return parsePostFromHash(data as Record<string, unknown>);
       })
-    );
+    )).filter((post): post is Post => post !== null); // null 제거
     
     return posts;
   }
@@ -329,8 +334,6 @@ export async function getPostBySlugV2(slug: string): Promise<Post | null> {
     
     // 포스트 데이터 조회 (viewCount는 Hash에 포함)
     const data = await redis.hgetall(`posts:data:${id}`);
-    if (!data || Object.keys(data).length === 0) return null;
-    
     return parsePostFromHash(data as Record<string, unknown>);
   }
   
@@ -345,8 +348,6 @@ export async function getPostByIdV2(id: string): Promise<Post | null> {
     const redis = await getRedis();
     
     const data = await redis.hgetall(`posts:data:${id}`);
-    if (!data || Object.keys(data).length === 0) return null;
-    
     return parsePostFromHash(data as Record<string, unknown>);
   }
   
