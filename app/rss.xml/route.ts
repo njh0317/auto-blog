@@ -1,6 +1,6 @@
 import { getPostsV2 } from '@/lib/storage';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 14400; // 4시간 캐싱
 
 export async function GET() {
   const posts = await getPostsV2();

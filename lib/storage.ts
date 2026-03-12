@@ -129,7 +129,7 @@ export async function savePostV2(post: Post): Promise<void> {
     // Sorted Set에 추가 (score: timestamp, member: id)
     await redis.zadd('posts:sorted', { score: timestamp, member: post.id });
     
-    // Hash에 데이터 저장
+    // Hash에 데이터 저장 (viewCount 포함)
     await redis.hset(`posts:data:${post.id}`, {
       id: post.id,
       slug: post.slug,
@@ -142,6 +142,7 @@ export async function savePostV2(post: Post): Promise<void> {
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       pinned: post.pinned ? '1' : '0',
+      viewCount: String(post.viewCount || 0),
       marketData: post.marketData ? JSON.stringify(post.marketData) : '',
       koreanMarketData: post.koreanMarketData ? JSON.stringify(post.koreanMarketData) : '',
       earningsData: post.earningsData ? JSON.stringify(post.earningsData) : '',
@@ -149,11 +150,6 @@ export async function savePostV2(post: Post): Promise<void> {
     
     // Slug 매핑
     await redis.set(`posts:slug:${post.slug}`, post.id);
-    
-    // 조회수 초기화
-    if (post.viewCount) {
-      await redis.set(`posts:views:${post.id}`, post.viewCount);
-    }
     
     // 새 글이면 카운트 증가
     if (!exists) {
@@ -172,7 +168,7 @@ export async function updatePostV2(post: Post): Promise<void> {
   if (isVercel) {
     const redis = await getRedis();
     
-    // Hash 데이터만 업데이트 (Sorted Set의 score는 유지)
+    // Hash 데이터만 업데이트 (Sorted Set의 score는 유지, viewCount 포함)
     await redis.hset(`posts:data:${post.id}`, {
       id: post.id,
       slug: post.slug,
@@ -185,6 +181,7 @@ export async function updatePostV2(post: Post): Promise<void> {
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       pinned: post.pinned ? '1' : '0',
+      viewCount: String(post.viewCount || 0),
       marketData: post.marketData ? JSON.stringify(post.marketData) : '',
       koreanMarketData: post.koreanMarketData ? JSON.stringify(post.koreanMarketData) : '',
       earningsData: post.earningsData ? JSON.stringify(post.earningsData) : '',
@@ -228,8 +225,8 @@ function parsePostFromHash(data: Record<string, unknown>): Post {
     category: data.category ? String(data.category) : undefined,
     createdAt: String(data.createdAt),
     updatedAt: String(data.updatedAt),
-    pinned: data.pinned === '1' || data.pinned === true || false, // 기본값 false
-    viewCount: 0, // 별도로 조회
+    pinned: data.pinned === '1' || data.pinned === true || false,
+    viewCount: data.viewCount ? parseInt(String(data.viewCount), 10) : 0,
     marketData: parseJSON(data.marketData),
     koreanMarketData: parseJSON(data.koreanMarketData),
     earningsData: parseJSON(data.earningsData),
@@ -259,14 +256,11 @@ export async function getPostsPaginatedV2(page: number = 1, limit: number = 20):
     // Sorted Set에서 ID 목록 조회 (최신순)
     const ids = await redis.zrange('posts:sorted', start, end, { rev: true });
     
-    // 각 포스트 데이터 조회 (병렬)
+    // 각 포스트 데이터 조회 (병렬, viewCount는 Hash에 포함)
     const postsData = await Promise.all(
       ids.map(async (id) => {
         const data = await redis.hgetall(`posts:data:${id}`);
-        const viewCount = await redis.get<number>(`posts:views:${id}`) || 0;
-        const post = parsePostFromHash(data as Record<string, unknown>);
-        post.viewCount = viewCount;
-        return post;
+        return parsePostFromHash(data as Record<string, unknown>);
       })
     );
     
@@ -307,14 +301,11 @@ export async function getPostsV2(): Promise<Post[]> {
     // 모든 ID 조회 (최신순)
     const ids = await redis.zrange('posts:sorted', 0, -1, { rev: true });
     
-    // 각 포스트 데이터 조회 (병렬)
+    // 각 포스트 데이터 조회 (병렬, viewCount는 Hash에 포함)
     const posts = await Promise.all(
       ids.map(async (id) => {
         const data = await redis.hgetall(`posts:data:${id}`);
-        const viewCount = await redis.get<number>(`posts:views:${id}`) || 0;
-        const post = parsePostFromHash(data as Record<string, unknown>);
-        post.viewCount = viewCount;
-        return post;
+        return parsePostFromHash(data as Record<string, unknown>);
       })
     );
     
@@ -336,15 +327,11 @@ export async function getPostBySlugV2(slug: string): Promise<Post | null> {
     const id = await redis.get<string>(`posts:slug:${slug}`);
     if (!id) return null;
     
-    // 포스트 데이터 조회
+    // 포스트 데이터 조회 (viewCount는 Hash에 포함)
     const data = await redis.hgetall(`posts:data:${id}`);
     if (!data || Object.keys(data).length === 0) return null;
     
-    const viewCount = await redis.get<number>(`posts:views:${id}`) || 0;
-    const post = parsePostFromHash(data as Record<string, unknown>);
-    post.viewCount = viewCount;
-    
-    return post;
+    return parsePostFromHash(data as Record<string, unknown>);
   }
   
   // 로컬은 기존 방식
@@ -360,11 +347,7 @@ export async function getPostByIdV2(id: string): Promise<Post | null> {
     const data = await redis.hgetall(`posts:data:${id}`);
     if (!data || Object.keys(data).length === 0) return null;
     
-    const viewCount = await redis.get<number>(`posts:views:${id}`) || 0;
-    const post = parsePostFromHash(data as Record<string, unknown>);
-    post.viewCount = viewCount;
-    
-    return post;
+    return parsePostFromHash(data as Record<string, unknown>);
   }
   
   // 로컬은 기존 방식
@@ -376,7 +359,10 @@ export async function getPostByIdV2(id: string): Promise<Post | null> {
 export async function incrementViewCountV2(id: string): Promise<number> {
   if (isVercel) {
     const redis = await getRedis();
-    const newCount = await redis.incr(`posts:views:${id}`);
+    
+    // HINCRBY로 원자적으로 증가 (1회 명령)
+    const newCount = await redis.hincrby(`posts:data:${id}`, 'viewCount', 1);
+    
     return newCount;
   }
   
@@ -401,12 +387,11 @@ export async function deletePostV2(id: string): Promise<boolean> {
     
     const slug = String((data as Record<string, unknown>).slug);
     
-    // 여러 키 삭제
+    // 여러 키 삭제 (posts:views는 더 이상 사용 안 함)
     await Promise.all([
       redis.zrem('posts:sorted', id),
       redis.del(`posts:data:${id}`),
       redis.del(`posts:slug:${slug}`),
-      redis.del(`posts:views:${id}`),
     ]);
     
     // 전체 개수 감소

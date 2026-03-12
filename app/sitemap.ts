@@ -1,6 +1,8 @@
 import { MetadataRoute } from 'next';
 import { getAllPosts } from '@/lib/posts';
 
+export const revalidate = 14400; // 4시간 캐싱
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   
