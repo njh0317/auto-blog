@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getVisitorStats, incrementVisitor } from '@/lib/visitor';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300; // 5분 캐싱
 
 // GET: 방문자 수 조회
 export async function GET() {
