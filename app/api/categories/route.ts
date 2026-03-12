@@ -3,7 +3,7 @@ import { getCategories, saveCategories } from '@/lib/storage';
 import { Category } from '@/lib/types';
 import { verifyPassword } from '@/lib/auth';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800; // 30분 캐싱
 
 // GET: 카테고리 목록 조회 (인증 불필요)
 export async function GET() {

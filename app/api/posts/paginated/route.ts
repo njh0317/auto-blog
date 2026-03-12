@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { getPostsPaginated } from '@/lib/posts';
 import { getPostsPaginatedV2 } from '@/lib/storage';
 
+export const revalidate = 1800; // 30분 캐싱
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get('page') || '1');

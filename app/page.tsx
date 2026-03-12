@@ -2,7 +2,7 @@ import { getPostsPaginated } from '@/lib/posts';
 import ProfileSidebar from '@/components/ProfileSidebar';
 import InfinitePostList from '@/components/InfinitePostList';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800; // 30분 캐싱
 
 export default async function HomePage() {
   const { posts, total } = await getPostsPaginated(1, 20);

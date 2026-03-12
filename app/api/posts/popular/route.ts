@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getPopularPosts } from '@/lib/posts';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800; // 30분 캐싱
 
 // GET: 인기글 조회
 export async function GET() {

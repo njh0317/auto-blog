@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAllPosts, createPost, deletePostById } from '@/lib/posts';
 import { verifyPassword } from '@/lib/auth';
 
+export const revalidate = 1800; // 30분 캐싱
+
 export async function GET() {
   const posts = await getAllPosts();
   return NextResponse.json(posts);

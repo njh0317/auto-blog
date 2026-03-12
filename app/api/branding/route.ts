@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getBrandingAsync, saveBranding } from '@/lib/branding';
 
+export const revalidate = 1800; // 30분 캐싱
+
 // 브랜딩 설정 조회
 export async function GET() {
   try {

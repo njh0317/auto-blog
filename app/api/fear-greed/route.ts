@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getFearGreedData } from '@/lib/market-data';
 
+export const revalidate = 1800; // 30분 캐싱
+
 export async function GET() {
   try {
     const data = await getFearGreedData();
