@@ -156,6 +156,9 @@ export async function savePostV2(post: Post): Promise<void> {
       await redis.incr('posts:count');
     }
     
+    // 캐시 무효화
+    await invalidatePostsCache(redis);
+    
     return;
   }
   
@@ -187,6 +190,9 @@ export async function updatePostV2(post: Post): Promise<void> {
       earningsData: post.earningsData ? JSON.stringify(post.earningsData) : '',
     });
     
+    // 캐시 무효화
+    await invalidatePostsCache(redis);
+    
     return;
   }
   
@@ -196,6 +202,15 @@ export async function updatePostV2(post: Post): Promise<void> {
   if (index !== -1) {
     posts[index] = post;
     writeLocalFile('posts.json', { posts });
+  }
+}
+
+// 캐시 무효화 헬퍼 함수
+async function invalidatePostsCache(redis: Awaited<ReturnType<typeof getRedis>>) {
+  // 모든 캐시 키 패턴 삭제
+  const keys = await redis.keys('cache:posts:*');
+  if (keys.length > 0) {
+    await redis.del(...keys);
   }
 }
 
@@ -250,6 +265,23 @@ export async function getPostsPaginatedV2(page: number = 1, limit: number = 20):
   if (isVercel) {
     const redis = await getRedis();
     
+    // 캐시 키 생성
+    const cacheKey = `cache:posts:paginated:${page}:${limit}`;
+    
+    // 캐시 확인 (30분 TTL)
+    const cached = await redis.get<{
+      posts: Post[];
+      total: number;
+      page: number;
+      totalPages: number;
+      hasNext: boolean;
+      hasPrev: boolean;
+    }>(cacheKey);
+    
+    if (cached) {
+      return cached;
+    }
+    
     // 전체 개수
     const total = await redis.get<number>('posts:count') || 0;
     const totalPages = Math.ceil(total / limit);
@@ -269,7 +301,7 @@ export async function getPostsPaginatedV2(page: number = 1, limit: number = 20):
       })
     )).filter((post): post is Post => post !== null); // null 제거
     
-    return {
+    const result = {
       posts: postsData,
       total,
       page,
@@ -277,6 +309,11 @@ export async function getPostsPaginatedV2(page: number = 1, limit: number = 20):
       hasNext: page < totalPages,
       hasPrev: page > 1,
     };
+    
+    // 캐시 저장 (30분 = 1800초)
+    await redis.set(cacheKey, result, { ex: 1800 });
+    
+    return result;
   }
   
   // 로컬은 기존 방식
@@ -303,6 +340,15 @@ export async function getPostsV2(): Promise<Post[]> {
   if (isVercel) {
     const redis = await getRedis();
     
+    // 캐시 키
+    const cacheKey = 'cache:posts:all';
+    
+    // 캐시 확인 (30분 TTL)
+    const cached = await redis.get<Post[]>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+    
     // 모든 ID 조회 (최신순)
     const ids = await redis.zrange('posts:sorted', 0, -1, { rev: true });
     
@@ -313,6 +359,9 @@ export async function getPostsV2(): Promise<Post[]> {
         return parsePostFromHash(data as Record<string, unknown>);
       })
     )).filter((post): post is Post => post !== null); // null 제거
+    
+    // 캐시 저장 (30분 = 1800초)
+    await redis.set(cacheKey, posts, { ex: 1800 });
     
     return posts;
   }
@@ -397,6 +446,9 @@ export async function deletePostV2(id: string): Promise<boolean> {
     
     // 전체 개수 감소
     await redis.decr('posts:count');
+    
+    // 캐시 무효화
+    await invalidatePostsCache(redis);
     
     return true;
   }
